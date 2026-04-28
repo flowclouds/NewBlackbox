@@ -85,6 +85,7 @@ dependencies {
     implementation(project(":black-reflection"))
     annotationProcessor(project(":compiler"))
     implementation 'androidx.appcompat:appcompat:1.2.0'
+    testImplementation libs.junit
 
     implementation 'com.moandjiezana.toml:toml4j:0.7.2'
 

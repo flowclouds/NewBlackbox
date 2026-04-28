@@ -1,8 +1,8 @@
 package top.niunaijun.blackbox.fake.service;
 
 import android.content.Context;
-import android.os.Bundle;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import top.niunaijun.blackbox.BlackBoxCore;
@@ -26,14 +26,23 @@ public class WorkManagerProxy extends ClassInvocationStub {
     protected Object getWho() {
         try {
             Context context = BlackBoxCore.getContext();
-            if (context != null) {
-                // Try to get the real WorkManager instance
-                Class<?> workManagerClass = Class.forName("androidx.work.WorkManager");
-                Method getInstanceMethod = workManagerClass.getMethod("getInstance", Context.class);
-                return getInstanceMethod.invoke(null, context);
+            if (context == null) {
+                return null;
+            }
+            Class<?> workManagerClass = Class.forName("androidx.work.WorkManager");
+            Method getInstanceMethod = workManagerClass.getMethod("getInstance", Context.class);
+            return getInstanceMethod.invoke(null, context);
+        } catch (ClassNotFoundException e) {
+            Slog.d(TAG, "WorkManager is not present, skipping hook");
+        } catch (InvocationTargetException e) {
+            Throwable cause = e.getCause();
+            if (cause instanceof IllegalStateException) {
+                Slog.d(TAG, "WorkManager is not initialized yet, skipping hook");
+            } else {
+                Slog.w(TAG, "Failed to get WorkManager instance: " + (cause == null ? e.getMessage() : cause.getMessage()));
             }
         } catch (Exception e) {
-            Slog.w(TAG, "Failed to get WorkManager instance", e);
+            Slog.w(TAG, "Failed to get WorkManager instance: " + e.getMessage());
         }
         return null;
     }

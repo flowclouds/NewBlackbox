@@ -35,8 +35,10 @@ IO.cpp \
 Utils/elf_util.cpp \
 Hook/DexFileHook.cpp \
 Hook/FileSystemHook.cpp \
+Hook/RuntimeHook.cpp \
 Utils/VirtualSpoof.cpp \
 Utils/HexDump.cpp \
+Utils/ProcessExitMonitor.cpp \
 Utils/AntiDetection.cpp \
 Hook/VMClassLoaderHook.cpp \
 Hook/UnixFileSystemHook.cpp \

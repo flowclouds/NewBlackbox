@@ -71,9 +71,11 @@ public class BProcessManagerService implements ISystemService {
                     if (app.initLock != null) {
                         app.initLock.block();
                     }
-                    if (app.bActivityThread != null) {
+                    if (isProcessRecordAlive(app)) {
                         return app;
                     }
+                    bProcess.remove(processName);
+                    mPidsSelfLocked.remove(app);
                 }
                 bpid = getUsingBPidL();
                 Slog.d(TAG, "init bUid = " + buid + ", bPid = " + bpid);
@@ -84,7 +86,7 @@ public class BProcessManagerService implements ISystemService {
             app = new ProcessRecord(info, processName);
             app.uid = Process.myUid();
             app.bpid = bpid;
-            app.buid = BPackageManagerService.get().getAppId(packageName);
+            app.buid = buid;
             app.callingBUid = getBUidByPidOrPackageName(callingPid, packageName);
             app.userId = userId;
 
@@ -104,6 +106,14 @@ public class BProcessManagerService implements ISystemService {
             }
         }
         return app;
+    }
+
+    private boolean isProcessRecordAlive(ProcessRecord app) {
+        if (app == null || app.bActivityThread == null) {
+            return false;
+        }
+        IBinder binder = app.bActivityThread.asBinder();
+        return binder != null && binder.isBinderAlive();
     }
 
     private int getUsingBPidL() {

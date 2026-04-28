@@ -82,7 +82,7 @@ void nativeHook(JNIEnv *env) {
     UnixFileSystemHook::init(env);
     FileSystemHook::init();
     VMClassLoaderHook::init(env);
-//    RuntimeHook::init(env);
+    RuntimeHook::init(env);
     BinderHook::init(env);
     DexFileHook::init(env);
 }

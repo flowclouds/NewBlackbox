@@ -1,5 +1,10 @@
 package top.niunaijun.blackbox.fake.service;
 
+import static android.content.Context.RECEIVER_EXPORTED;
+import static android.content.Context.RECEIVER_NOT_EXPORTED;
+import static android.content.pm.PackageManager.GET_META_DATA;
+import static android.content.pm.PackageManager.PERMISSION_GRANTED;
+
 import android.Manifest;
 import android.app.ActivityManager;
 import android.app.IServiceConnection;
@@ -12,12 +17,10 @@ import android.content.pm.ProviderInfo;
 import android.content.pm.ResolveInfo;
 import android.os.IBinder;
 import android.os.IInterface;
-import android.util.Log;
 
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Objects;
 
 import black.android.app.BRActivityManagerNative;
 import black.android.app.BRActivityManagerOreo;
@@ -50,16 +53,11 @@ import top.niunaijun.blackbox.proxy.record.ProxyBroadcastRecord;
 import top.niunaijun.blackbox.proxy.record.ProxyPendingRecord;
 import top.niunaijun.blackbox.utils.MethodParameterUtils;
 import top.niunaijun.blackbox.utils.Reflector;
+import top.niunaijun.blackbox.utils.Slog;
 import top.niunaijun.blackbox.utils.compat.ActivityManagerCompat;
 import top.niunaijun.blackbox.utils.compat.BuildCompat;
 import top.niunaijun.blackbox.utils.compat.ParceledListSliceCompat;
 import top.niunaijun.blackbox.utils.compat.TaskDescriptionCompat;
-import top.niunaijun.blackbox.utils.Slog;
-
-import static android.content.Context.RECEIVER_EXPORTED;
-import static android.content.Context.RECEIVER_NOT_EXPORTED;
-import static android.content.pm.PackageManager.GET_META_DATA;
-import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 
 /**
  * updated by alex5402 on 3/30/21.
@@ -387,7 +385,7 @@ public class IActivityManagerProxy extends ClassInvocationStub {
                     if (flagsIndex >= 0) {
                         int flags = MethodParameterUtils.toInt(args[flagsIndex]);
                         flags &= ~Context.BIND_EXTERNAL_SERVICE;
-                        args[flagsIndex] = flags;
+                        args[flagsIndex] = MethodParameterUtils.withIntValueType(args[flagsIndex], flags);
                     }
                 }
                 args[callingPackageIndex] = BlackBoxCore.getHostPkg();

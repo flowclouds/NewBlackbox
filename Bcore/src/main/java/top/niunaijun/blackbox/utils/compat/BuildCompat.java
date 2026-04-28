@@ -17,27 +17,32 @@ public class BuildCompat {
 
     // 14
     public static boolean isU() {
-        return Build.VERSION.SDK_INT >= 33 || (Build.VERSION.SDK_INT >= 32 && Build.VERSION.PREVIEW_SDK_INT == 1);
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE
+                || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && getPreviewSDKInt() > 0);
     }
 
     // 13
     public static boolean isTiramisu() {
-        return Build.VERSION.SDK_INT >= 32 || (Build.VERSION.SDK_INT >= 31 && Build.VERSION.PREVIEW_SDK_INT == 1);
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S_V2 && getPreviewSDKInt() > 0);
     }
 
     // 12
     public static boolean isS() {
-        return Build.VERSION.SDK_INT >= 31 || (Build.VERSION.SDK_INT >= 30 && Build.VERSION.PREVIEW_SDK_INT == 1);
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+                || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && getPreviewSDKInt() > 0);
     }
 
     // 11
     public static boolean isR() {
-        return Build.VERSION.SDK_INT >= 30 || (Build.VERSION.SDK_INT >= 29 && Build.VERSION.PREVIEW_SDK_INT == 1);
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.R
+                || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && getPreviewSDKInt() > 0);
     }
 
     // 10
     public static boolean isQ() {
-        return Build.VERSION.SDK_INT >= 29 || (Build.VERSION.SDK_INT >= 28 && Build.VERSION.PREVIEW_SDK_INT == 1);
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
+                || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && getPreviewSDKInt() > 0);
     }
 
     // 9

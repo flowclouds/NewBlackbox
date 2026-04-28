@@ -6,10 +6,21 @@
 #import "JniHook/JniHook.h"
 #include "BoxCore.h"
 
+static void logNativeLoadResult(JNIEnv *env, const char *name, jstring result) {
+    if (result == nullptr) {
+        ALOGD("nativeLoad success: %s", name);
+        return;
+    }
+    const char *error = env->GetStringUTFChars(result, JNI_FALSE);
+    ALOGE("nativeLoad failed: %s, error: %s", name, error);
+    env->ReleaseStringUTFChars(result, error);
+}
+
 HOOK_JNI(jstring, nativeLoad, JNIEnv *env, jobject obj, jstring name, jobject class_loader) {
     const char *nameC = env->GetStringUTFChars(name, JNI_FALSE);
     ALOGD("nativeLoad: %s", nameC);
     jstring result = orig_nativeLoad(env, obj, name, class_loader);
+    logNativeLoadResult(env, nameC, result);
     env->ReleaseStringUTFChars(name, nameC);
     return result;
 }
@@ -19,6 +30,7 @@ HOOK_JNI(jstring, nativeLoad2, JNIEnv *env, jobject obj, jstring name, jobject c
     const char *nameC = env->GetStringUTFChars(name, JNI_FALSE);
     ALOGD("nativeLoad: %s", nameC);
     jstring result = orig_nativeLoad2(env, obj, name, class_loader, caller);
+    logNativeLoadResult(env, nameC, result);
     env->ReleaseStringUTFChars(name, nameC);
     return result;
 }
