@@ -1,8 +1,10 @@
 package top.niunaijun.blackbox.fake.service;
 
 import android.os.IBinder;
+import android.util.Log;
 
 import java.lang.reflect.Method;
+import java.util.List;
 
 import black.android.os.BRServiceManager;
 import black.com.android.internal.telephony.BRISubStub;
@@ -33,8 +35,31 @@ public class ISubProxy extends BinderInvocationStub {
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        MethodParameterUtils.replaceFirstAppPkg(args);
+        MethodParameterUtils.replaceAllAppPkg(args);
         AttributionSourceUtils.fixAttributionSourceInArgs(args);
-        return super.invoke(proxy, method, args);
+        String pkg = firstString(args);
+        try {
+            Object result = super.invoke(proxy, method, args);
+            if (method.getName().contains("ub")) {
+                int size = result instanceof List ? ((List<?>) result).size() : -1;
+                Log.i("ISubProxy", method.getName() + " pkg=" + pkg + " size=" + size + " null=" + (result == null));
+            }
+            return result;
+        } catch (Throwable t) {
+            Log.e("ISubProxy", method.getName() + " pkg=" + pkg, t);
+            throw t;
+        }
+    }
+
+    private static String firstString(Object[] args) {
+        if (args == null) {
+            return null;
+        }
+        for (Object arg : args) {
+            if (arg instanceof String) {
+                return (String) arg;
+            }
+        }
+        return null;
     }
 }

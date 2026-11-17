@@ -19,6 +19,11 @@ import android.os.PersistableBundle;
 import android.os.UserHandle;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewTreeObserver;
+
+import java.lang.reflect.Field;
+import java.util.ArrayList;
 
 import top.niunaijun.blackbox.BlackBoxCore;
 import top.niunaijun.blackbox.app.BActivityThread;
@@ -374,6 +379,61 @@ public class BaseInstrumentationDelegate extends Instrumentation {
         mBaseInstrumentation.callActivityOnResume(activity);
         for (AppLifecycleCallback appLifecycleCallback : BlackBoxCore.get().getAppLifecycleCallbacks()) {
             appLifecycleCallback.onActivityResumed(activity);
+        }
+        releaseStuckFlutterDraw(activity);
+    }
+
+    // shortcut: Flutter's OnPreDrawListener cancels every frame until its own first buffer, and ColorOS then never creates that surface. Drop the listener so the window can draw. Remove if a Flutter app presents its first frame without this.
+    private static void releaseStuckFlutterDraw(Activity activity) {
+        try {
+            View decor = activity.getWindow().getDecorView();
+            decor.post(() -> {
+                ViewTreeObserver observer = decor.getViewTreeObserver();
+                if (!observer.isAlive()) {
+                    return;
+                }
+                observer.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                    private int frames;
+
+                    @Override
+                    public boolean onPreDraw() {
+                        dropFlutterPredraw(decor.getViewTreeObserver());
+                        if (++frames >= 90) {
+                            decor.getViewTreeObserver().removeOnPreDrawListener(this);
+                        }
+                        return true;
+                    }
+                });
+            });
+        } catch (Throwable ignored) {
+        }
+    }
+
+    private static void dropFlutterPredraw(ViewTreeObserver observer) {
+        try {
+            Field listenersField = ViewTreeObserver.class.getDeclaredField("mOnPreDrawListeners");
+            listenersField.setAccessible(true);
+            Object listeners = listenersField.get(observer);
+            if (listeners == null) {
+                return;
+            }
+            Field dataField = listeners.getClass().getDeclaredField("mData");
+            dataField.setAccessible(true);
+            ArrayList<?> data = (ArrayList<?>) dataField.get(listeners);
+            if (data == null) {
+                return;
+            }
+            ArrayList<ViewTreeObserver.OnPreDrawListener> drop = new ArrayList<>();
+            for (Object listener : data) {
+                if (listener instanceof ViewTreeObserver.OnPreDrawListener
+                        && listener.getClass().getName().startsWith("io.flutter.")) {
+                    drop.add((ViewTreeObserver.OnPreDrawListener) listener);
+                }
+            }
+            for (ViewTreeObserver.OnPreDrawListener listener : drop) {
+                observer.removeOnPreDrawListener(listener);
+            }
+        } catch (Throwable ignored) {
         }
     }
 

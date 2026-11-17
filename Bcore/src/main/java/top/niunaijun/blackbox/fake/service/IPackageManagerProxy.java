@@ -147,7 +147,8 @@ public class IPackageManagerProxy extends BinderInvocationStub {
                         if (perm != null && (perm.equals(android.Manifest.permission.RECORD_AUDIO)
                                 || perm.equals("android.permission.FOREGROUND_SERVICE_MICROPHONE")
                                 || perm.equals(android.Manifest.permission.MODIFY_AUDIO_SETTINGS)
-                                || perm.equals(android.Manifest.permission.CAPTURE_AUDIO_OUTPUT))) {
+                                || perm.equals(android.Manifest.permission.CAPTURE_AUDIO_OUTPUT)
+                                || isPhoneStatePermission(perm))) {
                             packageInfo.requestedPermissionsFlags[i] |= PackageInfo.REQUESTED_PERMISSION_GRANTED;
                         }
                     }
@@ -286,9 +287,14 @@ public class IPackageManagerProxy extends BinderInvocationStub {
 
             ApplicationInfo applicationInfo = BlackBoxCore.getBPackageManager().getApplicationInfo(packageName, flags, BlackBoxCore.getUserId());
             if (applicationInfo != null) {
+                // ColorOS qdgralloc rejects Impeller's 4x4 format 0x3b, so the Flutter surface never presents.
+                if (applicationInfo.metaData == null) {
+                    applicationInfo.metaData = new android.os.Bundle();
+                }
+                applicationInfo.metaData.putBoolean("io.flutter.embedding.android.EnableImpeller", false);
                 return applicationInfo;
             }
-            if (AppSystemEnv.isOpenPackage(packageName)) {
+            if (AppSystemEnv.isOpenPackage(packageName) || packageName.equals(BlackBoxCore.getHostPkg())) {
                 return method.invoke(who, args);
             }
             return null;
@@ -416,7 +422,7 @@ public class IPackageManagerProxy extends BinderInvocationStub {
             String packageName = (String) args[1];
             
             
-            if (isAudioPermission(permission)) {
+            if (isAudioPermission(permission) || isPhoneStatePermission(permission)) {
                 Slog.d(TAG, "SimpleAudioPermissionHook: Granting audio permission: " + permission + " to " + packageName);
                 return PackageManager.PERMISSION_GRANTED;
             }
@@ -446,7 +452,7 @@ public class IPackageManagerProxy extends BinderInvocationStub {
             String packageName = (String) args[1];
             
             
-            if (isAudioPermission(permission)) {
+            if (isAudioPermission(permission) || isPhoneStatePermission(permission)) {
                 Slog.d(TAG, "CheckSelfPermission: Granting audio permission: " + permission + " to " + packageName);
                 return PackageManager.PERMISSION_GRANTED;
             }
@@ -476,7 +482,7 @@ public class IPackageManagerProxy extends BinderInvocationStub {
             String packageName = (String) args[1];
             
             
-            if (isAudioPermission(permission)) {
+            if (isAudioPermission(permission) || isPhoneStatePermission(permission)) {
                 Slog.d(TAG, "ShouldShowRequestPermissionRationale: Not showing rationale for audio permission: " + permission);
                 return false;
             }
@@ -554,6 +560,11 @@ public class IPackageManagerProxy extends BinderInvocationStub {
     }
 
     
+    private static boolean isPhoneStatePermission(String permission) {
+        return permission != null && (permission.equals(android.Manifest.permission.READ_PHONE_STATE)
+                || permission.equals(android.Manifest.permission.READ_PHONE_NUMBERS));
+    }
+
     private static boolean isAudioPermission(String permission) {
         if (permission == null) return false;
         return permission.equals(android.Manifest.permission.RECORD_AUDIO)

@@ -5,11 +5,10 @@ import java.lang.reflect.Method;
 
 import black.android.os.BRIDeviceIdentifiersPolicyServiceStub;
 import black.android.os.BRServiceManager;
-import top.niunaijun.blackbox.BlackBoxCore;
 import top.niunaijun.blackbox.fake.hook.BinderInvocationStub;
 import top.niunaijun.blackbox.fake.hook.MethodHook;
 import top.niunaijun.blackbox.fake.hook.ProxyMethod;
-import top.niunaijun.blackbox.utils.Md5Utils;
+import top.niunaijun.blackbox.utils.MethodParameterUtils;
 
 
 public class IDeviceIdentifiersPolicyProxy extends BinderInvocationStub {
@@ -39,7 +38,8 @@ public class IDeviceIdentifiersPolicyProxy extends BinderInvocationStub {
         protected Object hook(Object who, Method method, Object[] args) throws Throwable {
 
 
-            return Md5Utils.md5(BlackBoxCore.getHostPkg());
+            MethodParameterUtils.replaceAllAppPkg(args);
+            return method.invoke(who, args);
         }
     }
 }

@@ -6,6 +6,7 @@ import android.net.NetworkInfo;
 import android.net.Network;
 import android.net.LinkProperties;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Array;
@@ -334,6 +335,9 @@ public class IConnectivityManagerProxy extends BinderInvocationStub {
                 try {
                     
                     Object result = method.invoke(who, args);
+                    if (result instanceof android.net.NetworkCapabilities) {
+                        hideVpnTransport(result);
+                    }
                     if (result != null) {
                         
                         try {
@@ -362,6 +366,30 @@ public class IConnectivityManagerProxy extends BinderInvocationStub {
                 }
             }
             return method.invoke(who, args);
+        }
+
+        // This ROM has no removeTransport(). TRANSPORT_VPN is bit 4 of the transport mask.
+        private static void hideVpnTransport(Object caps) {
+            try {
+                Method hasTransport = caps.getClass().getMethod("hasTransport", int.class);
+                if (!Boolean.TRUE.equals(hasTransport.invoke(caps, android.net.NetworkCapabilities.TRANSPORT_VPN))) {
+                    return;
+                }
+                for (Class<?> type = caps.getClass(); type != null && type != Object.class; type = type.getSuperclass()) {
+                    for (Field field : type.getDeclaredFields()) {
+                        if (!field.getName().toLowerCase().contains("transport")) {
+                            continue;
+                        }
+                        field.setAccessible(true);
+                        if (field.getType() == long.class) {
+                            field.setLong(caps, field.getLong(caps) & ~(1L << android.net.NetworkCapabilities.TRANSPORT_VPN));
+                        } else if (field.getType() == int.class) {
+                            field.setInt(caps, field.getInt(caps) & ~(1 << android.net.NetworkCapabilities.TRANSPORT_VPN));
+                        }
+                    }
+                }
+            } catch (Throwable ignored) {
+            }
         }
     }
 

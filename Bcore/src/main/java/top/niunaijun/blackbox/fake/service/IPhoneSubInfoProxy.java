@@ -32,7 +32,7 @@ public class IPhoneSubInfoProxy extends ClassInvocationStub {
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        MethodParameterUtils.replaceFirstAppPkg(args);
+        MethodParameterUtils.replaceAllAppPkg(args);
         AttributionSourceUtils.fixAttributionSourceInArgs(args);
         return super.invoke(proxy, method, args);
     }

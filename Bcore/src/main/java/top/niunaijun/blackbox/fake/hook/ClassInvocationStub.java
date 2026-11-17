@@ -4,6 +4,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.HashMap;
@@ -126,7 +127,13 @@ public abstract class ClassInvocationStub implements InvocationHandler, IInjectH
         if (result != null) {
             return result;
         }
-        result = methodHook.hook(mBase, method, args);
+        try {
+            result = methodHook.hook(mBase, method, args);
+        } catch (InvocationTargetException e) {
+            // method.invoke hides SecurityException, so the guest catch never sees it.
+            Throwable cause = e.getCause();
+            throw cause != null ? cause : e;
+        }
         result = methodHook.afterHook(result);
         return result;
     }

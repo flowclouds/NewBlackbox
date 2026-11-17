@@ -1,5 +1,7 @@
 package top.niunaijun.blackbox.fake.service;
 
+import android.util.Log;
+
 import java.lang.reflect.Method;
 
 import black.android.os.BRServiceManager;
@@ -29,6 +31,16 @@ public class ITelephonyRegistryProxy extends BinderInvocationStub {
     @Override
     public boolean isBadEnv() {
         return false;
+    }
+
+    @Override
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        MethodParameterUtils.replaceAllAppPkg(args);
+        AttributionSourceUtils.fixAttributionSourceInArgs(args);
+        if (method.getName().contains("ubscription")) {
+            Log.i("ITelephonyRegistryProxy", method.getName());
+        }
+        return super.invoke(proxy, method, args);
     }
 
     @ProxyMethod("listenForSubscriber")

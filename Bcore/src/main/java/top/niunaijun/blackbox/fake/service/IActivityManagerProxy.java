@@ -780,7 +780,9 @@ public class IActivityManagerProxy extends ClassInvocationStub {
             MethodParameterUtils.replaceLastUid(args);
             String permission = (String) args[0];
             if (permission.equals(Manifest.permission.ACCOUNT_MANAGER)
-                    || permission.equals(Manifest.permission.SEND_SMS)) {
+                    || permission.equals(Manifest.permission.SEND_SMS)
+                    || permission.equals(Manifest.permission.READ_PHONE_STATE)
+                    || permission.equals(Manifest.permission.READ_PHONE_NUMBERS)) {
                 return PackageManager.PERMISSION_GRANTED;
             }
             
@@ -796,6 +798,21 @@ public class IActivityManagerProxy extends ClassInvocationStub {
                 return PackageManager.PERMISSION_GRANTED;
             }
             
+            return method.invoke(who, args);
+        }
+    }
+
+    @ProxyMethod("checkPermissionForDevice")
+    public static class CheckPermissionForDevice extends MethodHook {
+        @Override
+        protected Object hook(Object who, Method method, Object[] args) throws Throwable {
+            String permission = (String) args[0];
+            if (Manifest.permission.READ_PHONE_STATE.equals(permission)
+                    || Manifest.permission.READ_PHONE_NUMBERS.equals(permission)) {
+                Object real = method.invoke(who, args);
+                android.util.Log.i("PhonePerm", permission + " real=" + real);
+                return PackageManager.PERMISSION_GRANTED;
+            }
             return method.invoke(who, args);
         }
     }

@@ -2,6 +2,8 @@ package top.niunaijun.blackbox.fake.service;
 
 import android.content.pm.PackageManager;
 
+import java.lang.reflect.Method;
+
 import black.android.app.BRActivityThread;
 import black.android.app.BRContextImpl;
 import black.android.os.BRServiceManager;
@@ -36,6 +38,30 @@ public class IPermissionManagerProxy extends BinderInvocationStub {
     }
 
     @Override
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        Class<?> returnType = method.getReturnType();
+        if ((returnType == int.class || returnType == Integer.class)
+                && method.getName().startsWith("check")
+                && grantsPhoneState(args)) {
+            return PackageManager.PERMISSION_GRANTED;
+        }
+        return super.invoke(proxy, method, args);
+    }
+
+    private static boolean grantsPhoneState(Object[] args) {
+        if (args == null) {
+            return false;
+        }
+        for (Object arg : args) {
+            if ("android.permission.READ_PHONE_STATE".equals(arg)
+                    || "android.permission.READ_PHONE_NUMBERS".equals(arg)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
     protected void onBindMethod() {
         super.onBindMethod();
         addMethodHook(new ValueMethodProxy("addPermissionAsync", true));
@@ -45,7 +71,7 @@ public class IPermissionManagerProxy extends BinderInvocationStub {
         addMethodHook(new ValueMethodProxy("performDexOptSecondary", true));
         addMethodHook(new ValueMethodProxy("addOnPermissionsChangeListener", 0));
         addMethodHook(new ValueMethodProxy("removeOnPermissionsChangeListener", 0));
-        addMethodHook(new ValueMethodProxy("checkDeviceIdentifierAccess", false));
+        addMethodHook(new ValueMethodProxy("checkDeviceIdentifierAccess", true));
         addMethodHook(new PkgMethodProxy("shouldShowRequestPermissionRationale"));
         if (BuildCompat.isOreo()) {
             addMethodHook(new ValueMethodProxy("notifyDexLoad", 0));
