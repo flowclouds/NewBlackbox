@@ -79,7 +79,35 @@ static void *hook_dlopen_ext(const char *filename, int flags, const void *info) 
 
 `hook_ssl_write(ssl, buf, num)` 的 `buf` 是明文。请求行加 `Host` 头拼出 `https://host/path`。一次 `SSL_write` 没写完请求行时会漏。so 换版本后偏移失效，靠开头指令跳过。不要再挂钩 `dlopen`，之前那样会把进程打崩。
 
-只做 Java、不挂 native 时，同一个 `beforeCreateApplication` 里写就行，不必再加 so。
+### Java
+
+容器的 Java 入口也是上面的 `AppLifecycleCallback`。`beforeCreateApplication`、`beforeApplicationOnCreate`、`afterApplicationOnCreate` 由 `BActivityThread` 调用。活动恢复由容器的 `Instrumentation` 转发。这里不要写某个应用的功能。
+
+自己的实现单独一个类。在 `beforeApplicationOnCreate` 里调用它，先看包名，再注册到这个访客的 `Application` 上。这样只有目标应用会走到你的回调。bKash 的 `Application` 是 `com.example.first.flutter.bkash.bkashnext.MainApplication`。
+
+```kotlin
+fun install(packageName: String?, application: Application?) {
+    if (packageName != "com.bKash.customerapp" || application == null) return
+    application.registerActivityLifecycleCallbacks(object : Application.ActivityLifecycleCallbacks {
+        override fun onActivityResumed(activity: Activity) {
+            if (activity.javaClass.name != "com.bKash.customerapp.MainActivity") return
+            AlertDialog.Builder(activity)
+                .setTitle("bKash hook")
+                .setMessage("挂在 ${application.javaClass.name}")
+                .setPositiveButton("知道了", null)
+                .show()
+        }
+        override fun onActivityCreated(a: Activity, s: Bundle?) {}
+        override fun onActivityStarted(a: Activity) {}
+        override fun onActivityPaused(a: Activity) {}
+        override fun onActivityStopped(a: Activity) {}
+        override fun onActivitySaveInstanceState(a: Activity, s: Bundle) {}
+        override fun onActivityDestroyed(a: Activity) {}
+    })
+}
+```
+
+弹窗是使用方自己的 `AlertDialog`，画在访客主页上。同一个 `MainActivity` 会多次 `onResume`，用 `decorView` 的 tag 挡一下，避免重复弹出。
 
 ## Requirements
 
