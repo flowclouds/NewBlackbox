@@ -75,6 +75,7 @@ import top.niunaijun.blackbox.fake.service.IStorageManagerProxy;
 import top.niunaijun.blackbox.fake.service.IStorageStatsManagerProxy;
 import top.niunaijun.blackbox.fake.service.ISystemUpdateProxy;
 import top.niunaijun.blackbox.fake.service.ITelephonyManagerProxy;
+import top.niunaijun.blackbox.fake.service.ISubProxy;
 import top.niunaijun.blackbox.fake.service.ITelephonyRegistryProxy;
 import top.niunaijun.blackbox.fake.service.IUserManagerProxy;
 import top.niunaijun.blackbox.fake.service.IVibratorServiceProxy;
@@ -111,6 +112,7 @@ public class HookManager {
             addInjector(new IActivityManagerProxy());
             addInjector(new IPackageManagerProxy());
             addInjector(new ITelephonyManagerProxy());
+            addInjector(new ISubProxy());
             addInjector(new HCallbackProxy());
             addInjector(new IAppOpsManagerProxy());
             addInjector(new INotificationManagerProxy());

@@ -34,6 +34,8 @@ class MainActivity : LoadingActivity() {
     companion object {
         private const val TAG = "MainActivity"
         private const val STORAGE_PERMISSION_REQUEST_CODE = 1001
+        private const val GET_INSTALLED_APPS = "com.android.permission.GET_INSTALLED_APPS"
+        private const val READ_PHONE_NUMBERS = android.Manifest.permission.READ_PHONE_NUMBERS
 
         fun start(context: Context) {
             val intent = Intent(context, MainActivity::class.java)
@@ -59,6 +61,9 @@ class MainActivity : LoadingActivity() {
 
             
             checkStoragePermission()
+            if (hasStoragePermission()) {
+                requestInstalledAppsPermission()
+            }
 
             try {
                 BlackBoxCore.get().onAfterMainActivityOnCreate(this)
@@ -131,10 +136,53 @@ class MainActivity : LoadingActivity() {
                             }
             ) {
                 Log.d(TAG, "Storage permissions granted")
+                requestInstalledAppsPermission()
             } else {
                 Log.w(TAG, "Storage permissions denied")
             }
         }
+    }
+
+    private fun hasStoragePermission(): Boolean {
+        return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+            android.os.Environment.isExternalStorageManager()
+        } else {
+            androidx.core.content.ContextCompat.checkSelfPermission(
+                    this,
+                    android.Manifest.permission.READ_EXTERNAL_STORAGE
+            ) == android.content.pm.PackageManager.PERMISSION_GRANTED &&
+                    androidx.core.content.ContextCompat.checkSelfPermission(
+                            this,
+                            android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    ) == android.content.pm.PackageManager.PERMISSION_GRANTED
+        }
+    }
+
+    private val installedAppsPermission =
+            registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { result ->
+                Log.d(TAG, "runtime permissions=$result")
+            }
+
+    private fun requestInstalledAppsPermission() {
+        val missing = mutableListOf<String>()
+        try {
+            packageManager.getPermissionInfo(GET_INSTALLED_APPS, 0)
+            if (androidx.core.content.ContextCompat.checkSelfPermission(this, GET_INSTALLED_APPS) !=
+                            android.content.pm.PackageManager.PERMISSION_GRANTED
+            ) {
+                missing.add(GET_INSTALLED_APPS)
+            }
+        } catch (e: android.content.pm.PackageManager.NameNotFoundException) {
+        }
+        if (androidx.core.content.ContextCompat.checkSelfPermission(this, READ_PHONE_NUMBERS) !=
+                        android.content.pm.PackageManager.PERMISSION_GRANTED
+        ) {
+            missing.add(READ_PHONE_NUMBERS)
+        }
+        if (missing.isEmpty()) {
+            return
+        }
+        installedAppsPermission.launch(missing.toTypedArray())
     }
 
     private fun showStoragePermissionDialog() {
@@ -146,7 +194,10 @@ class MainActivity : LoadingActivity() {
                                 "This app needs 'All Files Access' permission to properly run sandboxed apps. Without this permission, some apps may not work correctly.\n\nPlease grant permission in the next screen."
                 )
                 positiveButton(text = "Grant Permission") { openAllFilesAccessSettings() }
-                negativeButton(text = "Later") { Log.w(TAG, "User postponed storage permission") }
+                negativeButton(text = "Later") {
+                    Log.w(TAG, "User postponed storage permission")
+                    requestInstalledAppsPermission()
+                }
                 cancelable(false)
             }
         } catch (e: Exception) {
@@ -187,6 +238,7 @@ class MainActivity : LoadingActivity() {
                         } else {
                             Log.w(TAG, "Storage permission still not granted")
                         }
+                        requestInstalledAppsPermission()
                     }
                 } catch (e: Exception) {
                     Log.e(TAG, "Error handling storage permission result: ${e.message}")

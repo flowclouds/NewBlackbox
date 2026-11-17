@@ -3,6 +3,7 @@ package top.niunaijun.blackbox.utils;
 import top.niunaijun.blackbox.BlackBoxCore;
 import top.niunaijun.blackbox.app.BActivityThread;
 import top.niunaijun.blackbox.utils.Slog;
+import top.niunaijun.blackbox.utils.compat.ContextCompat;
 
 
 public class AttributionSourceUtils {
@@ -16,8 +17,8 @@ public class AttributionSourceUtils {
             Object arg = args[i];
             if (arg != null && arg.getClass().getName().contains("AttributionSource")) {
                 try {
+                    ContextCompat.fixAttributionSourceState(arg, BlackBoxCore.getHostUid());
                     fixAttributionSourceUid(arg);
-                    Slog.d(TAG, "Fixed AttributionSource UID in method arguments");
                 } catch (Exception e) {
                     Slog.w(TAG, "Failed to fix AttributionSource in args: " + e.getMessage());
                 }

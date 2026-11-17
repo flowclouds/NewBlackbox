@@ -7,6 +7,7 @@ import black.com.android.internal.telephony.BRITelephonyRegistryStub;
 import top.niunaijun.blackbox.fake.hook.BinderInvocationStub;
 import top.niunaijun.blackbox.fake.hook.MethodHook;
 import top.niunaijun.blackbox.fake.hook.ProxyMethod;
+import top.niunaijun.blackbox.utils.AttributionSourceUtils;
 import top.niunaijun.blackbox.utils.MethodParameterUtils;
 
 
@@ -36,6 +37,7 @@ public class ITelephonyRegistryProxy extends BinderInvocationStub {
         @Override
         protected Object hook(Object who, Method method, Object[] args) throws Throwable {
             MethodParameterUtils.replaceFirstAppPkg(args);
+            AttributionSourceUtils.fixAttributionSourceInArgs(args);
             return method.invoke(who, args);
         }
     }
@@ -46,6 +48,7 @@ public class ITelephonyRegistryProxy extends BinderInvocationStub {
         @Override
         protected Object hook(Object who, Method method, Object[] args) throws Throwable {
             MethodParameterUtils.replaceFirstAppPkg(args);
+            AttributionSourceUtils.fixAttributionSourceInArgs(args);
             return method.invoke(who, args);
         }
     }

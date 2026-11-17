@@ -11,14 +11,14 @@ import java.util.List;
 
 import black.android.os.BRServiceManager;
 import black.com.android.internal.telephony.BRITelephonyStub;
-import top.niunaijun.blackbox.BlackBoxCore;
 import top.niunaijun.blackbox.app.BActivityThread;
 import top.niunaijun.blackbox.entity.location.BCell;
 import top.niunaijun.blackbox.fake.frameworks.BLocationManager;
 import top.niunaijun.blackbox.fake.hook.BinderInvocationStub;
 import top.niunaijun.blackbox.fake.hook.MethodHook;
 import top.niunaijun.blackbox.fake.hook.ProxyMethod;
-import top.niunaijun.blackbox.utils.Md5Utils;
+import top.niunaijun.blackbox.utils.AttributionSourceUtils;
+import top.niunaijun.blackbox.utils.MethodParameterUtils;
 
 
 public class ITelephonyManagerProxy extends BinderInvocationStub {
@@ -44,34 +44,11 @@ public class ITelephonyManagerProxy extends BinderInvocationStub {
         return false;
     }
 
-    @ProxyMethod("getDeviceId")
-    public static class GetDeviceId extends MethodHook {
-        @Override
-        protected Object hook(Object who, Method method, Object[] args) throws Throwable {
-
-
-            return Md5Utils.md5(BlackBoxCore.getHostPkg());
-        }
-    }
-
-    @ProxyMethod("getImeiForSlot")
-    public static class getImeiForSlot extends MethodHook {
-        @Override
-        protected Object hook(Object who, Method method, Object[] args) throws Throwable {
-
-
-            return Md5Utils.md5(BlackBoxCore.getHostPkg());
-        }
-    }
-
-    @ProxyMethod("getMeidForSlot")
-    public static class GetMeidForSlot extends MethodHook {
-        @Override
-        protected Object hook(Object who, Method method, Object[] args) throws Throwable {
-
-
-            return Md5Utils.md5(BlackBoxCore.getHostPkg());
-        }
+    @Override
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        MethodParameterUtils.replaceFirstAppPkg(args);
+        AttributionSourceUtils.fixAttributionSourceInArgs(args);
+        return super.invoke(proxy, method, args);
     }
 
     @ProxyMethod("isUserDataEnabled")
@@ -82,30 +59,6 @@ public class ITelephonyManagerProxy extends BinderInvocationStub {
         }
     }
 
-
-    @ProxyMethod("getLine1NumberForDisplay")
-    public static class getLine1NumberForDisplay extends MethodHook {
-        @Override
-        protected Object hook(Object who, Method method, Object[] args) throws Throwable {
-            return null;
-        }
-    }
-
-    @ProxyMethod("getSubscriberId")
-    public static class GetSubscriberId extends MethodHook {
-        @Override
-        protected Object hook(Object who, Method method, Object[] args) throws Throwable {
-            return Md5Utils.md5(BlackBoxCore.getHostPkg());
-        }
-    }
-
-    @ProxyMethod("getDeviceIdWithFeature")
-    public static class GetDeviceIdWithFeature extends MethodHook {
-        @Override
-        protected Object hook(Object who, Method method, Object[] args) throws Throwable {
-            return Md5Utils.md5(BlackBoxCore.getHostPkg());
-        }
-    }
 
     @ProxyMethod("getCellLocation")
     public static class GetCellLocation extends MethodHook {

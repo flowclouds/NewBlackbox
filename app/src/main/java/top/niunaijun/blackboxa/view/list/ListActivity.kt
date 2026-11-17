@@ -30,6 +30,15 @@ class ListActivity : BaseActivity() {
 
     private var appList: List<InstalledAppBean> = ArrayList()
 
+    private var userID = 0
+
+    private val installedAppsPermission =
+            registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+                if (granted) {
+                    viewModel.getInstallAppList(userID)
+                }
+            }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(viewBinding.root)
@@ -83,8 +92,12 @@ class ListActivity : BaseActivity() {
         viewModel =
                 ViewModelProvider(this, InjectionUtil.getListFactory())
                         .get(ListViewModel::class.java)
-        val userID = intent.getIntExtra("userID", 0)
-        viewModel.getInstallAppList(userID)
+        userID = intent.getIntExtra("userID", 0)
+        if (needsInstalledAppsPermission()) {
+            installedAppsPermission.launch(GET_INSTALLED_APPS)
+        } else {
+            viewModel.getInstallAppList(userID)
+        }
         viewBinding.toolbarLayout.toolbar.setTitle(R.string.installed_app)
 
         viewModel.loadingLiveData.observe(this) {
@@ -154,7 +167,19 @@ class ListActivity : BaseActivity() {
         viewModel.appsLiveData.removeObservers(this)
     }
 
+    private fun needsInstalledAppsPermission(): Boolean {
+        return try {
+            packageManager.getPermissionInfo(GET_INSTALLED_APPS, 0)
+            androidx.core.content.ContextCompat.checkSelfPermission(this, GET_INSTALLED_APPS) !=
+                    android.content.pm.PackageManager.PERMISSION_GRANTED
+        } catch (e: android.content.pm.PackageManager.NameNotFoundException) {
+            false
+        }
+    }
+
     companion object {
+        private const val GET_INSTALLED_APPS = "com.android.permission.GET_INSTALLED_APPS"
+
         fun start(context: Context) {
             val intent = Intent(context, ListActivity::class.java)
             context.startActivity(intent)
