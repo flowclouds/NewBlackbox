@@ -4,6 +4,7 @@
 
 #include "BoxCore.h"
 #include "Log.h"
+#include "Obf.h"
 #include "IO.h"
 #include <jni.h>
 #include <JniHook/JniHook.h>
@@ -82,14 +83,16 @@ void nativeHook(JNIEnv *env) {
 void init(JNIEnv *env, jobject clazz, jint api_level) {
     ALOGD("NativeCore init.");
     VMEnv.api_level = api_level;
-    VMEnv.NativeCoreClass = (jclass) env->NewGlobalRef(env->FindClass(VMCORE_CLASS));
-    VMEnv.getCallingUidId = env->GetStaticMethodID(VMEnv.NativeCoreClass, "getCallingUid", "(I)I");
-    VMEnv.redirectPathString = env->GetStaticMethodID(VMEnv.NativeCoreClass, "redirectPath",
-                                                      "(Ljava/lang/String;)Ljava/lang/String;");
-    VMEnv.redirectPathFile = env->GetStaticMethodID(VMEnv.NativeCoreClass, "redirectPath",
-                                                    "(Ljava/io/File;)Ljava/io/File;");
-    VMEnv.loadEmptyDex = env->GetStaticMethodID(VMEnv.NativeCoreClass, "loadEmptyDex",
-                                                "()[J");
+    auto core = OBF(24);
+    auto redirect = OBF(25);
+    VMEnv.NativeCoreClass = (jclass) env->NewGlobalRef(env->FindClass(core.c_str()));
+    VMEnv.getCallingUidId = env->GetStaticMethodID(VMEnv.NativeCoreClass, OBF_C(9), OBF_C(10));
+    VMEnv.redirectPathString = env->GetStaticMethodID(VMEnv.NativeCoreClass, redirect.c_str(),
+                                                      OBF_C(11));
+    VMEnv.redirectPathFile = env->GetStaticMethodID(VMEnv.NativeCoreClass, redirect.c_str(),
+                                                    OBF_C(12));
+    VMEnv.loadEmptyDex = env->GetStaticMethodID(VMEnv.NativeCoreClass, OBF_C(13),
+                                                OBF_C(14));
 
     JniHook::InitJniHook(env, api_level);
 }
@@ -126,11 +129,11 @@ bool disableResourceLoading(JNIEnv *env, jclass clazz) {
 }
 
 static JNINativeMethod gMethods[] = {
-        {"disableHiddenApi", "()Z",                               (void *) disableHiddenApi},
-        {"disableResourceLoading", "()Z",                         (void *) disableResourceLoading},
-        {"addIORule",  "(Ljava/lang/String;Ljava/lang/String;)V", (void *) addIORule},
-        {"enableIO",   "()V",                                     (void *) enableIO},
-        {"init",       "(I)V",                                    (void *) init},
+        {OBF_C(15), OBF_C(16),                               (void *) disableHiddenApi},
+        {OBF_C(17), OBF_C(16),                         (void *) disableResourceLoading},
+        {OBF_C(18),  OBF_C(19), (void *) addIORule},
+        {OBF_C(20),   OBF_C(21),                                     (void *) enableIO},
+        {OBF_C(22),       OBF_C(23),                                    (void *) init},
 };
 
 int registerNativeMethods(JNIEnv *env, const char *className,
@@ -147,7 +150,7 @@ int registerNativeMethods(JNIEnv *env, const char *className,
 }
 
 int registerNatives(JNIEnv *env) {
-    if (!registerNativeMethods(env, VMCORE_CLASS, gMethods,
+    if (!registerNativeMethods(env, OBF_C(24), gMethods,
                                sizeof(gMethods) / sizeof(gMethods[0])))
         return JNI_FALSE;
     return JNI_TRUE;

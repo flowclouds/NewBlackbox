@@ -4,6 +4,7 @@
 
 #include "IO.h"
 #include "Log.h"
+#include "Obf.h"
 
 jmethodID getAbsolutePathMethodId;
 
@@ -74,7 +75,7 @@ const char *IO::redirectPath(const char *__path) {
     list<IO::RelocateInfo>::iterator iterator;
     for (iterator = relocate_rule.begin(); iterator != relocate_rule.end(); ++iterator) {
         IO::RelocateInfo info = *iterator;
-        if (strstr(__path, info.targetPath) && !strstr(__path, "/box/")) {
+        if (strstr(__path, info.targetPath) && !strstr(__path, OBF_C(38))) {
             char *ret = replace(__path, info.targetPath, info.relocatePath);
             
             return ret;
@@ -109,6 +110,6 @@ void IO::addRule(const char *targetPath, const char *relocatePath) {
 }
 
 void IO::init(JNIEnv *env) {
-    jclass tmpFile = env->FindClass("java/io/File");
-    getAbsolutePathMethodId = env->GetMethodID(tmpFile, "getAbsolutePath", "()Ljava/lang/String;");
+    jclass tmpFile = env->FindClass(OBF_C(39));
+    getAbsolutePathMethodId = env->GetMethodID(tmpFile, OBF_C(40), OBF_C(41));
 }

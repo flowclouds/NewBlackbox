@@ -32,11 +32,16 @@
 #include "xdl_iterate.h"
 #include "xdl_util.h"
 
-#define XDL_LINKER_SYM_MUTEX           "__dl__ZL10g_dl_mutex"
-#define XDL_LINKER_SYM_DLOPEN_EXT_N    "__dl__ZL10dlopen_extPKciPK17android_dlextinfoPv"
-#define XDL_LINKER_SYM_DO_DLOPEN_N     "__dl__Z9do_dlopenPKciPK17android_dlextinfoPv"
-#define XDL_LINKER_SYM_DLOPEN_O        "__dl__Z8__dlopenPKciPKv"
-#define XDL_LINKER_SYM_LOADER_DLOPEN_P "__loader_dlopen"
+const char *obf_sym_mutex(void);
+const char *obf_sym_dlopen_ext(void);
+const char *obf_sym_do_dlopen(void);
+const char *obf_sym_dlopen_o(void);
+const char *obf_sym_loader_dlopen(void);
+#define XDL_LINKER_SYM_MUTEX           obf_sym_mutex()
+#define XDL_LINKER_SYM_DLOPEN_EXT_N    obf_sym_dlopen_ext()
+#define XDL_LINKER_SYM_DO_DLOPEN_N     obf_sym_do_dlopen()
+#define XDL_LINKER_SYM_DLOPEN_O        obf_sym_dlopen_o()
+#define XDL_LINKER_SYM_LOADER_DLOPEN_P obf_sym_loader_dlopen()
 
 #ifndef __LP64__
 #define LIB "lib"
@@ -68,8 +73,8 @@ typedef struct {
 
 
 
-static xdl_linker_match_t xdl_linker_match_default[] = {{MATCH_SUFFIX, "/libc.so"}};
-static xdl_linker_match_t xdl_linker_match_art[] = {{MATCH_SUFFIX, "/libart.so"}};
+static xdl_linker_match_t xdl_linker_match_default[] = {{MATCH_SUFFIX, NULL}};
+static xdl_linker_match_t xdl_linker_match_art[] = {{MATCH_SUFFIX, NULL}};
 static xdl_linker_match_t xdl_linker_match_sphal[] = {{MATCH_PREFIX, "/vendor/" LIB "/egl/"},
                                                       {MATCH_PREFIX, "/vendor/" LIB "/hw/"},
                                                       {MATCH_PREFIX, "/vendor/" LIB "/"},
@@ -152,8 +157,13 @@ static void xdl_linker_save_caller_addr(struct dl_phdr_info *info, xdl_linker_ca
   }
 }
 
+const char *obf_suffix_libc(void);
+const char *obf_suffix_libart(void);
+
 static int xdl_linker_get_caller_addr_cb(struct dl_phdr_info *info, size_t size, void *arg) {
   (void)size, (void)arg;
+  xdl_linker_match_default[0].value = obf_suffix_libc();
+  xdl_linker_match_art[0].value = obf_suffix_libart();
   if (0 == info->dlpi_addr || NULL == info->dlpi_name) return 0;  
 
   int ret = 1;  

@@ -7,8 +7,6 @@
 
 #include <jni.h>
 
-#define VMCORE_CLASS "com/tm/box/core/NativeCore"
-
 class BoxCore {
 public:
     static JavaVM *getJavaVM();

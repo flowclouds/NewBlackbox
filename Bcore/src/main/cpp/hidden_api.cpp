@@ -5,6 +5,7 @@
 #include "hidden_api.h"
 #include "Utils/elf_util.h"
 #include "Log.h"
+#include "Obf.h"
 
 bool disable_hidden_api(JNIEnv *env) {
     char version_str[PROP_VALUE_MAX];
@@ -20,7 +21,7 @@ bool disable_hidden_api(JNIEnv *env) {
         return true;
     }
 
-    SandHook::ElfImg *elf_img = new SandHook::ElfImg("libart.so");
+    SandHook::ElfImg *elf_img = new SandHook::ElfImg(OBF_C(0));
     if (!elf_img->isValid()) {
         ALOGE("HiddenAPI: Failed to load libart.so");
         delete elf_img;
@@ -30,9 +31,9 @@ bool disable_hidden_api(JNIEnv *env) {
     
     void *addr = nullptr;
     const char* symbol_names[] = {
-        "_ZN3artL32VMRuntime_setHiddenApiExemptionsEP7_JNIEnvP7_jclassP13_jobjectArray",
-        "_ZN3art9VMRuntime22setHiddenApiExemptionsEP7_JNIEnvP7_jclassP13_jobjectArray",
-        "art::VMRuntime::setHiddenApiExemptions(_JNIEnv*, _jclass*, _jobjectArray*)",
+        OBF_C(1),
+        OBF_C(2),
+        OBF_C(3),
         nullptr
     };
 
@@ -51,7 +52,7 @@ bool disable_hidden_api(JNIEnv *env) {
         return false;
     }
 
-    jclass stringClass = env->FindClass("java/lang/String");
+    jclass stringClass = env->FindClass(OBF_C(4));
     if (!stringClass) {
         ALOGE("HiddenAPI: Failed to find String class");
         return false;
@@ -81,10 +82,10 @@ bool disable_resource_loading() {
     
     try {
         
-        void* handle = xdl_open("libandroid_runtime.so", XDL_DEFAULT);
+        void* handle = xdl_open(OBF_C(5), XDL_DEFAULT);
         if (handle) {
             
-            void* nativeLoadAddr = xdl_sym(handle, "_ZN7android8ApkAssets9nativeLoadEPKc", nullptr);
+            void* nativeLoadAddr = xdl_sym(handle, OBF_C(6), nullptr);
             if (nativeLoadAddr) {
                 ALOGD("ResourceLoading: Found ApkAssets.nativeLoad at %p", nativeLoadAddr);
                 
@@ -102,10 +103,10 @@ bool disable_resource_loading() {
     
     try {
         
-        void* handle = xdl_open("libc.so", XDL_DEFAULT);
+        void* handle = xdl_open(OBF_C(7), XDL_DEFAULT);
         if (handle) {
             
-            void* openAddr = xdl_sym(handle, "open", nullptr);
+            void* openAddr = xdl_sym(handle, OBF_C(8), nullptr);
             if (openAddr) {
                 ALOGD("ResourceLoading: Found open function at %p", openAddr);
                 

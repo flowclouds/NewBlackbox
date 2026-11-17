@@ -6,6 +6,7 @@
 #include "UnixFileSystemHook.h"
 #import "JniHook/JniHook.h"
 #include "BaseHook.h"
+#include "Obf.h"
 
 
 HOOK_JNI(jstring, canonicalize0, JNIEnv *env, jobject obj, jstring path) {
@@ -69,11 +70,11 @@ HOOK_JNI(jboolean, getSpace0, JNIEnv *env, jobject obj, jobject file, jint t) {
 }
 
 void UnixFileSystemHook::init(JNIEnv *env) {
-    const char *className = "java/io/UnixFileSystem";
+    auto className = OBF(148);
     
     
     try {
-        JniHook::HookJniFun(env, className, "canonicalize0", "(Ljava/lang/String;)Ljava/lang/String;",
+        JniHook::HookJniFun(env, className.c_str(), OBF(149).c_str(), OBF(11).c_str(),
                             (void *) new_canonicalize0, (void **) (&orig_canonicalize0), false);
     } catch (...) {
         ALOGD("UnixFileSystemHook: Failed to hook canonicalize0, continuing without it");
@@ -85,7 +86,7 @@ void UnixFileSystemHook::init(JNIEnv *env) {
     
     
     try {
-        JniHook::HookJniFun(env, className, "getLastModifiedTime0", "(Ljava/io/File;)J",
+        JniHook::HookJniFun(env, className.c_str(), OBF(150).c_str(), OBF(151).c_str(),
                             (void *) new_getLastModifiedTime0, (void **) (&orig_getLastModifiedTime0),
                             false);
     } catch (...) {
@@ -93,14 +94,14 @@ void UnixFileSystemHook::init(JNIEnv *env) {
     }
     
     try {
-        JniHook::HookJniFun(env, className, "setPermission0", "(Ljava/io/File;IZZ)Z",
+        JniHook::HookJniFun(env, className.c_str(), OBF(152).c_str(), OBF(153).c_str(),
                             (void *) new_setPermission0, (void **) (&orig_setPermission0), false);
     } catch (...) {
         ALOGD("UnixFileSystemHook: Failed to hook setPermission0, continuing without it");
     }
     
     try {
-        JniHook::HookJniFun(env, className, "createFileExclusively0", "(Ljava/lang/String;)Z",
+        JniHook::HookJniFun(env, className.c_str(), OBF(154).c_str(), OBF(155).c_str(),
                             (void *) new_createFileExclusively0,
                             (void **) (&orig_createFileExclusively0), false);
     } catch (...) {
@@ -108,21 +109,21 @@ void UnixFileSystemHook::init(JNIEnv *env) {
     }
     
     try {
-        JniHook::HookJniFun(env, className, "list0", "(Ljava/io/File;)[Ljava/lang/String;",
+        JniHook::HookJniFun(env, className.c_str(), OBF(156).c_str(), OBF(157).c_str(),
                             (void *) new_list0, (void **) (&orig_list0), false);
     } catch (...) {
         ALOGD("UnixFileSystemHook: Failed to hook list0, continuing without it");
     }
     
     try {
-        JniHook::HookJniFun(env, className, "createDirectory0", "(Ljava/io/File;)Z",
+        JniHook::HookJniFun(env, className.c_str(), OBF(158).c_str(), OBF(159).c_str(),
                             (void *) new_createDirectory0, (void **) (&orig_createDirectory0), false);
     } catch (...) {
         ALOGD("UnixFileSystemHook: Failed to hook createDirectory0, continuing without it");
     }
     
     try {
-        JniHook::HookJniFun(env, className, "setLastModifiedTime0", "(Ljava/io/File;J)Z",
+        JniHook::HookJniFun(env, className.c_str(), OBF(160).c_str(), OBF(161).c_str(),
                             (void *) new_setLastModifiedTime0, (void **) (&orig_setLastModifiedTime0),
                             false);
     } catch (...) {
@@ -130,14 +131,14 @@ void UnixFileSystemHook::init(JNIEnv *env) {
     }
     
     try {
-        JniHook::HookJniFun(env, className, "setReadOnly0", "(Ljava/io/File;)Z",
+        JniHook::HookJniFun(env, className.c_str(), OBF(162).c_str(), OBF(159).c_str(),
                             (void *) new_setReadOnly0, (void **) (&orig_setReadOnly0), false);
     } catch (...) {
         ALOGD("UnixFileSystemHook: Failed to hook setReadOnly0, continuing without it");
     }
     
     try {
-        JniHook::HookJniFun(env, className, "getSpace0", "(Ljava/io/File;I)J",
+        JniHook::HookJniFun(env, className.c_str(), OBF(163).c_str(), OBF(164).c_str(),
                             (void *) new_getSpace0, (void **) (&orig_getSpace0), false);
     } catch (...) {
         ALOGD("UnixFileSystemHook: Failed to hook getSpace0, continuing without it");

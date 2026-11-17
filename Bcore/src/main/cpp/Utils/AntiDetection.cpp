@@ -8,6 +8,7 @@
 #include <dirent.h>
 #include "Dobby/dobby.h"
 #include "xdl.h"
+#include "Obf.h"
 
 #define LOG_TAG "AntiDetection"
 #ifdef SDK_RELEASE
@@ -30,91 +31,91 @@ static int (*orig_system_property_get)(const char *name, char *value) = nullptr;
 
 static const char* blocked_files[] = {
     
-    "/system/xbin/su",
-    "/system/bin/su",
-    "/sbin/su",
-    "/system/app/Superuser.apk",
-    "/system/app/SuperSU.apk",
-    "/system/etc/init.d/99SuperSUDaemon",
-    "/system/xbin/daemonsu",
-    "/system/xbin/sugote",
-    "/system/bin/sugote-mksh",
-    "/system/xbin/sugote-mksh",
-    "/data/local/xbin/su",
-    "/data/local/bin/su",
-    "/data/local/tmp/su",
-    "/system/bin/magisk",
-    "/system/xbin/magisk",
-    "/sbin/magisk",
-    "/data/adb/magisk",
+    OBF_C(42),
+    OBF_C(43),
+    OBF_C(44),
+    OBF_C(45),
+    OBF_C(46),
+    OBF_C(47),
+    OBF_C(48),
+    OBF_C(49),
+    OBF_C(50),
+    OBF_C(51),
+    OBF_C(52),
+    OBF_C(53),
+    OBF_C(54),
+    OBF_C(55),
+    OBF_C(56),
+    OBF_C(57),
+    OBF_C(58),
     
     
-    "/data/virtual",
-    "/data/data/com.benny.openlauncher",
-    "/data/data/io.va.exposed",
-    "/data/data/com.lody.virtual",
-    "/data/data/com.excelliance.dualaid",
-    "/data/data/com.lbe.parallel",
-    "/data/data/com.dual.dualspace",
-    "/data/data/com.ludashi.superboost",
-    "/data/data/com.tm.box.sample",
-    "/box",
-    "/blackbox",
-    "/virtual",
+    OBF_C(59),
+    OBF_C(60),
+    OBF_C(61),
+    OBF_C(62),
+    OBF_C(63),
+    OBF_C(64),
+    OBF_C(65),
+    OBF_C(66),
+    OBF_C(67),
+    OBF_C(68),
+    OBF_C(69),
+    OBF_C(70),
     
     
-    "/dev/vboxguest",
-    "/dev/vboxuser",
-    "/dev/qemu_pipe",
-    "/dev/goldfish_pipe",
-    "/dev/socket/qemud",
-    "/dev/socket/baseband_genyd",
-    "/dev/socket/genyd",
-    "/system/lib/libc_malloc_debug_qemu.so",
-    "/sys/qemu_trace",
-    "/system/bin/qemu-props",
-    "/system/bin/nox-prop",
-    "/sys/module/goldfish_audio",
-    "/sys/module/goldfish_sync",
-    "/proc/tty/drivers/goldfish",
-    "/dev/goldfish_events",
-    "/system/lib/libdroid4x.so",
-    "/system/bin/windroyed",
-    "/system/lib/libnoxspeedup.so",
-    "/system/lib/libmemu.so",
-    "/system/lib/libbluelog.so",
+    OBF_C(71),
+    OBF_C(72),
+    OBF_C(73),
+    OBF_C(74),
+    OBF_C(75),
+    OBF_C(76),
+    OBF_C(77),
+    OBF_C(78),
+    OBF_C(79),
+    OBF_C(80),
+    OBF_C(81),
+    OBF_C(82),
+    OBF_C(83),
+    OBF_C(84),
+    OBF_C(85),
+    OBF_C(86),
+    OBF_C(87),
+    OBF_C(88),
+    OBF_C(89),
+    OBF_C(90),
     
     nullptr
 };
 
 static const char* blocked_packages[] = {
-    "com.noshufou.android.su",
-    "com.noshufou.android.su.elite", 
-    "eu.chainfire.supersu",
-    "com.koushikdutta.superuser",
-    "com.thirdparty.superuser",
-    "com.yellowes.su",
-    "com.koushikdutta.rommanager",
-    "com.koushikdutta.rommanager.license",
-    "com.dimonvideo.luckypatcher",
-    "com.chelpus.lackypatch",
-    "com.ramdroid.appquarantine",
-    "com.ramdroid.appquarantinepro",
-    "com.devadvance.rootcloak",
-    "com.devadvance.rootcloakplus",
-    "com.saurik.substrate",
-    "com.zachspong.temprootremovejb",
-    "com.amphoras.hidemyroot",
-    "com.amphoras.hidemyrootadfree",
-    "com.formyhm.hiderootPremium",
-    "com.formyhm.hideroot",
-    "me.phh.superuser",
-    "eu.chainfire.supersu.pro",
-    "com.kingouser.com",
-    "com.topjohnwu.magisk",
-    "com.lody.virtual",
-    "io.va.exposed",
-    "com.benny.openlauncher",
+    OBF_C(91),
+    OBF_C(92), 
+    OBF_C(93),
+    OBF_C(94),
+    OBF_C(95),
+    OBF_C(96),
+    OBF_C(97),
+    OBF_C(98),
+    OBF_C(99),
+    OBF_C(100),
+    OBF_C(101),
+    OBF_C(102),
+    OBF_C(103),
+    OBF_C(104),
+    OBF_C(105),
+    OBF_C(106),
+    OBF_C(107),
+    OBF_C(108),
+    OBF_C(109),
+    OBF_C(110),
+    OBF_C(111),
+    OBF_C(112),
+    OBF_C(113),
+    OBF_C(114),
+    OBF_C(115),
+    OBF_C(116),
+    OBF_C(117),
     nullptr
 };
 
@@ -151,8 +152,8 @@ static DIR* (*orig_opendir)(const char *name) = nullptr;
 
 static bool is_safe_path(const char* path) {
     if (!path) return false;
-    if (strstr(path, "/proc/net/")) return true;
-    if (strstr(path, "/dev/socket/")) return true;
+    if (strstr(path, OBF_C(118))) return true;
+    if (strstr(path, OBF_C(119))) return true;
     return false;
 }
 
@@ -225,7 +226,7 @@ static DIR* my_opendir(const char *name) {
 
 
 static void install_file_hooks() {
-    void* handle = xdl_open("libc.so", XDL_DEFAULT);
+    void* handle = xdl_open(OBF_C(7), XDL_DEFAULT);
     if (!handle) {
         LOGD("xdl_open failed for libc.so");
         return;

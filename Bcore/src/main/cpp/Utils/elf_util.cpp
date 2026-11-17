@@ -7,6 +7,7 @@
 #include <cassert>
 #include <sys/stat.h>
 #include "../Log.h"
+#include "../Obf.h"
 #include "elf_util.h"
 
 using namespace SandHook;
@@ -243,7 +244,7 @@ bool ElfImg::findModuleBase() {
     char buff[256];
     off_t load_addr;
     bool found = false;
-    FILE *maps = fopen("/proc/self/maps", "r");
+    FILE *maps = fopen(obf_maps(), "r");
 
 
     while (fgets(buff, sizeof(buff), maps)) {

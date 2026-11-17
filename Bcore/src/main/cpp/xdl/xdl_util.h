@@ -28,16 +28,16 @@
 #include <stdbool.h>
 #include <stddef.h>
 
+const char *obf_linker_basename(void);
+const char *obf_linker_pathname(void);
+#define XDL_UTIL_LINKER_BASENAME obf_linker_basename()
+#define XDL_UTIL_LINKER_PATHNAME obf_linker_pathname()
 #ifndef __LP64__
-#define XDL_UTIL_LINKER_BASENAME        "linker"
-#define XDL_UTIL_LINKER_PATHNAME        "/system/bin/linker"
 #define XDL_UTIL_APP_PROCESS_BASENAME   "app_process32"
 #define XDL_UTIL_APP_PROCESS_PATHNAME   "/system/bin/app_process32"
 #define XDL_UTIL_APP_PROCESS_BASENAME_K "app_process"
 #define XDL_UTIL_APP_PROCESS_PATHNAME_K "/system/bin/app_process"
 #else
-#define XDL_UTIL_LINKER_BASENAME      "linker64"
-#define XDL_UTIL_LINKER_PATHNAME      "/system/bin/linker64"
 #define XDL_UTIL_APP_PROCESS_BASENAME "app_process64"
 #define XDL_UTIL_APP_PROCESS_PATHNAME "/system/bin/app_process64"
 #endif
@@ -57,6 +57,7 @@
 extern "C" {
 #endif
 
+const char *obf_maps(void);
 bool xdl_util_starts_with(const char *str, const char *start);
 bool xdl_util_ends_with(const char *str, const char *ending);
 

@@ -4,11 +4,12 @@
 #include "UnixFileSystemHook.h"
 #import "JniHook/JniHook.h"
 #include <sys/stat.h>
+#include "Obf.h"
 
 HOOK_JNI(jobject, openDexFileNative, JNIEnv *env, jobject obj,jstring sourceName, jstring outputName, jint flags,jobject loader, jobject elements) {
     const char *sourceNameC = env->GetStringUTFChars(sourceName, JNI_FALSE);
     ALOGD("openDexFileNative: %s", sourceNameC);
-    if(strstr(sourceNameC,"/box/") != nullptr){
+    if(strstr(sourceNameC, OBF_C(38)) != nullptr){
 
 
 
@@ -23,8 +24,10 @@ HOOK_JNI(jobject, openDexFileNative, JNIEnv *env, jobject obj,jstring sourceName
 
 void DexFileHook::init(JNIEnv *env) {
     if (BoxCore::getApiLevel() >= __ANDROID_API_U__) {
-        const char *clazz = "dalvik/system/DexFile";
-        JniHook::HookJniFun(env, clazz, "openDexFileNative", "(Ljava/lang/String;Ljava/lang/String;ILjava/lang/ClassLoader;[Ldalvik/system/DexPathList$Element;)Ljava/lang/Object;", (void *) new_openDexFileNative,
+        auto clazz = OBF(165);
+        auto name = OBF(166);
+        auto sig = OBF(167);
+        JniHook::HookJniFun(env, clazz.c_str(), name.c_str(), sig.c_str(), (void *) new_openDexFileNative,
                             (void **) (&orig_openDexFileNative), true);
     }
 }

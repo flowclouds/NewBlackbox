@@ -58,7 +58,7 @@ static uintptr_t xdl_iterate_get_min_vaddr(struct dl_phdr_info *info) {
 
 static int xdl_iterate_open_or_rewind_maps(FILE **maps) {
   if (NULL == *maps) {
-    *maps = fopen("/proc/self/maps", "r");
+    *maps = fopen(obf_maps(), "r");
     if (NULL == *maps) return -1;
   } else
     rewind(*maps);
@@ -193,7 +193,7 @@ static int xdl_iterate_by_linker(xdl_iterate_phdr_cb_t cb, void *cb_arg, int fla
 
 #if (defined(__arm__) || defined(__i386__)) && __ANDROID_API__ < __ANDROID_API_L__
 static int xdl_iterate_by_maps(xdl_iterate_phdr_cb_t cb, void *cb_arg) {
-  FILE *maps = fopen("/proc/self/maps", "r");
+  FILE *maps = fopen(obf_maps(), "r");
   if (NULL == maps) return 0;
 
   int r = 0;

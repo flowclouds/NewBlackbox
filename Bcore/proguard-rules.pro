@@ -63,6 +63,7 @@
 -keep class com.tm.box.core.system.**$Stub$Proxy { *; }
 
 -keep class com.tm.box.fake.** { *; }
+-keep class com.tm.box.core.system.user.BUserInfo { *; }
 -keep class android.** { *; }
 -keep class com.android.internal.** { *; }
 

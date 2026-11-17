@@ -3,6 +3,7 @@
 
 
 #include "BinderHook.h"
+#include "Obf.h"
 #include <IO.h>
 #include <BoxCore.h>
 #include "UnixFileSystemHook.h"
@@ -17,7 +18,9 @@ HOOK_JNI(jint, getCallingUid, JNIEnv *env, jobject obj) {
 
 
 void BinderHook::init(JNIEnv *env) {
-    const char *clazz = "android/os/Binder";
-    JniHook::HookJniFun(env, clazz, "getCallingUid", "()I", (void *) new_getCallingUid,
+    auto clazz = OBF(140);
+    auto name = OBF(9);
+    auto sig = OBF(141);
+    JniHook::HookJniFun(env, clazz.c_str(), name.c_str(), sig.c_str(), (void *) new_getCallingUid,
                         (void **) (&orig_getCallingUid), true);
 }

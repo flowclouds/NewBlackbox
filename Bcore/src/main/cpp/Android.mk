@@ -29,7 +29,8 @@ SRC3 := $(wildcard $(LOCAL_PATH)/Hook/*.cpp) $(wildcard $(LOCAL_PATH)/Hook/*.c)
 SRC4 := $(wildcard $(LOCAL_PATH)/JniHook/*.cpp) $(wildcard $(LOCAL_PATH)/JniHook/*.c)
 
 LOCAL_MODULE := tmbox
-LOCAL_SRC_FILES := BoxCore.cpp \
+LOCAL_SRC_FILES := Obf.cpp \
+BoxCore.cpp \
 hidden_api.cpp \
 IO.cpp \
 Utils/elf_util.cpp \
