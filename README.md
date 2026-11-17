@@ -15,15 +15,77 @@ This enhanced edition includes bug fixes, stability improvements, and Android 14
 *   **Virtual App Cloning**: Run multiple instances of applications.
 *   **Sandboxed Environment**: Isolated process execution.
 *   **No Root Required**: Runs entirely in userspace.
-*   **Multi-Architecture**: Support for 32-bit and 64-bit apps.
+*   **Multi-Architecture**: arm64-v8a only.
 *   **Device Spoofing**: Modify device information for virtual apps.
 *   **Fake Location**: Spoof GPS coordinates.
+
+## 代码分层
+
+引擎打成 aar 之后，使用方只依赖 aar，不把 `Bcore` 源码引进去，也不改 `nativeHook()`。
+
+引擎自带的挂钩在 `libblackbox.so` 里。沙箱进程启动时，`BActivityThread.handleBindApplication` 调 `IOCore.enableRedirect`，进到 `nativeHook()`，装上 `UnixFileSystemHook`、`BinderHook`、`DexFileHook`、`JniHook`。这些跟着 aar 走，使用方碰不到。
+
+使用方自己的一套写在自己的模块里。沙箱进程（`:p0`）同样会执行宿主的 `Application.attachBaseContext`。在那里调用 `BlackBoxCore.addAppLifecycleCallback`。`beforeCreateApplication` 发生在访客 `makeApplication` 之前，应用自己的 so 还没加载。
+
+```kotlin
+BlackBoxCore.get().addAppLifecycleCallback(object : AppLifecycleCallback() {
+    override fun beforeCreateApplication(
+        packageName: String?, processName: String?, context: Context?, userId: Int
+    ) {
+        System.loadLibrary("myhook")
+    }
+})
+```
+
+这段要放在 `Application.attachBaseContext` 里，和 `doAttachBaseContext` 放在一起。只在主进程注册的话，沙箱进程里没有这个对象。
+
+`libblackbox.so` 不导出挂钩函数。自己的 so 自己链接 Dobby，在 `JNI_OnLoad` 里挂。符号用 `xdl_open` + `xdl_sym`，找不到再 `xdl_dsym`。`DobbyHook` 返回 0 才算挂上，失败打日志并跳过。
+
+流量。只看对端地址，本机和端口 0 丢掉：
+
+```cpp
+static int (*orig_connect)(int, const struct sockaddr *, socklen_t);
+
+static int hook_connect(int fd, const struct sockaddr *addr, socklen_t len) {
+    // 从 addr 取出 ip 和 port，打日志
+    return orig_connect(fd, addr, len);
+}
+
+void traffic_install() {
+    void *handle = xdl_open("libc.so", XDL_DEFAULT);
+    void *target = handle ? xdl_sym(handle, "connect", nullptr) : nullptr;
+    if (handle) xdl_close(handle);
+    if (!target || DobbyHook(target, (void *) hook_connect, (void **) &orig_connect) != 0)
+        ALOGE("traffic hook failed");
+}
+```
+
+URL。`libflutter.so` 的 `SSL_write` 没有导出，要等这个库被加载。在 `JNI_OnLoad` 里挂钩 `libdl.so` 的 `android_dlopen_ext`，路径里出现 `libflutter.so` 再算地址。bKash 7.4.0 这份 so 的 sha256 前缀是 `7cc17422`，`JNI_OnLoad` 在文件偏移 `0x4960cc`，`SSL_write` 在 `0x717ef0`。先核对第一条指令是 `0xd10103ff`（`sub sp, #0x40`），对不上就不要挂。
+
+```cpp
+static void *hook_dlopen_ext(const char *filename, int flags, const void *info) {
+    void *handle = orig_dlopen_ext(filename, flags, info);
+    if (handle && filename && strstr(filename, "libflutter.so")) {
+        void *flutter = xdl_open(filename, XDL_DEFAULT);
+        void *jni = flutter ? xdl_sym(flutter, "JNI_OnLoad", nullptr) : nullptr;
+        if (flutter) xdl_close(flutter);
+        auto *site = (uint32_t *) ((uintptr_t) jni + (0x717ef0 - 0x4960cc));
+        if (jni && *site == 0xd10103ff)
+            DobbyHook(site, (void *) hook_ssl_write, (void **) &orig_ssl_write);
+    }
+    return handle;
+}
+```
+
+`hook_ssl_write(ssl, buf, num)` 的 `buf` 是明文。请求行加 `Host` 头拼出 `https://host/path`。一次 `SSL_write` 没写完请求行时会漏。so 换版本后偏移失效，靠开头指令跳过。不要再挂钩 `dlopen`，之前那样会把进程打崩。
+
+只做 Java、不挂 native 时，同一个 `beforeCreateApplication` 里写就行，不必再加 so。
 
 ## Requirements
 
 *   **Android Version**: Android 5.0 (API 21) or higher.
 *   **RAM**: 2GB minimum recommended.
-*   **Architecture**: ARMv7a, ARM64-v8a, x86.
+*   **Architecture**: ARM64-v8a.
 
 ## Build Instructions
 

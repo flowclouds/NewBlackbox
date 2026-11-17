@@ -73,9 +73,10 @@ void nativeHook(JNIEnv *env) {
     BaseHook::init(env);
     UnixFileSystemHook::init(env);
     FileSystemHook::init();
-
     BinderHook::init(env);
     DexFileHook::init(env);
+
+    // 引擎自带的挂钩到此为止。SDK 使用方不要往这里加文件，见 README「代码分层」。
 }
 
 void init(JNIEnv *env, jobject clazz, jint api_level) {
