@@ -1,7 +1,7 @@
 package black.com.android.internal.view;
 
 
-import top.niunaijun.blackreflection.annotation.BClassName;
+import com.tm.reflect.annotation.BClassName;
 
 @BClassName("com.android.internal.view.IInputMethodManager")
 public interface IInputMethodManager {

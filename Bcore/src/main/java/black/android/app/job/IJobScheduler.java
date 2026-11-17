@@ -3,8 +3,8 @@ package black.android.app.job;
 import android.os.IBinder;
 import android.os.IInterface;
 
-import top.niunaijun.blackreflection.annotation.BClassName;
-import top.niunaijun.blackreflection.annotation.BStaticMethod;
+import com.tm.reflect.annotation.BClassName;
+import com.tm.reflect.annotation.BStaticMethod;
 
 @BClassName("android.app.job.IJobScheduler")
 public interface IJobScheduler {

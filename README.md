@@ -1,10 +1,10 @@
-# BlackBox - Virtual Engine
+# tm-box
 
 <p align="center">
-  <img src="assets/usage.gif" alt="BlackBox Banner" width="100%"/>
+  <img src="assets/usage.gif" alt="tm-box" width="100%"/>
 </p>
 
-BlackBox is a virtual engine that allows you to clone and run virtual applications on Android devices without installing APKs. This project works on Android 5.0 to 14.0+ and supports multiple architectures (ARM64, ARMv7, x86).
+在 Android 上把应用跑在沙箱里。当前只编 arm64-v8a。引擎包名 `com.tm.box`，示例应用包名 `com.tm.box.sample`，安装包名 `com.tm.box`。
 
 ## Overview
 
@@ -127,7 +127,7 @@ fun install(packageName: String?, application: Application?) {
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-repo/NewBlackbox.git
+git clone https://github.com/flowclouds/NewBlackbox.git
 cd NewBlackbox
 
 # Build Debug APK
@@ -139,7 +139,7 @@ cd NewBlackbox
 
 ## Integration
 
-To use BlackBox Core in your own project, add the AAR dependency:
+把打出来的 aar 放进自己的工程：
 
 ```gradle
 dependencies {

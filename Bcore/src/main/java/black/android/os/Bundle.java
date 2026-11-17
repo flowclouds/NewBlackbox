@@ -2,8 +2,8 @@ package black.android.os;
 
 import android.os.IBinder;
 
-import top.niunaijun.blackreflection.annotation.BClassName;
-import top.niunaijun.blackreflection.annotation.BMethod;
+import com.tm.reflect.annotation.BClassName;
+import com.tm.reflect.annotation.BMethod;
 
 @BClassName("android.os.Bundle")
 public interface Bundle {

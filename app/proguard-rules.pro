@@ -20,25 +20,25 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
--keep class top.niunaijun.blackbox.** {*; }
--keep class top.niunaijun.jnihook.** {*; }
+-keep class com.tm.box.** {*; }
+-keep class com.tm.jni.** {*; }
 -keep class mirror.** {*; }
 -keep class android.** {*; }
 -keep class com.android.** {*; }
 
--keep class top.niunaijun.blackreflection.** {*; }
--keep @top.niunaijun.blackreflection.annotation.BClass class * {*;}
--keep @top.niunaijun.blackreflection.annotation.BClassName class * {*;}
--keep @top.niunaijun.blackreflection.annotation.BClassNameNotProcess class * {*;}
+-keep class com.tm.reflect.** {*; }
+-keep @com.tm.reflect.annotation.BClass class * {*;}
+-keep @com.tm.reflect.annotation.BClassName class * {*;}
+-keep @com.tm.reflect.annotation.BClassNameNotProcess class * {*;}
 -keepclasseswithmembernames class * {
-    @top.niunaijun.blackreflection.annotation.BField.* <methods>;
-    @top.niunaijun.blackreflection.annotation.BFieldNotProcess.* <methods>;
-    @top.niunaijun.blackreflection.annotation.BFieldSetNotProcess.* <methods>;
-    @top.niunaijun.blackreflection.annotation.BFieldCheckNotProcess.* <methods>;
-    @top.niunaijun.blackreflection.annotation.BMethod.* <methods>;
-    @top.niunaijun.blackreflection.annotation.BStaticField.* <methods>;
-    @top.niunaijun.blackreflection.annotation.BStaticMethod.* <methods>;
-    @top.niunaijun.blackreflection.annotation.BMethodCheckNotProcess.* <methods>;
-    @top.niunaijun.blackreflection.annotation.BConstructor.* <methods>;
-    @top.niunaijun.blackreflection.annotation.BConstructorNotProcess.* <methods>;
+    @com.tm.reflect.annotation.BField.* <methods>;
+    @com.tm.reflect.annotation.BFieldNotProcess.* <methods>;
+    @com.tm.reflect.annotation.BFieldSetNotProcess.* <methods>;
+    @com.tm.reflect.annotation.BFieldCheckNotProcess.* <methods>;
+    @com.tm.reflect.annotation.BMethod.* <methods>;
+    @com.tm.reflect.annotation.BStaticField.* <methods>;
+    @com.tm.reflect.annotation.BStaticMethod.* <methods>;
+    @com.tm.reflect.annotation.BMethodCheckNotProcess.* <methods>;
+    @com.tm.reflect.annotation.BConstructor.* <methods>;
+    @com.tm.reflect.annotation.BConstructorNotProcess.* <methods>;
 }

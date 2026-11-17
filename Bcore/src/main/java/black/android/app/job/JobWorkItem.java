@@ -2,10 +2,10 @@ package black.android.app.job;
 
 import android.content.Intent;
 
-import top.niunaijun.blackreflection.annotation.BClassName;
-import top.niunaijun.blackreflection.annotation.BConstructor;
-import top.niunaijun.blackreflection.annotation.BField;
-import top.niunaijun.blackreflection.annotation.BMethod;
+import com.tm.reflect.annotation.BClassName;
+import com.tm.reflect.annotation.BConstructor;
+import com.tm.reflect.annotation.BField;
+import com.tm.reflect.annotation.BMethod;
 
 @BClassName("android.app.job.JobWorkItem")
 public interface JobWorkItem {

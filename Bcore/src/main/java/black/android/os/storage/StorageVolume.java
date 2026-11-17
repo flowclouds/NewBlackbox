@@ -2,8 +2,8 @@ package black.android.os.storage;
 
 import java.io.File;
 
-import top.niunaijun.blackreflection.annotation.BClassName;
-import top.niunaijun.blackreflection.annotation.BField;
+import com.tm.reflect.annotation.BClassName;
+import com.tm.reflect.annotation.BField;
 
 @BClassName("android.os.storage.StorageVolume")
 public interface StorageVolume {

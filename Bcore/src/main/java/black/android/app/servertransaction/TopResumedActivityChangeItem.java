@@ -1,8 +1,8 @@
 package black.android.app.servertransaction;
 
 
-import top.niunaijun.blackreflection.annotation.BClassName;
-import top.niunaijun.blackreflection.annotation.BField;
+import com.tm.reflect.annotation.BClassName;
+import com.tm.reflect.annotation.BField;
 
 @BClassName("android.app.servertransaction.TopResumedActivityChangeItem")
 public interface TopResumedActivityChangeItem {

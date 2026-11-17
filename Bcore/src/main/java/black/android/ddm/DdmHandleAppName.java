@@ -1,8 +1,8 @@
 package black.android.ddm;
 
 
-import top.niunaijun.blackreflection.annotation.BClassName;
-import top.niunaijun.blackreflection.annotation.BStaticMethod;
+import com.tm.reflect.annotation.BClassName;
+import com.tm.reflect.annotation.BStaticMethod;
 
 @BClassName("android.ddm.DdmHandleAppName")
 public interface DdmHandleAppName {

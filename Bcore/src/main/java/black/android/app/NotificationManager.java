@@ -2,9 +2,9 @@ package black.android.app;
 
 import android.os.IInterface;
 
-import top.niunaijun.blackreflection.annotation.BClassName;
-import top.niunaijun.blackreflection.annotation.BStaticField;
-import top.niunaijun.blackreflection.annotation.BStaticMethod;
+import com.tm.reflect.annotation.BClassName;
+import com.tm.reflect.annotation.BStaticField;
+import com.tm.reflect.annotation.BStaticMethod;
 
 @BClassName("android.app.NotificationManager")
 public interface NotificationManager {

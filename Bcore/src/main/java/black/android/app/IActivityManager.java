@@ -6,10 +6,10 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.os.IInterface;
 
-import top.niunaijun.blackreflection.annotation.BClassName;
-import top.niunaijun.blackreflection.annotation.BField;
-import top.niunaijun.blackreflection.annotation.BMethod;
-import top.niunaijun.blackreflection.annotation.BParamClassName;
+import com.tm.reflect.annotation.BClassName;
+import com.tm.reflect.annotation.BField;
+import com.tm.reflect.annotation.BMethod;
+import com.tm.reflect.annotation.BParamClassName;
 
 @BClassName("android.app.IActivityManager")
 public interface IActivityManager {

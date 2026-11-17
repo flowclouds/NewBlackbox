@@ -2,9 +2,9 @@ package black.android.content.res;
 
 import android.content.pm.ApplicationInfo;
 
-import top.niunaijun.blackreflection.annotation.BClassName;
-import top.niunaijun.blackreflection.annotation.BConstructor;
-import top.niunaijun.blackreflection.annotation.BStaticField;
+import com.tm.reflect.annotation.BClassName;
+import com.tm.reflect.annotation.BConstructor;
+import com.tm.reflect.annotation.BStaticField;
 
 @BClassName("android.content.res.CompatibilityInfo")
 public interface CompatibilityInfo {

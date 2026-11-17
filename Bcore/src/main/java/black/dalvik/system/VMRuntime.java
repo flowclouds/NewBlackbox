@@ -1,9 +1,9 @@
 package black.dalvik.system;
 
 
-import top.niunaijun.blackreflection.annotation.BClassName;
-import top.niunaijun.blackreflection.annotation.BMethod;
-import top.niunaijun.blackreflection.annotation.BStaticMethod;
+import com.tm.reflect.annotation.BClassName;
+import com.tm.reflect.annotation.BMethod;
+import com.tm.reflect.annotation.BStaticMethod;
 
 @BClassName("dalvik.system.VMRuntime")
 public interface VMRuntime {

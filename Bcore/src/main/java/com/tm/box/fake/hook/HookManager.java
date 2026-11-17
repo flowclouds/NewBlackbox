@@ -1,0 +1,329 @@
+package com.tm.box.fake.hook;
+
+import android.util.Log;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import com.tm.box.BlackBoxCore;
+import com.tm.box.fake.delegate.AppInstrumentation;
+
+import com.tm.box.fake.service.HCallbackProxy;
+import com.tm.box.fake.service.IAccessibilityManagerProxy;
+import com.tm.box.fake.service.IAccountManagerProxy;
+import com.tm.box.fake.service.IActivityClientProxy;
+import com.tm.box.fake.service.IActivityManagerProxy;
+import com.tm.box.fake.service.IActivityTaskManagerProxy;
+import com.tm.box.fake.service.IAlarmManagerProxy;
+import com.tm.box.fake.service.IAppOpsManagerProxy;
+import com.tm.box.fake.service.IAppWidgetManagerProxy;
+import com.tm.box.fake.service.IAttributionSourceProxy;
+import com.tm.box.fake.service.IAutofillManagerProxy;
+import com.tm.box.fake.service.ISensitiveContentProtectionManagerProxy;
+import com.tm.box.fake.service.ISettingsSystemProxy;
+import com.tm.box.fake.service.IConnectivityManagerProxy;
+import com.tm.box.fake.service.ISystemSensorManagerProxy;
+import com.tm.box.fake.service.IContentProviderProxy;
+import com.tm.box.fake.service.IXiaomiAttributionSourceProxy;
+import com.tm.box.fake.service.IXiaomiSettingsProxy;
+import com.tm.box.fake.service.IXiaomiMiuiServicesProxy;
+import com.tm.box.fake.service.IDnsResolverProxy;
+import com.tm.box.fake.service.IContextHubServiceProxy;
+import com.tm.box.fake.service.IDeviceIdentifiersPolicyProxy;
+import com.tm.box.fake.service.IDevicePolicyManagerProxy;
+import com.tm.box.fake.service.IDisplayManagerProxy;
+import com.tm.box.fake.service.IFingerprintManagerProxy;
+import com.tm.box.fake.service.IGraphicsStatsProxy;
+import com.tm.box.fake.service.IJobServiceProxy;
+import com.tm.box.fake.service.ILauncherAppsProxy;
+import com.tm.box.fake.service.ILocationManagerProxy;
+import com.tm.box.fake.service.IMediaRouterServiceProxy;
+import com.tm.box.fake.service.IMediaSessionManagerProxy;
+import com.tm.box.fake.service.IAudioServiceProxy;
+import com.tm.box.fake.service.ISensorPrivacyManagerProxy;
+import com.tm.box.fake.service.ContentResolverProxy;
+import com.tm.box.fake.service.IMiuiSecurityManagerProxy;
+import com.tm.box.fake.service.SystemLibraryProxy;
+import com.tm.box.fake.service.ReLinkerProxy;
+import com.tm.box.fake.service.MediaRecorderProxy;
+import com.tm.box.fake.service.NetworkPermissionCompat;
+import com.tm.box.fake.service.AudioRecordProxy;
+import com.tm.box.fake.service.MediaRecorderClassProxy;
+import com.tm.box.fake.service.SQLiteDatabaseProxy;
+import com.tm.box.fake.service.ClassLoaderProxy;
+import com.tm.box.fake.service.FileSystemProxy;
+import com.tm.box.fake.service.GmsProxy;
+import com.tm.box.fake.service.LevelDbProxy;
+import com.tm.box.fake.service.DeviceIdProxy;
+import com.tm.box.fake.service.GoogleAccountManagerProxy;
+import com.tm.box.fake.service.AuthenticationProxy;
+import com.tm.box.fake.service.AndroidIdProxy;
+import com.tm.box.fake.service.AudioPermissionProxy;
+import com.tm.box.fake.service.NetworkPermissionCompat;
+
+import com.tm.box.fake.service.INetworkManagementServiceProxy;
+import com.tm.box.fake.service.INotificationManagerProxy;
+import com.tm.box.fake.service.IPackageManagerProxy;
+import com.tm.box.fake.service.IPermissionManagerProxy;
+import com.tm.box.fake.service.IPersistentDataBlockServiceProxy;
+import com.tm.box.fake.service.IPhoneSubInfoProxy;
+import com.tm.box.fake.service.IPowerManagerProxy;
+import com.tm.box.fake.service.ApkAssetsProxy;
+import com.tm.box.fake.service.ResourcesManagerProxy;
+import com.tm.box.fake.service.IShortcutManagerProxy;
+import com.tm.box.fake.service.IStorageManagerProxy;
+import com.tm.box.fake.service.IStorageStatsManagerProxy;
+import com.tm.box.fake.service.ISystemUpdateProxy;
+import com.tm.box.fake.service.ITelephonyManagerProxy;
+import com.tm.box.fake.service.ISubProxy;
+import com.tm.box.fake.service.ITelephonyRegistryProxy;
+import com.tm.box.fake.service.IUserManagerProxy;
+import com.tm.box.fake.service.IVibratorServiceProxy;
+import com.tm.box.fake.service.IVpnManagerProxy;
+import com.tm.box.fake.service.IWifiManagerProxy;
+import com.tm.box.fake.service.IWifiScannerProxy;
+import com.tm.box.fake.service.IWindowManagerProxy;
+import com.tm.box.fake.service.context.ContentServiceStub;
+import com.tm.box.fake.service.context.RestrictionsManagerStub;
+import com.tm.box.fake.service.libcore.OsStub;
+import com.tm.box.utils.Slog;
+import com.tm.box.utils.compat.BuildCompat;
+import com.tm.box.fake.service.ISettingsProviderProxy;
+import com.tm.box.fake.service.FeatureFlagUtilsProxy;
+import com.tm.box.fake.service.WorkManagerProxy;
+
+
+
+public class HookManager {
+    public static final String TAG = "HookManager";
+
+    private static final HookManager sHookManager = new HookManager();
+
+    private final Map<Class<?>, IInjectHook> mInjectors = new HashMap<>();
+
+    public static HookManager get() {
+        return sHookManager;
+    }
+
+    public void init() {
+        if (BlackBoxCore.get().isBlackProcess() || BlackBoxCore.get().isServerProcess()) {
+            addInjector(new IDisplayManagerProxy());
+            addInjector(new OsStub());
+            addInjector(new IActivityManagerProxy());
+            addInjector(new IPackageManagerProxy());
+            addInjector(new ITelephonyManagerProxy());
+            addInjector(new ISubProxy());
+            addInjector(new HCallbackProxy());
+            addInjector(new IAppOpsManagerProxy());
+            addInjector(new INotificationManagerProxy());
+            addInjector(new IAlarmManagerProxy());
+            addInjector(new IAppWidgetManagerProxy());
+            addInjector(new ContentServiceStub());
+            addInjector(new IWindowManagerProxy());
+            addInjector(new IUserManagerProxy());
+            addInjector(new RestrictionsManagerStub());
+            addInjector(new IMediaSessionManagerProxy());
+            addInjector(new IAudioServiceProxy());
+            addInjector(new ISensorPrivacyManagerProxy());
+            addInjector(new ContentResolverProxy());
+            addInjector(new SystemLibraryProxy());
+            addInjector(new ReLinkerProxy());
+            addInjector(new WorkManagerProxy());
+            addInjector(new MediaRecorderProxy());
+            addInjector(new AudioRecordProxy());
+            addInjector(new IMiuiSecurityManagerProxy());
+            addInjector(new ISettingsProviderProxy());
+            addInjector(new FeatureFlagUtilsProxy());
+            addInjector(new MediaRecorderClassProxy());
+            addInjector(new SQLiteDatabaseProxy());
+            addInjector(new ClassLoaderProxy());
+            addInjector(new FileSystemProxy());
+            addInjector(new GmsProxy());
+            addInjector(new LevelDbProxy());
+            addInjector(new DeviceIdProxy());
+            addInjector(new GoogleAccountManagerProxy());
+            addInjector(new AuthenticationProxy());
+            addInjector(new AndroidIdProxy());
+            addInjector(new AudioPermissionProxy());
+            addInjector(new ILocationManagerProxy());
+            addInjector(new IStorageManagerProxy());
+            addInjector(new ILauncherAppsProxy());
+            addInjector(new IJobServiceProxy());
+            addInjector(new IAccessibilityManagerProxy());
+            addInjector(new ITelephonyRegistryProxy());
+            addInjector(new IDevicePolicyManagerProxy());
+            addInjector(new IAccountManagerProxy());
+            addInjector(new NetworkPermissionCompat());
+            addInjector(new IConnectivityManagerProxy());
+            addInjector(new IDnsResolverProxy());
+                    addInjector(new IAttributionSourceProxy());
+        addInjector(new IContentProviderProxy());
+        addInjector(new ISettingsSystemProxy());
+        addInjector(new ISystemSensorManagerProxy());
+        
+        
+        addInjector(new IXiaomiAttributionSourceProxy());
+        addInjector(new IXiaomiSettingsProxy());
+        addInjector(new IXiaomiMiuiServicesProxy());
+            addInjector(new IPhoneSubInfoProxy());
+            addInjector(new IMediaRouterServiceProxy());
+            addInjector(new IPowerManagerProxy());
+            addInjector(new IContextHubServiceProxy());
+            
+            addInjector(new IVibratorServiceProxy());
+            addInjector(new IPersistentDataBlockServiceProxy());
+            addInjector(AppInstrumentation.get());
+            
+            addInjector(new IWifiManagerProxy());
+            addInjector(new IWifiScannerProxy());
+            addInjector(new ApkAssetsProxy());
+            addInjector(new ResourcesManagerProxy());
+            
+            if (BuildCompat.isS()) {
+                addInjector(new IActivityClientProxy(null));
+                addInjector(new IVpnManagerProxy());
+            }
+            
+            if (BuildCompat.isS()) {
+                addInjector(new ISensitiveContentProtectionManagerProxy());
+            }
+            
+            if (BuildCompat.isR()) {
+                addInjector(new IPermissionManagerProxy());
+            }
+            
+            if (BuildCompat.isQ()) {
+                addInjector(new IActivityTaskManagerProxy());
+            }
+            
+            if (BuildCompat.isPie()) {
+                addInjector(new ISystemUpdateProxy());
+            }
+            
+            if (BuildCompat.isOreo()) {
+                addInjector(new IAutofillManagerProxy());
+                addInjector(new IDeviceIdentifiersPolicyProxy());
+                addInjector(new IStorageStatsManagerProxy());
+            }
+            
+            if (BuildCompat.isN_MR1()) {
+                addInjector(new IShortcutManagerProxy());
+            }
+            
+            if (BuildCompat.isN()) {
+                addInjector(new INetworkManagementServiceProxy());
+            }
+            
+            if (BuildCompat.isM()) {
+                addInjector(new IFingerprintManagerProxy());
+                addInjector(new IGraphicsStatsProxy());
+            }
+            
+            if (BuildCompat.isL()) {
+                addInjector(new IJobServiceProxy());
+            }
+        }
+        injectAll();
+    }
+
+    public void checkEnv(Class<?> clazz) {
+        IInjectHook iInjectHook = mInjectors.get(clazz);
+        if (iInjectHook != null && iInjectHook.isBadEnv()) {
+            Log.d(TAG, "checkEnv: " + clazz.getSimpleName() + " is bad env");
+            iInjectHook.injectHook();
+        }
+    }
+
+    public void checkAll() {
+        for (Class<?> aClass : mInjectors.keySet()) {
+            IInjectHook iInjectHook = mInjectors.get(aClass);
+            if (iInjectHook != null && iInjectHook.isBadEnv()) {
+                Log.d(TAG, "checkEnv: " + aClass.getSimpleName() + " is bad env");
+                iInjectHook.injectHook();
+            }
+        }
+    }
+
+    void addInjector(IInjectHook injectHook) {
+        mInjectors.put(injectHook.getClass(), injectHook);
+    }
+
+    void injectAll() {
+        for (IInjectHook value : mInjectors.values()) {
+            try {
+                Slog.d(TAG, "hook: " + value);
+                value.injectHook();
+            } catch (Exception e) {
+                Slog.d(TAG, "hook error: " + value);
+                
+                handleHookError(value, e);
+            }
+        }
+    }
+
+    
+    private void handleHookError(IInjectHook hook, Exception e) {
+        String hookName = hook.getClass().getSimpleName();
+        
+        
+        Slog.e(TAG, "Hook failed: " + hookName + " - " + e.getMessage(), e);
+        
+        
+        if (hookName.contains("ActivityManager") || 
+            hookName.contains("PackageManager") ||
+            hookName.contains("WebView") ||
+            hookName.contains("ContentProvider")) {
+            
+            Slog.w(TAG, "Critical hook failed: " + hookName + ", attempting recovery");
+            
+            try {
+                
+                if (hook.isBadEnv()) {
+                    Slog.d(TAG, "Attempting to recover hook: " + hookName);
+                    hook.injectHook();
+                }
+            } catch (Exception recoveryException) {
+                Slog.e(TAG, "Hook recovery failed: " + hookName, recoveryException);
+            }
+        }
+    }
+
+    
+    public boolean areCriticalHooksInstalled() {
+        String[] criticalHooks = {
+            "IActivityManagerProxy",
+            "IPackageManagerProxy",
+            "IContentProviderProxy"
+        };
+        
+        for (String hookName : criticalHooks) {
+            boolean found = false;
+            for (Class<?> hookClass : mInjectors.keySet()) {
+                if (hookClass.getSimpleName().equals(hookName)) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                Slog.w(TAG, "Critical hook missing: " + hookName);
+                return false;
+            }
+        }
+        
+        Slog.d(TAG, "All critical hooks are installed");
+        return true;
+    }
+
+    
+    public void reinitializeHooks() {
+        Slog.d(TAG, "Reinitializing all hooks");
+        
+        
+        mInjectors.clear();
+        
+        
+        init();
+        
+        Slog.d(TAG, "Hook reinitialization completed");
+    }
+}

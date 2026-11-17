@@ -6,8 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.IBinder;
 
-import top.niunaijun.blackreflection.annotation.BClassName;
-import top.niunaijun.blackreflection.annotation.BMethod;
+import com.tm.reflect.annotation.BClassName;
+import com.tm.reflect.annotation.BMethod;
 
 @BClassName("android.app.Instrumentation")
 public interface Instrumentation {

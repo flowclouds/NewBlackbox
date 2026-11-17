@@ -1,8 +1,8 @@
 package black.android.os;
 
 
-import top.niunaijun.blackreflection.annotation.BClassName;
-import top.niunaijun.blackreflection.annotation.BStaticMethod;
+import com.tm.reflect.annotation.BClassName;
+import com.tm.reflect.annotation.BStaticMethod;
 
 @BClassName("android.os.UserHandle")
 public interface UserHandle {

@@ -14,9 +14,9 @@ import android.os.IInterface;
 import java.io.File;
 import java.lang.ref.WeakReference;
 
-import top.niunaijun.blackreflection.annotation.BClassName;
-import top.niunaijun.blackreflection.annotation.BField;
-import top.niunaijun.blackreflection.annotation.BMethod;
+import com.tm.reflect.annotation.BClassName;
+import com.tm.reflect.annotation.BField;
+import com.tm.reflect.annotation.BMethod;
 
 @BClassName("android.app.LoadedApk")
 public interface LoadedApk {

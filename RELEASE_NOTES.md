@@ -1,4 +1,4 @@
-# Release Notes - NewBlackbox
+# Release Notes
 
 ## Version: Latest Build (2026-01-31)
 
@@ -15,12 +15,12 @@ Added a new setting to choose between VPN and normal network mode for sandboxed 
 - Requires app restart to take effect
 
 **Files Changed:**
-- `app/src/main/java/top/niunaijun/blackboxa/view/main/BlackBoxLoader.kt`
-- `app/src/main/java/top/niunaijun/blackboxa/view/setting/SettingFragment.kt`
+- `app/src/main/java/com/tm/box/sample/view/main/BlackBoxLoader.kt`
+- `app/src/main/java/com/tm/box/sample/view/setting/SettingFragment.kt`
 - `app/src/main/res/xml/setting.xml`
 - `app/src/main/res/values/strings.xml`
-- `Bcore/src/main/java/top/niunaijun/blackbox/app/configuration/ClientConfiguration.java`
-- `Bcore/src/main/java/top/niunaijun/blackbox/BlackBoxCore.java`
+- `Bcore/src/main/java/com/tm/box/app/configuration/ClientConfiguration.java`
+- `Bcore/src/main/java/com/tm/box/BlackBoxCore.java`
 
 #### Device Information Logging
 Added comprehensive device info header in logcat for easier debugging:
@@ -43,7 +43,7 @@ Added comprehensive device info header in logcat for easier debugging:
 **Solution:** Added VPN permission request to `MainActivity.kt` on app launch.
 
 **Files Changed:**
-- `app/src/main/java/top/niunaijun/blackboxa/view/main/MainActivity.kt`
+- `app/src/main/java/com/tm/box/sample/view/main/MainActivity.kt`
 
 ---
 
@@ -60,8 +60,8 @@ Added comprehensive device info header in logcat for easier debugging:
 - Added null check in `ClassInvocationStub.java` to skip hooks when services don't exist
 
 **Files Changed:**
-- `Bcore/src/main/java/top/niunaijun/blackbox/fake/service/context/providers/SystemProviderStub.java`
-- `Bcore/src/main/java/top/niunaijun/blackbox/fake/hook/ClassInvocationStub.java`
+- `Bcore/src/main/java/com/tm/box/fake/service/context/providers/SystemProviderStub.java`
+- `Bcore/src/main/java/com/tm/box/fake/hook/ClassInvocationStub.java`
 
 ---
 
@@ -88,7 +88,7 @@ Added comprehensive device info header in logcat for easier debugging:
 #### Oppo/ColorOS Thermal Stats Error
 On Oppo/ColorOS devices, you may see errors like:
 ```
-OppoThermalStats: PackageManager$NameNotFoundException: top.niunaijun.blackboxa:p0
+OppoThermalStats: PackageManager$NameNotFoundException: com.tm.box.sample:p0
 ```
 **This is harmless** - it's an Oppo system bug where their thermal management incorrectly uses process names (with `:p0` suffix) instead of package names. The app works normally.
 

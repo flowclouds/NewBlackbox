@@ -1,8 +1,8 @@
 package black.android.content;
 
 
-import top.niunaijun.blackreflection.annotation.BClassName;
-import top.niunaijun.blackreflection.annotation.BConstructor;
+import com.tm.reflect.annotation.BClassName;
+import com.tm.reflect.annotation.BConstructor;
 
 @BClassName("android.content.SyncAdapterType")
 public interface SyncAdapterType {

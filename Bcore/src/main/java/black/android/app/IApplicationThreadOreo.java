@@ -3,9 +3,9 @@ package black.android.app;
 import android.os.IBinder;
 import android.os.IInterface;
 
-import top.niunaijun.blackreflection.annotation.BClassName;
-import top.niunaijun.blackreflection.annotation.BMethod;
-import top.niunaijun.blackreflection.annotation.BStaticMethod;
+import com.tm.reflect.annotation.BClassName;
+import com.tm.reflect.annotation.BMethod;
+import com.tm.reflect.annotation.BStaticMethod;
 
 @BClassName("android.app.IApplicationThread")
 public interface IApplicationThreadOreo {

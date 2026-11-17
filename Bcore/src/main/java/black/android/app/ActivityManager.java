@@ -1,8 +1,8 @@
 package black.android.app;
 
 
-import top.niunaijun.blackreflection.annotation.BClassName;
-import top.niunaijun.blackreflection.annotation.BStaticField;
+import com.tm.reflect.annotation.BClassName;
+import com.tm.reflect.annotation.BStaticField;
 
 @BClassName("android.app.ActivityManager")
 public interface ActivityManager {

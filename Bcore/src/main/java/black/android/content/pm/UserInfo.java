@@ -1,9 +1,9 @@
 package black.android.content.pm;
 
 
-import top.niunaijun.blackreflection.annotation.BClassName;
-import top.niunaijun.blackreflection.annotation.BConstructor;
-import top.niunaijun.blackreflection.annotation.BStaticField;
+import com.tm.reflect.annotation.BClassName;
+import com.tm.reflect.annotation.BConstructor;
+import com.tm.reflect.annotation.BStaticField;
 
 @BClassName("android.content.pm.UserInfo")
 public interface UserInfo {
