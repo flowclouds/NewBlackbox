@@ -11,7 +11,11 @@
 
 using namespace SandHook;
 #define LOG_TAG "ELF_UTIL"
+#ifdef SDK_RELEASE
+#define LOGE(...) ((void)0)
+#else
 #define LOGE(...) __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
+#endif
 
 template<typename T>
 inline constexpr auto offsetOf(ElfW(Ehdr) *head, ElfW(Off) off) {

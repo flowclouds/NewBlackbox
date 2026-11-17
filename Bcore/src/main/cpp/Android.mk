@@ -45,7 +45,11 @@ JniHook/JniHook.cpp
 LOCAL_C_INCLUDES += $(LOCAL_PATH)
 LOCAL_CFLAGS += -Wno-error=format-security -fvisibility=hidden -ffunction-sections -fdata-sections -w -std=c++17
 LOCAL_CPPFLAGS += -Wno-error=format-security -fvisibility=hidden -ffunction-sections -fdata-sections -w -Werror -fms-extensions
-LOCAL_LDFLAGS += -Wl,--gc-sections,--strip-all,-z,max-page-size=16384
+LOCAL_LDFLAGS += -Wl,--gc-sections,--strip-all,-z,max-page-size=16384,--version-script,$(LOCAL_PATH)/export.map
+ifeq ($(SDK_RELEASE),1)
+LOCAL_CFLAGS += -DSDK_RELEASE
+LOCAL_CPPFLAGS += -DSDK_RELEASE
+endif
 LOCAL_ARM_MODE := arm
 
 LOCAL_CPP_FEATURES := exceptions

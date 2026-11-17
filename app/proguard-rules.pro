@@ -20,25 +20,4 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
--keep class com.tm.box.** {*; }
--keep class com.tm.jni.** {*; }
--keep class mirror.** {*; }
--keep class android.** {*; }
--keep class com.android.** {*; }
-
--keep class com.tm.reflect.** {*; }
--keep @com.tm.reflect.annotation.BClass class * {*;}
--keep @com.tm.reflect.annotation.BClassName class * {*;}
--keep @com.tm.reflect.annotation.BClassNameNotProcess class * {*;}
--keepclasseswithmembernames class * {
-    @com.tm.reflect.annotation.BField.* <methods>;
-    @com.tm.reflect.annotation.BFieldNotProcess.* <methods>;
-    @com.tm.reflect.annotation.BFieldSetNotProcess.* <methods>;
-    @com.tm.reflect.annotation.BFieldCheckNotProcess.* <methods>;
-    @com.tm.reflect.annotation.BMethod.* <methods>;
-    @com.tm.reflect.annotation.BStaticField.* <methods>;
-    @com.tm.reflect.annotation.BStaticMethod.* <methods>;
-    @com.tm.reflect.annotation.BMethodCheckNotProcess.* <methods>;
-    @com.tm.reflect.annotation.BConstructor.* <methods>;
-    @com.tm.reflect.annotation.BConstructorNotProcess.* <methods>;
-}
+# 引擎的保留名单在 Bcore/consumer-rules.pro，打进 aar 后由宿主的 R8 合并。

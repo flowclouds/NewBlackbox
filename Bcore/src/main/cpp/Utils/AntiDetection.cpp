@@ -10,7 +10,11 @@
 #include "xdl.h"
 
 #define LOG_TAG "AntiDetection"
+#ifdef SDK_RELEASE
+#define LOGD(...) ((void)0)
+#else
 #define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, __VA_ARGS__)
+#endif
 
 struct SpoofedProp {
     const char* key;

@@ -139,6 +139,8 @@ cd NewBlackbox
 
 ## Integration
 
+混淆包的重复步骤见 [SDK.md](SDK.md)。
+
 把打出来的 aar 放进自己的工程：
 
 ```gradle
