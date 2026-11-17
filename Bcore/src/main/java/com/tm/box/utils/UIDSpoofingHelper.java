@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Process;
 
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 import com.tm.box.app.BActivityThread;
 import com.tm.box.utils.Slog;
 
@@ -26,7 +26,7 @@ public class UIDSpoofingHelper {
     
     public static int getPackageUID(String packageName) {
         try {
-            Context context = BlackBoxCore.getContext();
+            Context context = TmBox.getContext();
             if (context != null) {
                 
                 PackageManager pm = context.getPackageManager();

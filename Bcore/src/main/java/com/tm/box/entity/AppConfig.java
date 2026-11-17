@@ -7,7 +7,7 @@ import android.os.Parcelable;
 
 
 public class AppConfig implements Parcelable {
-    public static final String KEY = "BlackBox_client_config";
+    public static final String KEY = "TmBox_client_config";
 
     public String packageName;
     public String processName;

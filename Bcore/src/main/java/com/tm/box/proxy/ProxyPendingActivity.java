@@ -6,7 +6,7 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 import com.tm.box.app.BActivityThread;
 import com.tm.box.proxy.record.ProxyPendingRecord;
 import com.tm.box.utils.Slog;
@@ -24,7 +24,7 @@ public class ProxyPendingActivity extends Activity {
         if (pendingActivityRecord.mTarget == null)
             return;
         pendingActivityRecord.mTarget.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        pendingActivityRecord.mTarget.setExtrasClassLoader(BlackBoxCore.getApplication().getClassLoader());
+        pendingActivityRecord.mTarget.setExtrasClassLoader(TmBox.getApplication().getClassLoader());
         startActivity(pendingActivityRecord.mTarget);
     }
 

@@ -4,7 +4,7 @@ import android.os.Build;
 import android.os.Process;
 import java.lang.reflect.Method;
 
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 import com.tm.box.fake.hook.ClassInvocationStub;
 import com.tm.box.fake.hook.MethodHook;
 import com.tm.box.fake.hook.ProxyMethod;

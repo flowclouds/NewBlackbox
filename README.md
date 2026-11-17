@@ -23,12 +23,12 @@ This enhanced edition includes bug fixes, stability improvements, and Android 14
 
 引擎打成 aar 之后，使用方只依赖 aar，不把 `Bcore` 源码引进去，也不改 `nativeHook()`。
 
-引擎自带的挂钩在 `libblackbox.so` 里。沙箱进程启动时，`BActivityThread.handleBindApplication` 调 `IOCore.enableRedirect`，进到 `nativeHook()`，装上 `UnixFileSystemHook`、`BinderHook`、`DexFileHook`、`JniHook`。这些跟着 aar 走，使用方碰不到。
+引擎自带的挂钩在 `libtmbox.so` 里。沙箱进程启动时，`BActivityThread.handleBindApplication` 调 `IOCore.enableRedirect`，进到 `nativeHook()`，装上 `UnixFileSystemHook`、`BinderHook`、`DexFileHook`、`JniHook`。这些跟着 aar 走，使用方碰不到。
 
-使用方自己的一套写在自己的模块里。沙箱进程（`:p0`）同样会执行宿主的 `Application.attachBaseContext`。在那里调用 `BlackBoxCore.addAppLifecycleCallback`。`beforeCreateApplication` 发生在访客 `makeApplication` 之前，应用自己的 so 还没加载。
+使用方自己的一套写在自己的模块里。沙箱进程（`:p0`）同样会执行宿主的 `Application.attachBaseContext`。在那里调用 `TmBox.addAppLifecycleCallback`。`beforeCreateApplication` 发生在访客 `makeApplication` 之前，应用自己的 so 还没加载。
 
 ```kotlin
-BlackBoxCore.get().addAppLifecycleCallback(object : AppLifecycleCallback() {
+TmBox.get().addAppLifecycleCallback(object : AppLifecycleCallback() {
     override fun beforeCreateApplication(
         packageName: String?, processName: String?, context: Context?, userId: Int
     ) {
@@ -39,7 +39,7 @@ BlackBoxCore.get().addAppLifecycleCallback(object : AppLifecycleCallback() {
 
 这段要放在 `Application.attachBaseContext` 里，和 `doAttachBaseContext` 放在一起。只在主进程注册的话，沙箱进程里没有这个对象。
 
-`libblackbox.so` 不导出挂钩函数。自己的 so 自己链接 Dobby，在 `JNI_OnLoad` 里挂。符号用 `xdl_open` + `xdl_sym`，找不到再 `xdl_dsym`。`DobbyHook` 返回 0 才算挂上，失败打日志并跳过。
+`libtmbox.so` 不导出挂钩函数。自己的 so 自己链接 Dobby，在 `JNI_OnLoad` 里挂。符号用 `xdl_open` + `xdl_sym`，找不到再 `xdl_dsym`。`DobbyHook` 返回 0 才算挂上，失败打日志并跳过。
 
 流量。只看对端地址，本机和端口 0 丢掉：
 

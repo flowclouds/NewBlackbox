@@ -10,7 +10,7 @@ import java.io.File;
 import java.util.List;
 
 import dalvik.system.DexFile;
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 import com.tm.box.app.BActivityThread;
 import com.tm.box.utils.compat.DexFileCompat;
 
@@ -23,7 +23,7 @@ public class NativeCore {
 
     static {
 
-        System.loadLibrary("blackbox");
+        System.loadLibrary("tmbox");
     }
 
     public static native void init(int apiLevel);
@@ -47,9 +47,9 @@ public class NativeCore {
             if (origCallingUid > Process.LAST_APPLICATION_UID)
                 return origCallingUid;
 
-            if (origCallingUid == BlackBoxCore.getHostUid()) {
+            if (origCallingUid == TmBox.getHostUid()) {
                 
-                String appPackageName = BlackBoxCore.getAppPackageName();
+                String appPackageName = TmBox.getAppPackageName();
                 if (appPackageName != null && appPackageName.equals("com.google.android.gms")){
                     
                 }
@@ -62,7 +62,7 @@ public class NativeCore {
                 
                 
                 try {
-                    int callingBUid = BlackBoxCore.getCallingBUid();
+                    int callingBUid = TmBox.getCallingBUid();
                     if (callingBUid > 0 && callingBUid < Process.LAST_APPLICATION_UID) {
                         return callingBUid;
                     }
@@ -92,7 +92,7 @@ public class NativeCore {
                 }
                 
                 
-                return BlackBoxCore.getHostUid();
+                return TmBox.getHostUid();
             }
             return origCallingUid;
         } catch (Exception e) {

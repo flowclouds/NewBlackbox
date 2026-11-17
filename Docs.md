@@ -1,4 +1,4 @@
-# BlackBox Virtual Environment - Complete User Guide
+# TmBox Virtual Environment - Complete User Guide
 
 ## Table of Contents
 1. [Overview](#overview)
@@ -16,7 +16,7 @@
 
 ## Overview
 
-BlackBox is a comprehensive Android virtualization solution that creates isolated environments for running apps. The latest version includes significant improvements for:
+TmBox is a comprehensive Android virtualization solution that creates isolated environments for running apps. The latest version includes significant improvements for:
 
 - **App Installation & Management**: Robust app installation with cloning prevention
 - **WebView Support**: Complete WebView compatibility for browsers and web apps
@@ -36,7 +36,7 @@ BlackBox is a comprehensive Android virtualization solution that creates isolate
 - Internet connection for initial setup
 
 ### Basic Installation
-1. **Download BlackBox APK** from the official source
+1. **Download TmBox APK** from the official source
 2. **Install the APK** using your preferred method
 3. **Grant Permissions** when prompted:
    - Storage access
@@ -59,30 +59,30 @@ BlackBox is a comprehensive Android virtualization solution that creates isolate
 
 #### Method 1: APK File Installation
 ```java
-// Using BlackBoxCore API
-BlackBoxCore.get().installPackageAsUser(apkFile, userId);
+// Using TmBox API
+TmBox.get().installPackageAsUser(apkFile, userId);
 
 // Example with error handling
 try {
-    InstallResult result = BlackBoxCore.get().installPackageAsUser(apkFile, 0);
+    InstallResult result = TmBox.get().installPackageAsUser(apkFile, 0);
     if (result.isSuccess()) {
-        Log.d("BlackBox", "App installed successfully: " + result.getPackageName());
+        Log.d("TmBox", "App installed successfully: " + result.getPackageName());
     } else {
-        Log.e("BlackBox", "Installation failed: " + result.getErrorMessage());
+        Log.e("TmBox", "Installation failed: " + result.getErrorMessage());
     }
 } catch (Exception e) {
-    Log.e("BlackBox", "Installation error", e);
+    Log.e("TmBox", "Installation error", e);
 }
 ```
 
 #### Method 2: Package Name Installation
 ```java
 // Install from existing package
-BlackBoxCore.get().installPackageAsUser("com.example.app", userId);
+TmBox.get().installPackageAsUser("com.example.app", userId);
 
 // Check if package exists first
-if (BlackBoxCore.getPackageManager().getPackageInfo("com.example.app", 0) != null) {
-    BlackBoxCore.get().installPackageAsUser("com.example.app", userId);
+if (TmBox.getPackageManager().getPackageInfo("com.example.app", 0) != null) {
+    TmBox.get().installPackageAsUser("com.example.app", userId);
 }
 ```
 
@@ -90,7 +90,7 @@ if (BlackBoxCore.getPackageManager().getPackageInfo("com.example.app", 0) != nul
 ```java
 // Install from content URI
 Uri apkUri = Uri.parse("content://com.example.provider/app.apk");
-BlackBoxCore.get().installPackageAsUser(apkUri, userId);
+TmBox.get().installPackageAsUser(apkUri, userId);
 ```
 
 ### App Removal
@@ -98,20 +98,20 @@ BlackBoxCore.get().installPackageAsUser(apkUri, userId);
 #### Uninstall Virtual App
 ```java
 // Remove app from virtual environment
-BlackBoxCore.get().uninstallPackage(packageName, userId);
+TmBox.get().uninstallPackage(packageName, userId);
 
 // Force uninstall if needed
-BlackBoxCore.get().uninstallPackage(packageName, userId, true);
+TmBox.get().uninstallPackage(packageName, userId, true);
 ```
 
 #### Clean App Data
 ```java
 // Clear app data without uninstalling
-BlackBoxCore.get().clearAppData(packageName, userId);
+TmBox.get().clearAppData(packageName, userId);
 
 // Clear specific data types
-BlackBoxCore.get().clearAppData(packageName, userId, "cache");
-BlackBoxCore.get().clearAppData(packageName, userId, "data");
+TmBox.get().clearAppData(packageName, userId, "cache");
+TmBox.get().clearAppData(packageName, userId, "data");
 ```
 
 ### App Management Utilities
@@ -119,25 +119,25 @@ BlackBoxCore.get().clearAppData(packageName, userId, "data");
 #### List Installed Apps
 ```java
 // Get all virtual apps
-List<AppInfo> virtualApps = BlackBoxCore.get().getInstalledApps(userId);
+List<AppInfo> virtualApps = TmBox.get().getInstalledApps(userId);
 
 // Get specific app info
-AppInfo appInfo = BlackBoxCore.get().getAppInfo(packageName, userId);
+AppInfo appInfo = TmBox.get().getAppInfo(packageName, userId);
 
 // Check if app is installed
-boolean isInstalled = BlackBoxCore.get().isAppInstalled(packageName, userId);
+boolean isInstalled = TmBox.get().isAppInstalled(packageName, userId);
 ```
 
 #### App Configuration
 ```java
 // Enable/disable app
-BlackBoxCore.get().setAppEnabled(packageName, userId, true);
+TmBox.get().setAppEnabled(packageName, userId, true);
 
 // Set app permissions
-BlackBoxCore.get().setAppPermission(packageName, permission, userId, true);
+TmBox.get().setAppPermission(packageName, permission, userId, true);
 
 // Configure app settings
-BlackBoxCore.get().setAppSetting(packageName, setting, value, userId);
+TmBox.get().setAppSetting(packageName, setting, value, userId);
 ```
 
 ---
@@ -306,20 +306,20 @@ UIDSpoofingHelper.setUIDStrategy("operation", customStrategy);
 #### Virtual Process Control
 ```java
 // Control virtual processes
-BlackBoxCore.get().startVirtualProcess(packageName, userId);
-BlackBoxCore.get().stopVirtualProcess(packageName, userId);
+TmBox.get().startVirtualProcess(packageName, userId);
+TmBox.get().stopVirtualProcess(packageName, userId);
 
 // Monitor process status
-ProcessInfo processInfo = BlackBoxCore.get().getProcessInfo(packageName, userId);
+ProcessInfo processInfo = TmBox.get().getProcessInfo(packageName, userId);
 ```
 
 #### Memory Management
 ```java
 // Optimize memory usage
-BlackBoxCore.get().optimizeMemory(userId);
+TmBox.get().optimizeMemory(userId);
 
 // Clear unused resources
-BlackBoxCore.get().clearUnusedResources(userId);
+TmBox.get().clearUnusedResources(userId);
 ```
 
 ---
@@ -331,13 +331,13 @@ BlackBoxCore.get().clearUnusedResources(userId);
 #### App Installation Failures
 ```bash
 # Check logs for installation errors
-adb logcat | grep "BlackBox"
+adb logcat | grep "TmBox"
 
 # Common solutions:
 # 1. Ensure sufficient storage space
 # 2. Check APK file integrity
 # 3. Verify package compatibility
-# 4. Clear BlackBox cache
+# 4. Clear TmBox cache
 ```
 
 #### WebView Issues
@@ -363,23 +363,23 @@ adb logcat | grep "BlackBox"
 #### Enable Debug Logging
 ```java
 // Enable comprehensive logging
-BlackBoxCore.setDebugMode(true);
+TmBox.setDebugMode(true);
 
 // Set log level
 Slog.setLogLevel(Slog.LEVEL_DEBUG);
 
 // Enable specific debug features
-BlackBoxCore.enableDebugFeature("webview", true);
-BlackBoxCore.enableDebugFeature("gms", true);
+TmBox.enableDebugFeature("webview", true);
+TmBox.enableDebugFeature("gms", true);
 ```
 
 #### Log Analysis
 ```bash
-# Filter BlackBox logs
-adb logcat | grep "BlackBox\|WebView\|GmsProxy\|WorkManager"
+# Filter TmBox logs
+adb logcat | grep "TmBox\|WebView\|GmsProxy\|WorkManager"
 
 # Save logs to file
-adb logcat > blackbox_logs.txt
+adb logcat > box_logs.txt
 
 # Analyze specific components
 adb logcat | grep "JobServiceStub\|WebViewProxy\|GoogleAccountManagerProxy"
@@ -391,10 +391,10 @@ adb logcat | grep "JobServiceStub\|WebViewProxy\|GoogleAccountManagerProxy"
 
 ### Core Classes
 
-#### BlackBoxCore
+#### TmBox
 ```java
 // Main entry point
-BlackBoxCore core = BlackBoxCore.get();
+TmBox core = TmBox.get();
 
 // Core methods
 core.installPackageAsUser(apkFile, userId);
@@ -450,7 +450,7 @@ boolean success = GoogleAccountManagerProxy.addAccount(account, password, extras
 ## Frequently Asked Questions
 
 ### Q: Why do some apps show black screens?
-**A**: This is usually caused by context or resource loading issues. The new BlackBox version includes comprehensive fixes for:
+**A**: This is usually caused by context or resource loading issues. The new TmBox version includes comprehensive fixes for:
 - Context management
 - Resource loading
 - Activity lifecycle
@@ -471,7 +471,7 @@ boolean success = GoogleAccountManagerProxy.addAccount(account, password, extras
 - Graceful fallback mechanisms
 
 ### Q: How do I prevent app cloning issues?
-**A**: BlackBox now includes:
+**A**: TmBox now includes:
 - Automatic cloning prevention
 - Package validation
 - Security checks
@@ -491,7 +491,7 @@ boolean success = GoogleAccountManagerProxy.addAccount(account, password, extras
 ### Getting Help
 - **Documentation**: Check this Docs.md file
 - **Logs**: Enable debug mode and analyze logs
-- **Community**: Join BlackBox user forums
+- **Community**: Join TmBox user forums
 - **Issues**: Report bugs with detailed logs
 
 ### Version History
@@ -511,10 +511,10 @@ boolean success = GoogleAccountManagerProxy.addAccount(account, password, extras
 
 ## Conclusion
 
-The new BlackBox virtual environment provides a robust, feature-rich solution for Android app virtualization. With comprehensive WebView support, Google services integration, and background job management, it offers enterprise-grade functionality for both developers and end users.
+The new TmBox virtual environment provides a robust, feature-rich solution for Android app virtualization. With comprehensive WebView support, Google services integration, and background job management, it offers enterprise-grade functionality for both developers and end users.
 
 For the best experience:
-1. **Keep BlackBox updated** to the latest version
+1. **Keep TmBox updated** to the latest version
 2. **Enable debug logging** when troubleshooting
 3. **Monitor system resources** for optimal performance
 4. **Report issues** with detailed logs for faster resolution

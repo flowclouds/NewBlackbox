@@ -4,7 +4,7 @@ import android.app.Application
 import android.content.Context
 import android.util.Log
 import java.io.File
-import com.tm.box.BlackBoxCore
+import com.tm.box.TmBox
 import com.tm.box.app.BActivityThread
 import com.tm.box.app.configuration.AppLifecycleCallback
 import com.tm.box.app.configuration.ClientConfiguration
@@ -12,7 +12,7 @@ import com.tm.box.sample.app.App
 import com.tm.box.sample.biz.cache.AppSharedPreferenceDelegate
 
 
-class BlackBoxLoader {
+class TmBoxLoader {
 
     private var mShowShortcutPermissionDialog by AppSharedPreferenceDelegate(App.getContext(), true)
 
@@ -33,18 +33,18 @@ class BlackBoxLoader {
         }
     }
 
-    fun getBlackBoxCore(): BlackBoxCore {
+    fun getTmBox(): TmBox {
         return try {
-            BlackBoxCore.get()
+            TmBox.get()
         } catch (e: Exception) {
-            Log.e(TAG, "Error getting BlackBoxCore: ${e.message}")
+            Log.e(TAG, "Error getting TmBox: ${e.message}")
             throw e
         }
     }
 
     fun addLifecycleCallback() {
         try {
-            BlackBoxCore.get()
+            TmBox.get()
                     .addAppLifecycleCallback(
                             object : AppLifecycleCallback() {
                                 override fun beforeCreateApplication(
@@ -144,7 +144,7 @@ class BlackBoxLoader {
 
     fun attachBaseContext(context: Context) {
         try {
-            BlackBoxCore.get()
+            TmBox.get()
                     .doAttachBaseContext(
                             context,
                             object : ClientConfiguration() {
@@ -183,11 +183,11 @@ class BlackBoxLoader {
 
     fun doOnCreate() {
         try {
-            BlackBoxCore.get().doCreate()
+            TmBox.get().doCreate()
 
             
             try {
-                BlackBoxCore.get().addServiceAvailableCallback {
+                TmBox.get().addServiceAvailableCallback {
                     Log.d(TAG, "Services became available, triggering app list refresh")
                     
                     
@@ -201,6 +201,6 @@ class BlackBoxLoader {
     }
 
     companion object {
-        val TAG: String = BlackBoxLoader::class.java.simpleName
+        val TAG: String = TmBoxLoader::class.java.simpleName
     }
 }

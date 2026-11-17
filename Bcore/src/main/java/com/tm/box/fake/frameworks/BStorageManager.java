@@ -8,7 +8,7 @@ import com.tm.box.core.system.ServiceManager;
 import com.tm.box.core.system.os.IBStorageManagerService;
 
 
-public class BStorageManager extends BlackManager<IBStorageManagerService> {
+public class BStorageManager extends BoxManager<IBStorageManagerService> {
     private static final BStorageManager sStorageManager = new BStorageManager();
 
     public static BStorageManager get() {

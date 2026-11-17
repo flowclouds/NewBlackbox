@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 import com.tm.box.app.BActivityThread;
 
 
@@ -278,7 +278,7 @@ public class CrashMonitor {
             return BActivityThread.getAppPackageName();
         } catch (Exception e) {
             try {
-                Context context = BlackBoxCore.getContext();
+                Context context = TmBox.getContext();
                 if (context != null) {
                     return context.getPackageName();
                 }
@@ -334,7 +334,7 @@ public class CrashMonitor {
     
     private static void writeCrashLog(CrashInfo crashInfo) {
         try {
-            Context context = BlackBoxCore.getContext();
+            Context context = TmBox.getContext();
             if (context == null) return;
             
             File logDir = new File(context.getFilesDir(), "crash_logs");

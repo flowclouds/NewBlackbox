@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import black.android.app.job.BRJobInfo;
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 import com.tm.box.core.system.BProcessManagerService;
 import com.tm.box.core.system.ISystemService;
 import com.tm.box.core.system.ProcessRecord;
@@ -66,7 +66,7 @@ public class BJobManagerService extends IBJobManagerService.Stub implements ISys
         jobRecord.mServiceInfo = serviceInfo;
 
         mJobRecords.put(formatKey(processRecord.processName, info.getId()), jobRecord);
-        BRJobInfo.get(info)._set_service(new ComponentName(BlackBoxCore.getHostPkg(), ProxyManifest.getProxyJobService(processRecord.bpid)));
+        BRJobInfo.get(info)._set_service(new ComponentName(TmBox.getHostPkg(), ProxyManifest.getProxyJobService(processRecord.bpid)));
         return info;
     }
 

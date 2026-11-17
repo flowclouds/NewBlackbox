@@ -5,7 +5,7 @@ import android.view.WindowManager;
 
 import java.lang.reflect.Method;
 
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 import com.tm.box.fake.hook.BinderInvocationStub;
 import com.tm.box.fake.hook.MethodHook;
 import com.tm.box.fake.hook.ProxyMethod;
@@ -52,8 +52,8 @@ public class IWindowSessionProxy extends BinderInvocationStub {
                 }
                 if (arg instanceof WindowManager.LayoutParams) {
                     WindowManager.LayoutParams lp = (WindowManager.LayoutParams) arg;
-                    lp.packageName = BlackBoxCore.getHostPkg();
-                    if (BlackBoxCore.get().isDisableFlagSecure()) {
+                    lp.packageName = TmBox.getHostPkg();
+                    if (TmBox.get().isDisableFlagSecure()) {
                         lp.flags &= ~WindowManager.LayoutParams.FLAG_SECURE;
                     }
                 }
@@ -76,7 +76,7 @@ public class IWindowSessionProxy extends BinderInvocationStub {
                 }
                 if (arg instanceof WindowManager.LayoutParams) {
                     WindowManager.LayoutParams lp = (WindowManager.LayoutParams) arg;
-                    if (BlackBoxCore.get().isDisableFlagSecure()) {
+                    if (TmBox.get().isDisableFlagSecure()) {
                         lp.flags &= ~WindowManager.LayoutParams.FLAG_SECURE;
                     }
                 }

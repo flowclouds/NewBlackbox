@@ -7,7 +7,7 @@ import android.net.Uri;
 import java.io.File;
 import java.util.List;
 
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 import com.tm.box.app.BActivityThread;
 import com.tm.box.utils.compat.BuildCompat;
 
@@ -19,7 +19,7 @@ public class FileProviderHandler {
             File file = convertFile(context, uri);
             if (file == null)
                 return null;
-            return BlackBoxCore.getBStorageManager().getUriForFile(file.getAbsolutePath());
+            return TmBox.getBStorageManager().getUriForFile(file.getAbsolutePath());
         }
         return uri;
     }

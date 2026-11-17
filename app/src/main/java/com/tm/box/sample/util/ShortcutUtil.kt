@@ -57,7 +57,7 @@ object ShortcutUtil {
     }
 
     private fun showAllowPermissionDialog(context: Context){
-        if (!AppManager.mBlackBoxLoader.showShortcutPermissionDialog()){
+        if (!AppManager.mTmBoxLoader.showShortcutPermissionDialog()){
             return
         }
 
@@ -66,7 +66,7 @@ object ShortcutUtil {
             message(R.string.add_shortcut_fail_msg)
             checkBoxPrompt(R.string.no_reminders) { checked ->
                 if (checked) {
-                    AppManager.mBlackBoxLoader.invalidShortcutPermissionDialog(false)
+                    AppManager.mTmBoxLoader.invalidShortcutPermissionDialog(false)
                 }
             }
             positiveButton(R.string.done)

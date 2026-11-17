@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import cbfg.rvadapter.RVAdapter
 import com.afollestad.materialdialogs.MaterialDialog
-import com.tm.box.BlackBoxCore
+import com.tm.box.TmBox
 import com.tm.box.sample.R
 import com.tm.box.sample.bean.AppInfo
 import com.tm.box.sample.databinding.FragmentAppsBinding
@@ -180,7 +180,7 @@ class AppsFragment : Fragment() {
             
             
             try {
-                BlackBoxCore.get().addServiceAvailableCallback {
+                TmBox.get().addServiceAvailableCallback {
                     Log.d(TAG, "Services became available, refreshing app list")
                     
                     viewModel.getInstalledAppsWithRetry(userID)
@@ -471,7 +471,7 @@ class AppsFragment : Fragment() {
                 message(text = getString(R.string.app_stop_hint,info.name))
                 positiveButton(R.string.done) {
                     try {
-                        BlackBoxCore.get().stopPackage(info.packageName, userID)
+                        TmBox.get().stopPackage(info.packageName, userID)
                         toast(getString(R.string.is_stop,info.name))
                     } catch (e: Exception) {
                         Log.e(TAG, "Error stopping app: ${e.message}")

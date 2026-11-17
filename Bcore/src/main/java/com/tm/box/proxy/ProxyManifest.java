@@ -2,7 +2,7 @@ package com.tm.box.proxy;
 
 import java.util.Locale;
 
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 
 
 public class ProxyManifest {
@@ -13,11 +13,11 @@ public class ProxyManifest {
     }
 
     public static String getBindProvider() {
-        return BlackBoxCore.getHostPkg() + ".box.SystemCallProvider";
+        return TmBox.getHostPkg() + ".box.SystemCallProvider";
     }
 
     public static String getProxyAuthorities(int index) {
-        return String.format(Locale.CHINA, "%s.proxy_content_provider_%d", BlackBoxCore.getHostPkg(), index);
+        return String.format(Locale.CHINA, "%s.proxy_content_provider_%d", TmBox.getHostPkg(), index);
     }
 
     public static String getProxyPendingActivity(int index) {
@@ -41,14 +41,14 @@ public class ProxyManifest {
     }
 
     public static String getProxyFileProvider() {
-        return BlackBoxCore.getHostPkg() + ".box.FileProvider";
+        return TmBox.getHostPkg() + ".box.FileProvider";
     }
 
     public static String getProxyReceiver() {
-        return BlackBoxCore.getHostPkg() + ".stub_receiver";
+        return TmBox.getHostPkg() + ".stub_receiver";
     }
 
     public static String getProcessName(int bPid) {
-        return BlackBoxCore.getHostPkg() + ":p" + bPid;
+        return TmBox.getHostPkg() + ":p" + bPid;
     }
 }

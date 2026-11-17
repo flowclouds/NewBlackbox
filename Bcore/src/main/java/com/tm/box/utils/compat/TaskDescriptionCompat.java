@@ -8,7 +8,7 @@ import android.graphics.drawable.Drawable;
 
 import java.util.Locale;
 
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 import com.tm.box.app.BActivityThread;
 import com.tm.box.utils.DrawableUtils;
 
@@ -20,7 +20,7 @@ public class TaskDescriptionCompat {
         if (label != null && icon != null)
             return td;
 
-        label = getTaskDescriptionLabel(BlackBoxCore.getUserId(), getApplicationLabel());
+        label = getTaskDescriptionLabel(TmBox.getUserId(), getApplicationLabel());
         
         
         
@@ -39,8 +39,8 @@ public class TaskDescriptionCompat {
 
     private static CharSequence getApplicationLabel() {
         try {
-            PackageManager pm = BlackBoxCore.getPackageManager();
-            return pm.getApplicationLabel(pm.getApplicationInfo(BlackBoxCore.getAppPackageName(), 0));
+            PackageManager pm = TmBox.getPackageManager();
+            return pm.getApplicationLabel(pm.getApplicationInfo(TmBox.getAppPackageName(), 0));
         } catch (PackageManager.NameNotFoundException e) {
             return null;
         }

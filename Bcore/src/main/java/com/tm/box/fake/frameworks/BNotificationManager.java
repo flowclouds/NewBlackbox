@@ -13,7 +13,7 @@ import com.tm.box.core.system.ServiceManager;
 import com.tm.box.core.system.notification.IBNotificationManagerService;
 
 
-public class BNotificationManager extends BlackManager<IBNotificationManagerService> {
+public class BNotificationManager extends BoxManager<IBNotificationManagerService> {
     private static final BNotificationManager sNotificationManager = new BNotificationManager();
 
     public static BNotificationManager get() {

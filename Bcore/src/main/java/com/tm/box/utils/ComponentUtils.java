@@ -8,7 +8,7 @@ import android.content.pm.ProviderInfo;
 
 import java.util.Objects;
 
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 import com.tm.box.app.BActivityThread;
 
 import static android.content.pm.ActivityInfo.LAUNCH_SINGLE_INSTANCE;
@@ -21,8 +21,8 @@ public class ComponentUtils {
 
     public static boolean isSelf(Intent intent) {
         ComponentName component = intent.getComponent();
-        if (component == null || BlackBoxCore.getAppPackageName() == null) return false;
-        return component.getPackageName().equals(BlackBoxCore.getAppPackageName());
+        if (component == null || TmBox.getAppPackageName() == null) return false;
+        return component.getPackageName().equals(TmBox.getAppPackageName());
     }
 
     public static boolean isSelf(Intent[] intent) {

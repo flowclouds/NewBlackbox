@@ -3,29 +3,29 @@ package com.tm.box.sample.app
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
-import com.tm.box.sample.view.main.BlackBoxLoader
+import com.tm.box.sample.view.main.TmBoxLoader
 
 
 object AppManager {
     private const val TAG = "AppManager"
 
     @JvmStatic
-    val mBlackBoxLoader by lazy {
+    val mTmBoxLoader by lazy {
         try {
-            BlackBoxLoader()
+            TmBoxLoader()
         } catch (e: Exception) {
-            Log.e(TAG, "Error creating BlackBoxLoader: ${e.message}")
+            Log.e(TAG, "Error creating TmBoxLoader: ${e.message}")
 
-            BlackBoxLoader() 
+            TmBoxLoader() 
         }
     }
 
     @JvmStatic
-    val mBlackBoxCore by lazy {
+    val mTmBox by lazy {
         try {
-            mBlackBoxLoader.getBlackBoxCore()
+            mTmBoxLoader.getTmBox()
         } catch (e: Exception) {
-            Log.e(TAG, "Error getting BlackBoxCore: ${e.message}")
+            Log.e(TAG, "Error getting TmBox: ${e.message}")
             throw e 
         }
     }
@@ -42,8 +42,8 @@ object AppManager {
 
     fun doAttachBaseContext(context: Context) {
         try {
-            mBlackBoxLoader.attachBaseContext(context)
-            mBlackBoxLoader.addLifecycleCallback()
+            mTmBoxLoader.attachBaseContext(context)
+            mTmBoxLoader.addLifecycleCallback()
         } catch (e: Exception) {
             Log.e(TAG, "Error in doAttachBaseContext: ${e.message}")
             
@@ -52,7 +52,7 @@ object AppManager {
 
     fun doOnCreate() {
         try {
-            mBlackBoxLoader.doOnCreate()
+            mTmBoxLoader.doOnCreate()
         } catch (e: Exception) {
             Log.e(TAG, "Error in doOnCreate: ${e.message}")
         }

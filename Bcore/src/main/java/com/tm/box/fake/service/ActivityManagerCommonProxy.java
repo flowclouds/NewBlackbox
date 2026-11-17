@@ -11,7 +11,7 @@ import android.os.IBinder;
 import java.io.File;
 import java.lang.reflect.Method;
 
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 import com.tm.box.app.BActivityThread;
 import com.tm.box.fake.hook.MethodHook;
 import com.tm.box.fake.hook.ProxyMethod;
@@ -45,22 +45,22 @@ public class ActivityManagerCommonProxy {
                 
                 if (file != null && file.exists()) {
                     try {
-                        PackageInfo packageInfo = BlackBoxCore.getPackageManager().getPackageArchiveInfo(file.getAbsolutePath(), 0);
+                        PackageInfo packageInfo = TmBox.getPackageManager().getPackageArchiveInfo(file.getAbsolutePath(), 0);
                         if (packageInfo != null) {
                             String packageName = packageInfo.packageName;
-                            String hostPackageName = BlackBoxCore.getHostPkg();
+                            String hostPackageName = TmBox.getHostPkg();
                             if (packageName.equals(hostPackageName)) {
-                                Slog.w(TAG, "Blocked attempt to install BlackBox app from within BlackBox: " + packageName);
+                                Slog.w(TAG, "Blocked attempt to install TmBox app from within TmBox: " + packageName);
                                 
                                 return 0;
                             }
                         }
                     } catch (Exception e) {
-                        Slog.w(TAG, "Could not verify if this is BlackBox app: " + e.getMessage());
+                        Slog.w(TAG, "Could not verify if this is TmBox app: " + e.getMessage());
                     }
                 }
                 
-                if (BlackBoxCore.get().requestInstallPackage(file, BActivityThread.getUserId())) {
+                if (TmBox.get().requestInstallPackage(file, BActivityThread.getUserId())) {
                     return 0;
                 }
                 intent.setData(FileProviderHandler.convertFileUri(BActivityThread.getApplication(), intent.getData()));
@@ -68,10 +68,10 @@ public class ActivityManagerCommonProxy {
             }
             String dataString = intent.getDataString();
             if (dataString != null && dataString.equals("package:" + BActivityThread.getAppPackageName())) {
-                intent.setData(Uri.parse("package:" + BlackBoxCore.getHostPkg()));
+                intent.setData(Uri.parse("package:" + TmBox.getHostPkg()));
             }
 
-            ResolveInfo resolveInfo = BlackBoxCore.getBPackageManager().resolveActivity(
+            ResolveInfo resolveInfo = TmBox.getBPackageManager().resolveActivity(
                     intent,
                     GET_META_DATA,
                     StartActivityCompat.getResolvedType(args),
@@ -83,7 +83,7 @@ public class ActivityManagerCommonProxy {
                 } else {
                     origPackage = intent.getPackage();
                 }
-                resolveInfo = BlackBoxCore.getBPackageManager().resolveActivity(
+                resolveInfo = TmBox.getBPackageManager().resolveActivity(
                         intent,
                         GET_META_DATA,
                         StartActivityCompat.getResolvedType(args),
@@ -97,7 +97,7 @@ public class ActivityManagerCommonProxy {
 
             intent.setExtrasClassLoader(who.getClass().getClassLoader());
             intent.setComponent(new ComponentName(resolveInfo.activityInfo.packageName, resolveInfo.activityInfo.name));
-            BlackBoxCore.getBActivityManager().startActivityAms(BActivityThread.getUserId(),
+            TmBox.getBActivityManager().startActivityAms(BActivityThread.getUserId(),
                     StartActivityCompat.getIntent(args),
                     StartActivityCompat.getResolvedType(args),
                     StartActivityCompat.getResultTo(args),
@@ -144,7 +144,7 @@ public class ActivityManagerCommonProxy {
             for (Intent intent : intents) {
                 intent.setExtrasClassLoader(who.getClass().getClassLoader());
             }
-            return BlackBoxCore.getBActivityManager().startActivities(BActivityThread.getUserId(),
+            return TmBox.getBActivityManager().startActivities(BActivityThread.getUserId(),
                     intents, resolvedTypes, resultTo, options);
         }
 
@@ -168,7 +168,7 @@ public class ActivityManagerCommonProxy {
     public static class ActivityResumed extends MethodHook {
         @Override
         protected Object hook(Object who, Method method, Object[] args) throws Throwable {
-            BlackBoxCore.getBActivityManager().onActivityResumed((IBinder) args[0]);
+            TmBox.getBActivityManager().onActivityResumed((IBinder) args[0]);
             return method.invoke(who, args);
         }
     }
@@ -177,7 +177,7 @@ public class ActivityManagerCommonProxy {
     public static class ActivityDestroyed extends MethodHook {
         @Override
         protected Object hook(Object who, Method method, Object[] args) throws Throwable {
-            BlackBoxCore.getBActivityManager().onActivityDestroyed((IBinder) args[0]);
+            TmBox.getBActivityManager().onActivityDestroyed((IBinder) args[0]);
             return method.invoke(who, args);
         }
     }
@@ -186,7 +186,7 @@ public class ActivityManagerCommonProxy {
     public static class FinishActivity extends MethodHook {
         @Override
         protected Object hook(Object who, Method method, Object[] args) throws Throwable {
-            BlackBoxCore.getBActivityManager().onFinishActivity((IBinder) args[0]);
+            TmBox.getBActivityManager().onFinishActivity((IBinder) args[0]);
             return method.invoke(who, args);
         }
     }
@@ -204,7 +204,7 @@ public class ActivityManagerCommonProxy {
     public static class getCallingPackage extends MethodHook {
         @Override
         protected Object hook(Object who, Method method, Object[] args) throws Throwable {
-            return BlackBoxCore.getBActivityManager().getCallingPackage((IBinder) args[0], BActivityThread.getUserId());
+            return TmBox.getBActivityManager().getCallingPackage((IBinder) args[0], BActivityThread.getUserId());
         }
     }
 
@@ -212,7 +212,7 @@ public class ActivityManagerCommonProxy {
     public static class getCallingActivity extends MethodHook {
         @Override
         protected Object hook(Object who, Method method, Object[] args) throws Throwable {
-            return BlackBoxCore.getBActivityManager().getCallingActivity((IBinder) args[0], BActivityThread.getUserId());
+            return TmBox.getBActivityManager().getCallingActivity((IBinder) args[0], BActivityThread.getUserId());
         }
     }
 }

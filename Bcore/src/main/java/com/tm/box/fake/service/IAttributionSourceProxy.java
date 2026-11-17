@@ -5,7 +5,7 @@ package com.tm.box.fake.service;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 import com.tm.box.app.BActivityThread;
 import com.tm.box.fake.hook.ClassInvocationStub;
 import com.tm.box.fake.hook.MethodHook;
@@ -44,8 +44,8 @@ public class IAttributionSourceProxy extends ClassInvocationStub {
         protected Object hook(Object who, Method method, Object[] args) throws Throwable {
             try {
                 
-                int uid = BlackBoxCore.getHostUid();
-                String packageName = BlackBoxCore.getHostPkg();
+                int uid = TmBox.getHostUid();
+                String packageName = TmBox.getHostPkg();
                 
                 Slog.d(TAG, "Creating AttributionSource with UID: " + uid + ", package: " + packageName);
                 
@@ -59,7 +59,7 @@ public class IAttributionSourceProxy extends ClassInvocationStub {
                 return method.invoke(who, args);
             } catch (Exception e) {
                 Slog.w(TAG, "Error creating AttributionSource, using fallback: " + e.getMessage());
-                return createSafeAttributionSource(BlackBoxCore.getHostUid(), BlackBoxCore.getHostPkg());
+                return createSafeAttributionSource(TmBox.getHostUid(), TmBox.getHostPkg());
             }
         }
         
@@ -150,10 +150,10 @@ public class IAttributionSourceProxy extends ClassInvocationStub {
                 }
                 
                 
-                return createSafeAttributionSource(BlackBoxCore.getHostUid(), BlackBoxCore.getHostPkg());
+                return createSafeAttributionSource(TmBox.getHostUid(), TmBox.getHostPkg());
             } catch (Exception e) {
                 Slog.w(TAG, "Error in fromParcel, using fallback: " + e.getMessage());
-                return createSafeAttributionSource(BlackBoxCore.getHostUid(), BlackBoxCore.getHostPkg());
+                return createSafeAttributionSource(TmBox.getHostUid(), TmBox.getHostPkg());
             }
         }
         
@@ -163,9 +163,9 @@ public class IAttributionSourceProxy extends ClassInvocationStub {
                 Class<?> attributionSourceClass = attributionSource.getClass();
                 Method setUidMethod = attributionSourceClass.getDeclaredMethod("setUid", int.class);
                 setUidMethod.setAccessible(true);
-                setUidMethod.invoke(attributionSource, BlackBoxCore.getHostUid());
+                setUidMethod.invoke(attributionSource, TmBox.getHostUid());
                 
-                Slog.d(TAG, "Fixed AttributionSource UID to: " + BlackBoxCore.getHostUid());
+                Slog.d(TAG, "Fixed AttributionSource UID to: " + TmBox.getHostUid());
             } catch (Exception e) {
                 Slog.w(TAG, "Could not fix AttributionSource UID: " + e.getMessage());
             }

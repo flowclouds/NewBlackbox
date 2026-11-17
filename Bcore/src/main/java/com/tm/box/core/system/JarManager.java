@@ -9,7 +9,7 @@ import java.io.InputStream;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 import com.tm.box.core.env.BEnvironment;
 import com.tm.box.utils.FileUtils;
 import com.tm.box.utils.JarUtils;
@@ -113,9 +113,9 @@ public class JarManager {
     
     
     private void initializeJarEnvironment() {
-        Context context = BlackBoxCore.getContext();
+        Context context = TmBox.getContext();
         if (context == null) {
-            throw new IllegalStateException("BlackBoxCore context is null");
+            throw new IllegalStateException("TmBox context is null");
         }
         
         Log.d(TAG, "Starting JAR environment initialization");

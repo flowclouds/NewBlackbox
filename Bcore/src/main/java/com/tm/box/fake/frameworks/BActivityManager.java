@@ -20,7 +20,7 @@ import com.tm.box.entity.am.RunningServiceInfo;
 import com.tm.box.utils.Slog;
 
 
-public class BActivityManager extends BlackManager<IBActivityManagerService> {
+public class BActivityManager extends BoxManager<IBActivityManagerService> {
     private static final String TAG = "BActivityManager";
     private static final BActivityManager sActivityManager = new BActivityManager();
 

@@ -15,7 +15,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 import com.tm.box.core.env.BEnvironment;
 import com.tm.box.core.system.BProcessManagerService;
 import com.tm.box.core.system.user.BUserHandle;
@@ -206,7 +206,7 @@ import com.tm.box.utils.compat.PackageParserCompat;
             BPackageSettings bPackageSettings = new BPackageSettings(packageSettingsIn);
             bPackageSettings.pkg.mExtras = bPackageSettings;
             if (bPackageSettings.installOption.isFlag(InstallOption.FLAG_SYSTEM)) {
-                PackageInfo packageInfo = BlackBoxCore.getPackageManager().getPackageInfo(packageName, PackageManager.GET_META_DATA);
+                PackageInfo packageInfo = TmBox.getPackageManager().getPackageInfo(packageName, PackageManager.GET_META_DATA);
                 String currPackageSourcePath = packageInfo.applicationInfo.sourceDir;
                 if (!currPackageSourcePath.equals(bPackageSettings.pkg.baseCodePath)) {
                     
@@ -239,7 +239,7 @@ import com.tm.box.utils.compat.PackageParserCompat;
         if (aPackage == null) {
             throw new RuntimeException("parser apk error.");
         }
-        aPackage.applicationInfo = BlackBoxCore.getPackageManager().getPackageInfo(aPackage.packageName, 0).applicationInfo;
+        aPackage.applicationInfo = TmBox.getPackageManager().getPackageInfo(aPackage.packageName, 0).applicationInfo;
         return getPackageLPw(aPackage.packageName, aPackage, option);
     }
 

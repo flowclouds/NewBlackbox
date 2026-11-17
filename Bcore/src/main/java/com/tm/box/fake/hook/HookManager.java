@@ -5,7 +5,7 @@ import android.util.Log;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 import com.tm.box.fake.delegate.AppInstrumentation;
 
 import com.tm.box.fake.service.HCallbackProxy;
@@ -106,7 +106,7 @@ public class HookManager {
     }
 
     public void init() {
-        if (BlackBoxCore.get().isBlackProcess() || BlackBoxCore.get().isServerProcess()) {
+        if (TmBox.get().isBoxProcess() || TmBox.get().isServerProcess()) {
             addInjector(new IDisplayManagerProxy());
             addInjector(new OsStub());
             addInjector(new IActivityManagerProxy());

@@ -14,7 +14,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 import com.tm.box.app.BActivityThread;
 
 
@@ -124,7 +124,7 @@ public class SocialMediaAppCrashPrevention {
     private static void hookWebViewDatabase() {
         try {
             
-            Context context = BlackBoxCore.getContext();
+            Context context = TmBox.getContext();
             if (context != null) {
                 String packageName = context.getPackageName();
                 String userId = String.valueOf(BActivityThread.getUserId());
@@ -160,7 +160,7 @@ public class SocialMediaAppCrashPrevention {
     private static void installContextCrashPrevention() {
         try {
             
-            Context context = BlackBoxCore.getContext();
+            Context context = TmBox.getContext();
             if (context == null) {
                 Slog.w(TAG, "Host context is null, attempting to recover");
                 

@@ -17,7 +17,7 @@ import java.io.File;
 import java.util.Collections;
 import java.util.List;
 
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 import com.tm.box.app.BActivityThread;
 import com.tm.box.core.system.ServiceManager;
 import com.tm.box.core.system.pm.IBPackageManagerService;
@@ -27,7 +27,7 @@ import com.tm.box.entity.pm.InstalledPackage;
 import com.tm.box.utils.TransactionThrottler;
 
 
-public class BPackageManager extends BlackManager<IBPackageManagerService> {
+public class BPackageManager extends BoxManager<IBPackageManagerService> {
     private static final BPackageManager sPackageManager = new BPackageManager();
     private final TransactionThrottler transactionThrottler = new TransactionThrottler();
     private static volatile boolean sIsFindingApkPath = false; 
@@ -94,7 +94,7 @@ public class BPackageManager extends BlackManager<IBPackageManagerService> {
         intentToResolve.setPackage(packageName);
         List<ResolveInfo> ris = queryIntentActivities(intentToResolve,
                 0,
-                intentToResolve.resolveTypeIfNeeded(BlackBoxCore.getContext().getContentResolver()),
+                intentToResolve.resolveTypeIfNeeded(TmBox.getContext().getContentResolver()),
                 userId);
 
         
@@ -105,7 +105,7 @@ public class BPackageManager extends BlackManager<IBPackageManagerService> {
             intentToResolve.setPackage(packageName);
             ris = queryIntentActivities(intentToResolve,
                     0,
-                    intentToResolve.resolveTypeIfNeeded(BlackBoxCore.getContext().getContentResolver()),
+                    intentToResolve.resolveTypeIfNeeded(TmBox.getContext().getContentResolver()),
                     userId);
         }
         if (ris == null || ris.size() <= 0) {
@@ -122,7 +122,7 @@ public class BPackageManager extends BlackManager<IBPackageManagerService> {
     private Intent createFallbackLaunchIntent(String packageName) {
         try {
             
-            Intent intent = BlackBoxCore.getContext().getPackageManager().getLaunchIntentForPackage(packageName);
+            Intent intent = TmBox.getContext().getPackageManager().getLaunchIntentForPackage(packageName);
             if (intent != null) {
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 return intent;
@@ -501,12 +501,12 @@ public class BPackageManager extends BlackManager<IBPackageManagerService> {
             if (file != null && !file.isEmpty()) {
                 try {
                     
-                    PackageInfo packageInfo = BlackBoxCore.getPackageManager().getPackageArchiveInfo(file, 0);
+                    PackageInfo packageInfo = TmBox.getPackageManager().getPackageArchiveInfo(file, 0);
                     if (packageInfo != null) {
                         String packageName = packageInfo.packageName;
-                        String hostPackageName = BlackBoxCore.getHostPkg();
+                        String hostPackageName = TmBox.getHostPkg();
                         if (packageName.equals(hostPackageName)) {
-                            Log.w(TAG, "Attempt to install BlackBox app detected and blocked: " + packageName);
+                            Log.w(TAG, "Attempt to install TmBox app detected and blocked: " + packageName);
                             return new InstallResult().installError("Cannot clone the host app from inside the sandbox.");
                         }
                     }
@@ -619,7 +619,7 @@ public class BPackageManager extends BlackManager<IBPackageManagerService> {
     private boolean isInstalledFallback(String packageName) {
         try {
             
-            BlackBoxCore.getContext().getPackageManager().getPackageInfo(packageName, 0);
+            TmBox.getContext().getPackageManager().getPackageInfo(packageName, 0);
             return true;
         } catch (Exception e) {
             Log.d(TAG, "Fallback isInstalled check failed for " + packageName + ", assuming not installed");

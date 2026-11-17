@@ -7,7 +7,7 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 import com.tm.box.app.BActivityThread;
 import com.tm.box.fake.hook.HookManager;
 import com.tm.box.fake.service.HCallbackProxy;
@@ -31,7 +31,7 @@ public class ProxyActivity extends Activity {
 
         ProxyActivityRecord record = ProxyActivityRecord.create(getIntent());
         if (record.mTarget != null) {
-            record.mTarget.setExtrasClassLoader(BlackBoxCore.getApplication().getClassLoader());
+            record.mTarget.setExtrasClassLoader(TmBox.getApplication().getClassLoader());
             startActivity(record.mTarget);
             return;
         }

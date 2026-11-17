@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import black.android.content.pm.BRUserInfo;
 import black.android.os.BRIUserManagerStub;
 import black.android.os.BRServiceManager;
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 import com.tm.box.app.BActivityThread;
 import com.tm.box.fake.hook.BinderInvocationStub;
 import com.tm.box.fake.hook.MethodHook;
@@ -39,7 +39,7 @@ public class IUserManagerProxy extends BinderInvocationStub {
     public static class GetApplicationRestrictions extends MethodHook {
         @Override
         protected Object hook(Object who, Method method, Object[] args) throws Throwable {
-            args[0] = BlackBoxCore.getHostPkg();
+            args[0] = TmBox.getHostPkg();
             return method.invoke(who, args);
         }
     }
@@ -48,7 +48,7 @@ public class IUserManagerProxy extends BinderInvocationStub {
     public static class GetProfileParent extends MethodHook {
         @Override
         protected Object hook(Object who, Method method, Object[] args) throws Throwable {
-            Object blackBox = BRUserInfo.get()._new(BActivityThread.getUserId(), "BlackBox", BRUserInfo.get().FLAG_PRIMARY());
+            Object blackBox = BRUserInfo.get()._new(BActivityThread.getUserId(), "TmBox", BRUserInfo.get().FLAG_PRIMARY());
             return blackBox;
         }
     }

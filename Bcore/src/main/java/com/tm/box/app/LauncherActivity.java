@@ -9,7 +9,7 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 import com.tm.box.R;
 import com.tm.box.utils.Slog;
 import android.util.Log;
@@ -29,13 +29,13 @@ public class LauncherActivity extends Activity {
     public static void launch(Intent intent, int userId) {
         try {
             Intent splash = new Intent();
-            splash.setClass(BlackBoxCore.getContext(), LauncherActivity.class);
+            splash.setClass(TmBox.getContext(), LauncherActivity.class);
             
             splash.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             splash.putExtra(LauncherActivity.KEY_INTENT, intent);
             splash.putExtra(LauncherActivity.KEY_PKG, intent.getPackage());
             splash.putExtra(LauncherActivity.KEY_USER_ID, userId);
-            BlackBoxCore.getContext().startActivity(splash);
+            TmBox.getContext().startActivity(splash);
             Slog.d(TAG, "LauncherActivity.launch() called for package: " + intent.getPackage());
         } catch (Exception e) {
             Slog.e(TAG, "Error in LauncherActivity.launch()", e);
@@ -134,20 +134,20 @@ public class LauncherActivity extends Activity {
     private PackageInfo getPackageInfoWithFallback(String packageName, int userId) {
         try {
             
-            return BlackBoxCore.getBPackageManager().getPackageInfo(packageName, 0, userId);
+            return TmBox.getBPackageManager().getPackageInfo(packageName, 0, userId);
         } catch (Exception e) {
             Slog.w(TAG, "Failed to get package info for " + packageName + " (attempt 1): " + e.getMessage());
             
             try {
                 
-                return BlackBoxCore.getBPackageManager().getPackageInfo(packageName, 
+                return TmBox.getBPackageManager().getPackageInfo(packageName, 
                     android.content.pm.PackageManager.GET_META_DATA, userId);
             } catch (Exception e2) {
                 Slog.w(TAG, "Failed to get package info for " + packageName + " (attempt 2): " + e2.getMessage());
                 
                 try {
                     
-                    android.content.pm.ApplicationInfo appInfo = BlackBoxCore.getBPackageManager()
+                    android.content.pm.ApplicationInfo appInfo = TmBox.getBPackageManager()
                         .getApplicationInfo(packageName, 0, userId);
                     
                     if (appInfo != null) {
@@ -182,7 +182,7 @@ public class LauncherActivity extends Activity {
                 Thread.sleep(100);
                 
                 
-                BlackBoxCore.getBActivityManager().startActivity(launchIntent, userId);
+                TmBox.getBActivityManager().startActivity(launchIntent, userId);
                 
                 Slog.d(TAG, "App launch initiated successfully");
             } catch (Exception e) {

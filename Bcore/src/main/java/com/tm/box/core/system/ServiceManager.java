@@ -5,7 +5,7 @@ import android.os.IBinder;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 import com.tm.box.core.system.accounts.BAccountManagerService;
 import com.tm.box.core.system.am.BActivityManagerService;
 import com.tm.box.core.system.am.BJobManagerService;
@@ -62,15 +62,15 @@ public class ServiceManager {
         return mCaches.get(name);
     }
 
-    public static void initBlackManager() {
-        BlackBoxCore.get().getService(ACTIVITY_MANAGER);
-        BlackBoxCore.get().getService(JOB_MANAGER);
-        BlackBoxCore.get().getService(PACKAGE_MANAGER);
-        BlackBoxCore.get().getService(STORAGE_MANAGER);
-        BlackBoxCore.get().getService(USER_MANAGER);
+    public static void initBoxManager() {
+        TmBox.get().getService(ACTIVITY_MANAGER);
+        TmBox.get().getService(JOB_MANAGER);
+        TmBox.get().getService(PACKAGE_MANAGER);
+        TmBox.get().getService(STORAGE_MANAGER);
+        TmBox.get().getService(USER_MANAGER);
 
-        BlackBoxCore.get().getService(ACCOUNT_MANAGER);
-        BlackBoxCore.get().getService(LOCATION_MANAGER);
-        BlackBoxCore.get().getService(NOTIFICATION_MANAGER);
+        TmBox.get().getService(ACCOUNT_MANAGER);
+        TmBox.get().getService(LOCATION_MANAGER);
+        TmBox.get().getService(NOTIFICATION_MANAGER);
     }
 }

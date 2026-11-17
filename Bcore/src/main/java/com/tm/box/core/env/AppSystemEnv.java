@@ -6,7 +6,7 @@ import android.os.Build;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 import com.tm.box.utils.compat.BuildCompat;
 
 
@@ -64,7 +64,7 @@ public class AppSystemEnv {
     }
 
     public static boolean isBlackPackage(String packageName) {
-        if (BlackBoxCore.get().isHideRoot() && sSuPackages.contains(packageName)) {
+        if (TmBox.get().isHideRoot() && sSuPackages.contains(packageName)) {
             return true;
         }
         return false;

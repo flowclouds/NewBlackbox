@@ -2,7 +2,7 @@ package com.tm.box.fake.service.base;
 
 import java.lang.reflect.Method;
 
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 import com.tm.box.app.BActivityThread;
 import com.tm.box.fake.hook.MethodHook;
 
@@ -25,7 +25,7 @@ public class UidMethodProxy extends MethodHook {
     protected Object hook(Object who, Method method, Object[] args) throws Throwable {
         int uid = (int) args[index];
         if (uid == BActivityThread.getBUid()) {
-            args[index] = BlackBoxCore.getHostUid();
+            args[index] = TmBox.getHostUid();
         }
         return method.invoke(who, args);
     }

@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 import com.tm.box.core.system.pm.BPackage;
 import com.tm.box.core.system.pm.BPackageManagerService;
 import com.tm.box.core.system.pm.BPackageSettings;
@@ -86,9 +86,9 @@ public class BroadcastManager implements PackageMonitor {
                 for (BPackage.ActivityIntentInfo intent : intents) {
                     ProxyBroadcastReceiver proxyBroadcastReceiver = new ProxyBroadcastReceiver();
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        BlackBoxCore.getContext().registerReceiver(proxyBroadcastReceiver, intent.intentFilter, Context.RECEIVER_EXPORTED);
+                        TmBox.getContext().registerReceiver(proxyBroadcastReceiver, intent.intentFilter, Context.RECEIVER_EXPORTED);
                     }else{
-                        BlackBoxCore.getContext().registerReceiver(proxyBroadcastReceiver, intent.intentFilter);
+                        TmBox.getContext().registerReceiver(proxyBroadcastReceiver, intent.intentFilter);
                     }
                     addReceiver(bPackage.packageName, proxyBroadcastReceiver);
                 }
@@ -130,7 +130,7 @@ public class BroadcastManager implements PackageMonitor {
                     Slog.d(TAG, "unregisterReceiver Package: " + packageName + ", size: " + broadcastReceivers.size());
                     for (BroadcastReceiver broadcastReceiver : broadcastReceivers) {
                         try {
-                            BlackBoxCore.getContext().unregisterReceiver(broadcastReceiver);
+                            TmBox.getContext().unregisterReceiver(broadcastReceiver);
                         } catch (Throwable ignored) {
                         }
                     }

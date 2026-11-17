@@ -3,7 +3,7 @@ package com.tm.box.utils;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.res.Resources;
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -63,7 +63,7 @@ public class ContextWrapperHook {
         
         
         try {
-            Context hostContext = BlackBoxCore.getContext();
+            Context hostContext = TmBox.getContext();
             if (hostContext != null) {
                 return hostContext.getResources();
             }
@@ -88,7 +88,7 @@ public class ContextWrapperHook {
             
             
             if (currentBase == null) {
-                Context fallbackContext = BlackBoxCore.getContext();
+                Context fallbackContext = TmBox.getContext();
                 if (fallbackContext != null) {
                     mBaseField.set(contextWrapper, fallbackContext);
                     Slog.d(TAG, "Replaced null base context with fallback context");

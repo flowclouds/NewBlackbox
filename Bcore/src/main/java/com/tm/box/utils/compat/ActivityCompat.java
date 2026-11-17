@@ -16,7 +16,7 @@ import android.view.WindowManager;
 
 import black.android.app.BRActivity;
 import black.com.android.internal.BRRstyleable;
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 import com.tm.box.app.BActivityThread;
 import com.tm.box.utils.DrawableUtils;
 
@@ -53,7 +53,7 @@ public class ActivityCompat {
             if (intent != null && activity.isTaskRoot()) {
                 try {
                     String label = TaskDescriptionCompat.getTaskDescriptionLabel(
-                            BlackBoxCore.getUserId(), applicationInfo.loadLabel(pm));
+                            TmBox.getUserId(), applicationInfo.loadLabel(pm));
 
                     Bitmap icon = null;
                     Drawable drawable = getActivityIcon(activity);

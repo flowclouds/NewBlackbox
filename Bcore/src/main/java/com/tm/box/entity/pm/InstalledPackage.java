@@ -8,7 +8,7 @@ import android.os.Parcelable;
 
 import java.util.Objects;
 
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 
 
 public class InstalledPackage implements Parcelable {
@@ -16,11 +16,11 @@ public class InstalledPackage implements Parcelable {
     public String packageName;
 
     public ApplicationInfo getApplication() {
-        return BlackBoxCore.getBPackageManager().getApplicationInfo(packageName, PackageManager.GET_META_DATA, userId);
+        return TmBox.getBPackageManager().getApplicationInfo(packageName, PackageManager.GET_META_DATA, userId);
     }
 
     public PackageInfo getPackageInfo() {
-        return BlackBoxCore.getBPackageManager().getPackageInfo(packageName, PackageManager.GET_META_DATA, userId);
+        return TmBox.getBPackageManager().getPackageInfo(packageName, PackageManager.GET_META_DATA, userId);
     }
 
     @Override

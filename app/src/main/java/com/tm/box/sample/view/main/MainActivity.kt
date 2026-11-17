@@ -10,7 +10,7 @@ import androidx.core.content.edit
 import androidx.viewpager2.widget.ViewPager2
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.input.input
-import com.tm.box.BlackBoxCore
+import com.tm.box.TmBox
 import com.tm.box.sample.R
 import com.tm.box.sample.app.App
 import com.tm.box.sample.app.AppManager
@@ -49,7 +49,7 @@ class MainActivity : LoadingActivity() {
             super.onCreate(savedInstanceState)
 
             try {
-                BlackBoxCore.get().onBeforeMainActivityOnCreate(this)
+                TmBox.get().onBeforeMainActivityOnCreate(this)
             } catch (e: Exception) {
                 Log.e(TAG, "Error in onBeforeMainActivityOnCreate: ${e.message}")
             }
@@ -65,7 +65,7 @@ class MainActivity : LoadingActivity() {
             requestInstalledAppsPermission()
 
             try {
-                BlackBoxCore.get().onAfterMainActivityOnCreate(this)
+                TmBox.get().onAfterMainActivityOnCreate(this)
             } catch (e: Exception) {
                 Log.e(TAG, "Error in onAfterMainActivityOnCreate: ${e.message}")
             }
@@ -298,7 +298,7 @@ class MainActivity : LoadingActivity() {
 
     private fun initViewPager() {
         try {
-            val userList = BlackBoxCore.get().users
+            val userList = TmBox.get().users
             userList.forEach { fragmentList.add(AppsFragment.newInstance(it.id)) }
 
             currentUser = userList.firstOrNull()?.id ?: 0
@@ -360,7 +360,7 @@ class MainActivity : LoadingActivity() {
 
     fun scanUser() {
         try {
-            val userList = BlackBoxCore.get().users
+            val userList = TmBox.get().users
 
             if (fragmentList.size == userList.size) {
                 fragmentList.add(AppsFragment.newInstance(fragmentList.size))

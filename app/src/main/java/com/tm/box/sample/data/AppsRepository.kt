@@ -6,7 +6,7 @@ import android.util.Log
 import android.webkit.URLUtil
 import androidx.lifecycle.MutableLiveData
 import java.io.File
-import com.tm.box.BlackBoxCore
+import com.tm.box.TmBox
 import com.tm.box.utils.AbiUtils
 import com.tm.box.sample.R
 import com.tm.box.sample.app.AppManager
@@ -23,7 +23,7 @@ class AppsRepository {
     
     private fun safeLoadAppLabel(applicationInfo: ApplicationInfo): String {
         return try {
-            BlackBoxCore.getPackageManager().getApplicationLabel(applicationInfo).toString()
+            TmBox.getPackageManager().getApplicationLabel(applicationInfo).toString()
         } catch (e: Exception) {
             Log.w(TAG, "Failed to load label for ${applicationInfo.packageName}: ${e.message}")
             applicationInfo.packageName 
@@ -44,7 +44,7 @@ class AppsRepository {
                 return null
             }
 
-            val icon = BlackBoxCore.getPackageManager().getApplicationIcon(applicationInfo)
+            val icon = TmBox.getPackageManager().getApplicationIcon(applicationInfo)
 
             
             if (icon is android.graphics.drawable.BitmapDrawable) {
@@ -55,7 +55,7 @@ class AppsRepository {
                         val scaledBitmap =
                                 android.graphics.Bitmap.createScaledBitmap(bitmap, 96, 96, true)
                         android.graphics.drawable.BitmapDrawable(
-                                BlackBoxCore.getPackageManager()
+                                TmBox.getPackageManager()
                                         .getResourcesForApplication(applicationInfo.packageName),
                                 scaledBitmap
                         )
@@ -82,7 +82,7 @@ class AppsRepository {
         try {
             synchronized(mInstalledList) {
                 val installedApplications: List<ApplicationInfo> =
-                        BlackBoxCore.getPackageManager().getInstalledApplications(0)
+                        TmBox.getPackageManager().getInstalledApplications(0)
                 val installedList = mutableListOf<AppInfo>()
 
                 for (installedApplication in installedApplications) {
@@ -95,10 +95,10 @@ class AppsRepository {
                         if (!AbiUtils.isSupport(file)) continue
 
                         
-                        if (BlackBoxCore.get().isBlackBoxApp(installedApplication.packageName)) {
+                        if (TmBox.get().isHostApp(installedApplication.packageName)) {
                             Log.d(
                                     TAG,
-                                    "Filtering out BlackBox app: ${installedApplication.packageName}"
+                                    "Filtering out TmBox app: ${installedApplication.packageName}"
                             )
                             continue
                         }
@@ -136,7 +136,7 @@ class AppsRepository {
         try {
             loadingLiveData.postValue(true)
             synchronized(mInstalledList) {
-                val blackBoxCore = BlackBoxCore.get()
+                val tmBox = TmBox.get()
                 Log.d(TAG, mInstalledList.joinToString(","))
                 val newInstalledList =
                         mInstalledList.map {
@@ -145,7 +145,7 @@ class AppsRepository {
                                     it.icon, 
                                     it.packageName,
                                     it.sourceDir,
-                                    blackBoxCore.isInstalled(it.packageName, userID)
+                                    tmBox.isInstalled(it.packageName, userID)
                             )
                         }
                 appsLiveData.postValue(newInstalledList)
@@ -169,10 +169,10 @@ class AppsRepository {
                 MemoryManager.forceGarbageCollectionIfNeeded()
             }
 
-            val blackBoxCore = BlackBoxCore.get()
+            val tmBox = TmBox.get()
 
             
-            val users = blackBoxCore.users
+            val users = tmBox.users
             Log.d(TAG, "getVmInstallList: userId=$userId, total users=${users.size}")
             users.forEach { user -> Log.d(TAG, "User: id=${user.id}, name=${user.name}") }
 
@@ -186,7 +186,7 @@ class AppsRepository {
 
             while (applicationList == null && retryCount < maxRetries) {
                 try {
-                    applicationList = blackBoxCore.getInstalledApplications(0, userId)
+                    applicationList = tmBox.getInstalledApplications(0, userId)
                     if (applicationList == null) {
                         Log.w(
                                 TAG,
@@ -353,35 +353,35 @@ class AppsRepository {
             ) {
                 
                 try {
-                    val hostPackageName = BlackBoxCore.getHostPkg()
+                    val hostPackageName = TmBox.getHostPkg()
 
                     
                     if (!URLUtil.isValidUrl(source)) {
                         val file = File(source)
                         if (file.exists()) {
                             val packageInfo =
-                                    BlackBoxCore.getPackageManager()
+                                    TmBox.getPackageManager()
                                             .getPackageArchiveInfo(source, 0)
                             if (packageInfo != null && packageInfo.packageName == hostPackageName) {
                                 resultLiveData.postValue(
-                                        "Cannot install BlackBox app from within BlackBox. This would create infinite recursion and is not allowed for security reasons."
+                                        "Cannot install TmBox app from within TmBox. This would create infinite recursion and is not allowed for security reasons."
                                 )
                                 return
                             }
                         }
                     }
                 } catch (e: Exception) {
-                    Log.w(TAG, "Could not verify if this is BlackBox app: ${e.message}")
+                    Log.w(TAG, "Could not verify if this is TmBox app: ${e.message}")
                 }
             }
 
-            val blackBoxCore = BlackBoxCore.get()
+            val tmBox = TmBox.get()
             val installResult =
                     if (URLUtil.isValidUrl(source)) {
                         val uri = Uri.parse(source)
-                        blackBoxCore.installPackageAsUser(uri, userId)
+                        tmBox.installPackageAsUser(uri, userId)
                     } else {
-                        blackBoxCore.installPackageAsUser(source, userId)
+                        tmBox.installPackageAsUser(source, userId)
                     }
 
             if (installResult.success) {
@@ -399,7 +399,7 @@ class AppsRepository {
 
     fun unInstall(packageName: String, userID: Int, resultLiveData: MutableLiveData<String>) {
         try {
-            BlackBoxCore.get().uninstallPackageAsUser(packageName, userID)
+            TmBox.get().uninstallPackageAsUser(packageName, userID)
             updateAppSortList(userID, packageName, false)
             scanUser()
             resultLiveData.postValue(getString(R.string.uninstall_success))
@@ -411,7 +411,7 @@ class AppsRepository {
 
     fun launchApk(packageName: String, userId: Int, launchLiveData: MutableLiveData<Boolean>) {
         try {
-            val result = BlackBoxCore.get().launchApk(packageName, userId)
+            val result = TmBox.get().launchApk(packageName, userId)
             launchLiveData.postValue(result)
         } catch (e: Exception) {
             Log.e(TAG, "Error launching APK: ${e.message}")
@@ -421,7 +421,7 @@ class AppsRepository {
 
     fun clearApkData(packageName: String, userID: Int, resultLiveData: MutableLiveData<String>) {
         try {
-            BlackBoxCore.get().clearPackage(packageName, userID)
+            TmBox.get().clearPackage(packageName, userID)
             resultLiveData.postValue(getString(R.string.clear_success))
         } catch (e: Exception) {
             Log.e(TAG, "Error clearing APK data: ${e.message}")
@@ -432,8 +432,8 @@ class AppsRepository {
     
     private fun scanUser() {
         try {
-            val blackBoxCore = BlackBoxCore.get()
-            val userList = blackBoxCore.users
+            val tmBox = TmBox.get()
+            val userList = tmBox.users
 
             if (userList.isEmpty()) {
                 return
@@ -441,8 +441,8 @@ class AppsRepository {
 
             val id = userList.last().id
 
-            if (blackBoxCore.getInstalledApplications(0, id).isEmpty()) {
-                blackBoxCore.deleteUser(id)
+            if (tmBox.getInstalledApplications(0, id).isEmpty()) {
+                tmBox.deleteUser(id)
                 AppManager.mRemarkSharedPreferences.edit().apply {
                     remove("Remark$id")
                     remove("AppList$id")

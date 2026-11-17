@@ -22,7 +22,7 @@ import black.android.app.BRActivityThread;
 import black.android.app.BRContextImpl;
 import black.android.app.ContextImpl;
 import black.android.content.pm.BRPackageManager;
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 import com.tm.box.app.BActivityThread;
 import com.tm.box.core.env.AppSystemEnv;
 import com.tm.box.fake.FakeCore;
@@ -54,7 +54,7 @@ public class IPackageManagerProxy extends BinderInvocationStub {
     protected void inject(Object baseInvocation, Object proxyInvocation) {
         BRActivityThread.get()._set_sPackageManager(proxyInvocation);
         replaceSystemService("package");
-        Object systemContext = BRActivityThread.get(BlackBoxCore.mainThread()).getSystemContext();
+        Object systemContext = BRActivityThread.get(TmBox.mainThread()).getSystemContext();
         BRContextImpl.get(systemContext).getPackageManager();
         PackageManager packageManager = BRContextImpl.get(systemContext).mPackageManager();
         if (packageManager != null) {
@@ -95,7 +95,7 @@ public class IPackageManagerProxy extends BinderInvocationStub {
             Intent intent = (Intent) args[0];
             String resolvedType = (String) args[1];
             int flags = MethodParameterUtils.toInt(args[2]);
-            ResolveInfo resolveInfo = BlackBoxCore.getBPackageManager().resolveIntent(intent, resolvedType, flags, BlackBoxCore.getUserId());
+            ResolveInfo resolveInfo = TmBox.getBPackageManager().resolveIntent(intent, resolvedType, flags, TmBox.getUserId());
             if (resolveInfo != null) {
                 return resolveInfo;
             }
@@ -110,7 +110,7 @@ public class IPackageManagerProxy extends BinderInvocationStub {
             Intent intent = (Intent) args[0];
             String resolvedType = (String) args[1];
             int flags = MethodParameterUtils.toInt(args[2]);
-            ResolveInfo resolveInfo = BlackBoxCore.getBPackageManager().resolveService(intent, flags, resolvedType, BlackBoxCore.getUserId());
+            ResolveInfo resolveInfo = TmBox.getBPackageManager().resolveService(intent, flags, resolvedType, TmBox.getUserId());
             if (resolveInfo != null) {
                 return resolveInfo;
             }
@@ -138,7 +138,7 @@ public class IPackageManagerProxy extends BinderInvocationStub {
                 return createFakeGooglePlayServicesPackageInfo();
             }
             
-            PackageInfo packageInfo = BlackBoxCore.getBPackageManager().getPackageInfo(packageName, flags, BlackBoxCore.getUserId());
+            PackageInfo packageInfo = TmBox.getBPackageManager().getPackageInfo(packageName, flags, TmBox.getUserId());
             if (packageInfo != null) {
                 
                 if (packageInfo.requestedPermissions != null && packageInfo.requestedPermissionsFlags != null) {
@@ -194,7 +194,7 @@ public class IPackageManagerProxy extends BinderInvocationStub {
         protected Object hook(Object who, Method method, Object[] args) throws Throwable {
             ComponentName componentName = (ComponentName) args[0];
             int flags = MethodParameterUtils.toInt(args[1]);
-            ProviderInfo providerInfo = BlackBoxCore.getBPackageManager().getProviderInfo(componentName, flags, BlackBoxCore.getUserId());
+            ProviderInfo providerInfo = TmBox.getBPackageManager().getProviderInfo(componentName, flags, TmBox.getUserId());
             if (providerInfo != null)
                 return providerInfo;
             if (AppSystemEnv.isOpenPackage(componentName)) {
@@ -210,7 +210,7 @@ public class IPackageManagerProxy extends BinderInvocationStub {
         protected Object hook(Object who, Method method, Object[] args) throws Throwable {
             ComponentName componentName = (ComponentName) args[0];
             int flags = MethodParameterUtils.toInt(args[1]);
-            ActivityInfo receiverInfo = BlackBoxCore.getBPackageManager().getReceiverInfo(componentName, flags, BlackBoxCore.getUserId());
+            ActivityInfo receiverInfo = TmBox.getBPackageManager().getReceiverInfo(componentName, flags, TmBox.getUserId());
             if (receiverInfo != null)
                 return receiverInfo;
             if (AppSystemEnv.isOpenPackage(componentName)) {
@@ -226,7 +226,7 @@ public class IPackageManagerProxy extends BinderInvocationStub {
         protected Object hook(Object who, Method method, Object[] args) throws Throwable {
             ComponentName componentName = (ComponentName) args[0];
             int flags = MethodParameterUtils.toInt(args[1]);
-            ActivityInfo activityInfo = BlackBoxCore.getBPackageManager().getActivityInfo(componentName, flags, BlackBoxCore.getUserId());
+            ActivityInfo activityInfo = TmBox.getBPackageManager().getActivityInfo(componentName, flags, TmBox.getUserId());
             if (activityInfo != null)
                 return activityInfo;
             if (AppSystemEnv.isOpenPackage(componentName)) {
@@ -243,7 +243,7 @@ public class IPackageManagerProxy extends BinderInvocationStub {
         protected Object hook(Object who, Method method, Object[] args) throws Throwable {
             ComponentName componentName = (ComponentName) args[0];
             int flags = MethodParameterUtils.toInt(args[1]);
-            ServiceInfo serviceInfo = BlackBoxCore.getBPackageManager().getServiceInfo(componentName, flags, BlackBoxCore.getUserId());
+            ServiceInfo serviceInfo = TmBox.getBPackageManager().getServiceInfo(componentName, flags, TmBox.getUserId());
             if (serviceInfo != null)
                 return serviceInfo;
             if (AppSystemEnv.isOpenPackage(componentName)) {
@@ -259,7 +259,7 @@ public class IPackageManagerProxy extends BinderInvocationStub {
         @Override
         protected Object hook(Object who, Method method, Object[] args) throws Throwable {
             int flags = MethodParameterUtils.toInt(args[0]);
-            List<ApplicationInfo> installedApplications = BlackBoxCore.getBPackageManager().getInstalledApplications(flags, BlackBoxCore.getUserId());
+            List<ApplicationInfo> installedApplications = TmBox.getBPackageManager().getInstalledApplications(flags, TmBox.getUserId());
             return ParceledListSliceCompat.create(installedApplications);
         }
     }
@@ -270,7 +270,7 @@ public class IPackageManagerProxy extends BinderInvocationStub {
         @Override
         protected Object hook(Object who, Method method, Object[] args) throws Throwable {
             int flags = MethodParameterUtils.toInt(args[0]);
-            List<PackageInfo> installedPackages = BlackBoxCore.getBPackageManager().getInstalledPackages(flags, BlackBoxCore.getUserId());
+            List<PackageInfo> installedPackages = TmBox.getBPackageManager().getInstalledPackages(flags, TmBox.getUserId());
             return ParceledListSliceCompat.create(installedPackages);
         }
     }
@@ -285,7 +285,7 @@ public class IPackageManagerProxy extends BinderInvocationStub {
 
 
 
-            ApplicationInfo applicationInfo = BlackBoxCore.getBPackageManager().getApplicationInfo(packageName, flags, BlackBoxCore.getUserId());
+            ApplicationInfo applicationInfo = TmBox.getBPackageManager().getApplicationInfo(packageName, flags, TmBox.getUserId());
             if (applicationInfo != null) {
                 // ColorOS qdgralloc rejects Impeller's 4x4 format 0x3b, so the Flutter surface never presents.
                 if (applicationInfo.metaData == null) {
@@ -294,7 +294,7 @@ public class IPackageManagerProxy extends BinderInvocationStub {
                 applicationInfo.metaData.putBoolean("io.flutter.embedding.android.EnableImpeller", false);
                 return applicationInfo;
             }
-            if (AppSystemEnv.isOpenPackage(packageName) || packageName.equals(BlackBoxCore.getHostPkg())) {
+            if (AppSystemEnv.isOpenPackage(packageName) || packageName.equals(TmBox.getHostPkg())) {
                 return method.invoke(who, args);
             }
             return null;
@@ -306,8 +306,8 @@ public class IPackageManagerProxy extends BinderInvocationStub {
         @Override
         protected Object hook(Object who, Method method, Object[] args) throws Throwable {
             int flags = MethodParameterUtils.toInt(args[2]);
-            List<ProviderInfo> providers = BlackBoxCore.getBPackageManager().
-                    queryContentProviders(BlackBoxCore.getAppProcessName(), BlackBoxCore.getBUid(), flags, BlackBoxCore.getUserId());
+            List<ProviderInfo> providers = TmBox.getBPackageManager().
+                    queryContentProviders(TmBox.getAppProcessName(), TmBox.getBUid(), flags, TmBox.getUserId());
             return ParceledListSliceCompat.create(providers);
         }
     }
@@ -319,7 +319,7 @@ public class IPackageManagerProxy extends BinderInvocationStub {
             Intent intent = MethodParameterUtils.getFirstParam(args, Intent.class);
             String type = MethodParameterUtils.getFirstParam(args, String.class);
             Integer flags = MethodParameterUtils.getFirstParam(args, Integer.class);
-            List<ResolveInfo> resolves = BlackBoxCore.getBPackageManager().queryBroadcastReceivers(intent, flags, type, BActivityThread.getUserId());
+            List<ResolveInfo> resolves = TmBox.getBPackageManager().queryBroadcastReceivers(intent, flags, type, BActivityThread.getUserId());
             Slog.d(TAG, "queryIntentReceivers: " + resolves);
 
             
@@ -338,7 +338,7 @@ public class IPackageManagerProxy extends BinderInvocationStub {
         protected Object hook(Object who, Method method, Object[] args) throws Throwable {
             String authority = (String) args[0];
             int flags = MethodParameterUtils.toInt(args[1]);
-            ProviderInfo providerInfo = BlackBoxCore.getBPackageManager().resolveContentProvider(authority, flags, BActivityThread.getUserId());
+            ProviderInfo providerInfo = TmBox.getBPackageManager().resolveContentProvider(authority, flags, BActivityThread.getUserId());
             if (providerInfo == null) {
                 return method.invoke(who, args);
             }
@@ -360,11 +360,11 @@ public class IPackageManagerProxy extends BinderInvocationStub {
         @Override
         protected Object hook(Object who, Method method, Object[] args) throws Throwable {
             int uid = (Integer) args[0];
-            if (uid == BlackBoxCore.getHostUid()) {
+            if (uid == TmBox.getHostUid()) {
                 args[0] = BActivityThread.getBUid();
                 uid = (int) args[0];
             }
-            String[] packagesForUid = BlackBoxCore.getBPackageManager().getPackagesForUid(uid);
+            String[] packagesForUid = TmBox.getBPackageManager().getPackagesForUid(uid);
             Slog.d(TAG, args[0] + " , " + BActivityThread.getAppProcessName() + " GetPackagesForUid: " + Arrays.toString(packagesForUid));
             return packagesForUid;
         }
@@ -394,7 +394,7 @@ public class IPackageManagerProxy extends BinderInvocationStub {
         protected Object hook(Object who, Method method, Object[] args) throws Throwable {
             ComponentName componentName = (ComponentName) args[0];
             String packageName = componentName.getPackageName();
-            ApplicationInfo applicationInfo = BlackBoxCore.getBPackageManager().getApplicationInfo(packageName,0, BActivityThread.getUserId());
+            ApplicationInfo applicationInfo = TmBox.getBPackageManager().getApplicationInfo(packageName,0, BActivityThread.getUserId());
 
 
 

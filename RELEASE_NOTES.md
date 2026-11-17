@@ -11,16 +11,16 @@ Added a new setting to choose between VPN and normal network mode for sandboxed 
 
 - **Location:** Settings → Others → Use VPN Network
 - **Default:** OFF (normal network mode)
-- When enabled, traffic is routed through BlackBox's VPN service
+- When enabled, traffic is routed through TmBox's VPN service
 - Requires app restart to take effect
 
 **Files Changed:**
-- `app/src/main/java/com/tm/box/sample/view/main/BlackBoxLoader.kt`
+- `app/src/main/java/com/tm/box/sample/view/main/TmBoxLoader.kt`
 - `app/src/main/java/com/tm/box/sample/view/setting/SettingFragment.kt`
 - `app/src/main/res/xml/setting.xml`
 - `app/src/main/res/values/strings.xml`
 - `Bcore/src/main/java/com/tm/box/app/configuration/ClientConfiguration.java`
-- `Bcore/src/main/java/com/tm/box/BlackBoxCore.java`
+- `Bcore/src/main/java/com/tm/box/TmBox.java`
 
 #### Device Information Logging
 Added comprehensive device info header in logcat for easier debugging:

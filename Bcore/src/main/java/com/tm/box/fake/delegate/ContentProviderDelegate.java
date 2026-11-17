@@ -19,7 +19,7 @@ import black.android.providers.BRSettingsNameValueCache;
 import black.android.providers.BRSettingsNameValueCacheOreo;
 import black.android.providers.BRSettingsSecure;
 import black.android.providers.BRSettingsSystem;
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 import com.tm.box.fake.service.context.providers.ContentProviderStub;
 import com.tm.box.fake.service.context.providers.SystemProviderStub;
 import com.tm.box.utils.compat.BuildCompat;
@@ -44,10 +44,10 @@ public class ContentProviderDelegate {
             case "media":
             case "telephony":
             case "settings":
-                bContentProvider = new SystemProviderStub().wrapper(iInterface, BlackBoxCore.getHostPkg());
+                bContentProvider = new SystemProviderStub().wrapper(iInterface, TmBox.getHostPkg());
                 break;
             default:
-                bContentProvider = new ContentProviderStub().wrapper(iInterface, BlackBoxCore.getHostPkg());
+                bContentProvider = new ContentProviderStub().wrapper(iInterface, TmBox.getHostPkg());
                 break;
         }
         if (BuildCompat.isOreo()) {
@@ -60,8 +60,8 @@ public class ContentProviderDelegate {
     public static void init() {
         clearSettingProvider();
 
-        BlackBoxCore.getContext().getContentResolver().call(Uri.parse("content://settings"), "", null, null);
-        Object activityThread = BlackBoxCore.mainThread();
+        TmBox.getContext().getContentResolver().call(Uri.parse("content://settings"), "", null, null);
+        Object activityThread = TmBox.mainThread();
         ArrayMap<Object, Object> map = (ArrayMap<Object, Object>) BRActivityThread.get(activityThread).mProviderMap();
 
         for (Object value : map.values()) {
@@ -73,7 +73,7 @@ public class ContentProviderDelegate {
             if (!sInjected.contains(providerName)) {
                 sInjected.add(providerName);
                 final IInterface iInterface = BRActivityThreadProviderClientRecordP.get(value).mProvider();
-                BRActivityThreadProviderClientRecordP.get(value)._set_mProvider(new ContentProviderStub().wrapper(iInterface, BlackBoxCore.getHostPkg()));
+                BRActivityThreadProviderClientRecordP.get(value)._set_mProvider(new ContentProviderStub().wrapper(iInterface, TmBox.getHostPkg()));
                 BRActivityThreadProviderClientRecordP.get(value)._set_mNames(new String[]{providerName});
             }
         }

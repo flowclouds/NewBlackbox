@@ -9,7 +9,7 @@ import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 
 
 public class AbiUtils {
@@ -26,7 +26,7 @@ public class AbiUtils {
             return true;
         }
 
-        if (BlackBoxCore.is64Bit()) {
+        if (TmBox.is64Bit()) {
             return abiUtils.is64Bit();
         } else {
             return abiUtils.is32Bit();

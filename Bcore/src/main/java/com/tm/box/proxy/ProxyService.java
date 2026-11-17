@@ -8,7 +8,7 @@ import android.os.IBinder;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 import com.tm.box.app.dispatcher.AppServiceDispatcher;
 import com.tm.box.utils.compat.BuildCompat;
 
@@ -59,10 +59,10 @@ public class ProxyService extends Service {
     }
 
     private void showNotification() {
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), getPackageName() + ".blackbox_proxy")
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), getPackageName() + ".box_proxy")
                 .setPriority(NotificationCompat.PRIORITY_MAX);
         if (BuildCompat.isOreo()) {
-            startForeground(BlackBoxCore.getHostPkg().hashCode(), builder.build());
+            startForeground(TmBox.getHostPkg().hashCode(), builder.build());
         }
     }
 

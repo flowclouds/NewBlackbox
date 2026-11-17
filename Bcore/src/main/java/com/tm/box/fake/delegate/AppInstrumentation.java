@@ -14,7 +14,7 @@ import java.lang.reflect.Field;
 
 import black.android.app.BRActivity;
 import black.android.app.BRActivityThread;
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 import com.tm.box.app.BActivityThread;
 import com.tm.box.fake.hook.HookManager;
 import com.tm.box.fake.hook.IInjectHook;
@@ -52,14 +52,14 @@ public final class AppInstrumentation extends BaseInstrumentationDelegate implem
             if (mInstrumentation == this || checkInstrumentation(mInstrumentation))
                 return;
             mBaseInstrumentation = (Instrumentation) mInstrumentation;
-            BRActivityThread.get(BlackBoxCore.mainThread())._set_mInstrumentation(this);
+            BRActivityThread.get(TmBox.mainThread())._set_mInstrumentation(this);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     private Instrumentation getCurrInstrumentation() {
-        Object currentActivityThread = BlackBoxCore.mainThread();
+        Object currentActivityThread = TmBox.mainThread();
         return BRActivityThread.get(currentActivityThread).mInstrumentation();
     }
 

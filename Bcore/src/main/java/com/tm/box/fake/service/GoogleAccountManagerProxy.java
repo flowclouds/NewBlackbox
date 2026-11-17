@@ -9,7 +9,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 import com.tm.box.fake.hook.ClassInvocationStub;
 import com.tm.box.fake.hook.MethodHook;
 import com.tm.box.fake.hook.ProxyMethod;
@@ -27,7 +27,7 @@ public class GoogleAccountManagerProxy extends ClassInvocationStub {
     @Override
     protected Object getWho() {
         try {
-            Context context = BlackBoxCore.getContext();
+            Context context = TmBox.getContext();
             if (context != null) {
                 return AccountManager.get(context);
             }
@@ -314,7 +314,7 @@ public class GoogleAccountManagerProxy extends ClassInvocationStub {
     
     private static boolean isGoogleApp() {
         try {
-            Context context = BlackBoxCore.getContext();
+            Context context = TmBox.getContext();
             if (context != null) {
                 String packageName = context.getPackageName();
                 return packageName != null && (

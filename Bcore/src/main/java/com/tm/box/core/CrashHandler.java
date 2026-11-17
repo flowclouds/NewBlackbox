@@ -1,6 +1,6 @@
 package com.tm.box.core;
 
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 
 
 public class CrashHandler implements Thread.UncaughtExceptionHandler {
@@ -17,8 +17,8 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
 
     @Override
     public void uncaughtException(Thread t, Throwable e) {
-        if (BlackBoxCore.get().getExceptionHandler() != null) {
-            BlackBoxCore.get().getExceptionHandler().uncaughtException(t, e);
+        if (TmBox.get().getExceptionHandler() != null) {
+            TmBox.get().getExceptionHandler().uncaughtException(t, e);
         }
         mDefaultHandler.uncaughtException(t, e);
     }

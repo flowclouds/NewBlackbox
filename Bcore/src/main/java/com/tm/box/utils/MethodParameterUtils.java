@@ -3,7 +3,7 @@ package com.tm.box.utils;
 import java.util.Arrays;
 import java.util.HashSet;
 
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 import com.tm.box.app.BActivityThread;
 
 public class MethodParameterUtils {
@@ -26,8 +26,8 @@ public class MethodParameterUtils {
         for (int i = 0; i < args.length; i++) {
             if (args[i] instanceof String) {
                 String value = (String) args[i];
-                if (BlackBoxCore.get().isInstalled(value, BlackBoxCore.getUserId())) {
-                    args[i] = BlackBoxCore.getHostPkg();
+                if (TmBox.get().isInstalled(value, TmBox.getUserId())) {
+                    args[i] = TmBox.getHostPkg();
                     return value;
                 }
             }
@@ -44,8 +44,8 @@ public class MethodParameterUtils {
                 continue;
             if (args[i] instanceof String) {
                 String value = (String) args[i];
-                if (BlackBoxCore.get().isInstalled(value, BlackBoxCore.getUserId())) {
-                    args[i] = BlackBoxCore.getHostPkg();
+                if (TmBox.get().isInstalled(value, TmBox.getUserId())) {
+                    args[i] = TmBox.getHostPkg();
                 }
             }
         }
@@ -57,8 +57,8 @@ public class MethodParameterUtils {
         for (int i = 0; i < args.length; i++) {
             if (args[i] instanceof Integer) {
                 int uid = (int) args[i];
-                if (uid == BlackBoxCore.getBUid()) {
-                    args[i] = BlackBoxCore.getHostUid();
+                if (uid == TmBox.getBUid()) {
+                    args[i] = TmBox.getHostUid();
                 }
             }
         }
@@ -68,8 +68,8 @@ public class MethodParameterUtils {
         int index = ArrayUtils.indexOfLast(args, Integer.class);
         if (index != -1) {
             int uid = (int) args[index];
-            if (uid == BlackBoxCore.getBUid()) {
-                args[index] = BlackBoxCore.getHostUid();
+            if (uid == TmBox.getBUid()) {
+                args[index] = TmBox.getHostUid();
             }
         }
     }
@@ -78,8 +78,8 @@ public class MethodParameterUtils {
         int index = ArrayUtils.indexOfLast(args, String.class);
         if (index != -1) {
             String pkg = (String) args[index];
-            if (BlackBoxCore.get().isInstalled(pkg, BlackBoxCore.getUserId())) {
-                args[index] = BlackBoxCore.getHostPkg();
+            if (TmBox.get().isInstalled(pkg, TmBox.getUserId())) {
+                args[index] = TmBox.getHostPkg();
             }
             return pkg;
         }
@@ -90,8 +90,8 @@ public class MethodParameterUtils {
         int index = ArrayUtils.indexOf(args, String.class, sequence);
         if (index != -1) {
             String pkg = (String) args[index];
-            if (BlackBoxCore.get().isInstalled(pkg, BlackBoxCore.getUserId())) {
-                args[index] = BlackBoxCore.getHostPkg();
+            if (TmBox.get().isInstalled(pkg, TmBox.getUserId())) {
+                args[index] = TmBox.getHostPkg();
             }
             return pkg;
         }

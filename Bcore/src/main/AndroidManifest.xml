@@ -489,7 +489,7 @@
             android:name="com.tm.box.core.system.SystemCallProvider"
             android:authorities="${applicationId}.box.SystemCallProvider"
             android:exported="false"
-            android:process="@string/black_box_service_name" />
+            android:process="@string/box_service_name" />
 
         
         <provider
@@ -506,7 +506,7 @@
             android:name=".proxy.ProxyBroadcastReceiver"
             android:enabled="true"
             android:exported="true"
-            android:process="@string/black_box_service_name">
+            android:process="@string/box_service_name">
             <intent-filter>
                 <action android:name="${applicationId}.stub_receiver" />
             </intent-filter>
@@ -515,13 +515,13 @@
         <service
             android:name="com.tm.box.core.system.DaemonService"
             android:exported="false"
-            android:process="@string/black_box_service_name"
+            android:process="@string/box_service_name"
             android:foregroundServiceType="specialUse" />
 
         <service
             android:name="com.tm.box.core.system.DaemonService$DaemonInnerService"
             android:exported="false"
-            android:process="@string/black_box_service_name"
+            android:process="@string/box_service_name"
             android:foregroundServiceType="specialUse" />
 
         <activity

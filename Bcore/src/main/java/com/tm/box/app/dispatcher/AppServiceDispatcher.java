@@ -10,7 +10,7 @@ import android.os.IBinder;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 import com.tm.box.app.BActivityThread;
 import com.tm.box.entity.ServiceRecord;
 import com.tm.box.entity.UnbindRecord;
@@ -31,7 +31,7 @@ public class AppServiceDispatcher {
         return sServiceDispatcher;
     }
 
-    private final Handler mHandler = BlackBoxCore.get().getHandler();
+    private final Handler mHandler = TmBox.get().getHandler();
 
     public IBinder onBind(Intent proxyIntent) {
         ProxyServiceRecord serviceRecord = ProxyServiceRecord.create(proxyIntent);
@@ -83,7 +83,7 @@ public class AppServiceDispatcher {
         record.setStartId(stubRecord.mStartId);
         try {
             int i = service.onStartCommand(stubRecord.mServiceIntent, flags, stubRecord.mStartId);
-            BlackBoxCore.getBActivityManager().onStartCommand(proxyIntent, stubRecord.mUserId);
+            TmBox.getBActivityManager().onStartCommand(proxyIntent, stubRecord.mUserId);
             return i;
         } catch (Throwable e) {
             e.printStackTrace();
@@ -152,7 +152,7 @@ public class AppServiceDispatcher {
         Intent intent = stubRecord.mServiceIntent;
 
         try {
-            UnbindRecord unbindRecord = BlackBoxCore.getBActivityManager().onServiceUnbind(proxyIntent, BlackBoxCore.getUserId());
+            UnbindRecord unbindRecord = TmBox.getBActivityManager().onServiceUnbind(proxyIntent, TmBox.getUserId());
             if (unbindRecord == null)
                 return false;
 
@@ -169,7 +169,7 @@ public class AppServiceDispatcher {
                 boolean b = service.onUnbind(intent);
                 if (destroy) {
                     service.onDestroy();
-                    BlackBoxCore.getBActivityManager().onServiceDestroy(proxyIntent, BlackBoxCore.getUserId());
+                    TmBox.getBActivityManager().onServiceDestroy(proxyIntent, TmBox.getUserId());
                     mService.remove(new Intent.FilterComparison(intent));
                 }
                 record.setRebind(true);
@@ -200,7 +200,7 @@ public class AppServiceDispatcher {
             try {
                 if (destroy) {
                     mHandler.post(() -> record.getService().onDestroy());
-                    BlackBoxCore.getBActivityManager().onServiceDestroy(intent, BlackBoxCore.getUserId());
+                    TmBox.getBActivityManager().onServiceDestroy(intent, TmBox.getUserId());
                     mService.remove(new Intent.FilterComparison(intent));
                 }
             } catch (Throwable e) {
@@ -222,7 +222,7 @@ public class AppServiceDispatcher {
         if (record != null && record.getService() != null) {
             return record.getService();
         }
-        Service service = BlackBoxCore.currentActivityThread().createService(serviceInfo, token);
+        Service service = TmBox.currentActivityThread().createService(serviceInfo, token);
         if (service == null)
             return null;
         record = new ServiceRecord();

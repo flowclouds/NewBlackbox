@@ -25,7 +25,7 @@ import black.android.content.pm.BRApplicationInfoN;
 import black.android.content.pm.BRPackageParserSigningDetails;
 import black.android.content.pm.BRSigningInfo;
 import black.android.content.res.BRAssetManager;
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 import com.tm.box.core.env.AppSystemEnv;
 import com.tm.box.core.env.BEnvironment;
 import com.tm.box.entity.pm.InstallOption;
@@ -191,7 +191,7 @@ public class PackageManagerCompat {
         }
         PackageInfo base = null;
         try {
-            base = BlackBoxCore.getContext().getPackageManager().getPackageInfo(p.packageName, flags);
+            base = TmBox.getContext().getPackageManager().getPackageInfo(p.packageName, flags);
         } catch (PackageManager.NameNotFoundException ignored) {
         }
         if ((flags & PackageManager.GET_SIGNATURES) != 0) {
@@ -284,13 +284,13 @@ public class PackageManagerCompat {
         }
         ApplicationInfo baseApplication;
         try {
-            baseApplication = BlackBoxCore.getPackageManager().getApplicationInfo(BlackBoxCore.getHostPkg(), flags);
+            baseApplication = TmBox.getPackageManager().getApplicationInfo(TmBox.getHostPkg(), flags);
         } catch (Exception e) {
             return null;
         }
         String sourceDir = p.baseCodePath;
         if (p.applicationInfo == null) {
-            p.applicationInfo = BlackBoxCore.getPackageManager()
+            p.applicationInfo = TmBox.getPackageManager()
                     .getPackageArchiveInfo(sourceDir, 0).applicationInfo;
         }
         ApplicationInfo ai = new ApplicationInfo(p.applicationInfo);

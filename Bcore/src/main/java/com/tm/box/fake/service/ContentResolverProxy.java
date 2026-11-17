@@ -4,7 +4,7 @@ import android.net.Uri;
 
 import java.lang.reflect.Method;
 
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 import com.tm.box.fake.hook.MethodHook;
 import com.tm.box.fake.hook.ProxyMethod;
 import com.tm.box.utils.Slog;
@@ -21,7 +21,7 @@ public class ContentResolverProxy extends ClassInvocationStub {
     @Override
     protected Object getWho() {
         
-        return BlackBoxCore.getContext().getContentResolver();
+        return TmBox.getContext().getContentResolver();
     }
 
     @Override

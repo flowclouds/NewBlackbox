@@ -13,7 +13,7 @@ import com.tm.box.entity.location.BCell;
 import com.tm.box.entity.location.BLocation;
 
 
-public class BLocationManager extends BlackManager<IBLocationManagerService> {
+public class BLocationManager extends BoxManager<IBLocationManagerService> {
     private static final BLocationManager sLocationManager = new BLocationManager();
 
     public static final int CLOSE_MODE = 0;

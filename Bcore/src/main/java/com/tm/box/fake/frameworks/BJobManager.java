@@ -9,7 +9,7 @@ import com.tm.box.core.system.am.IBJobManagerService;
 import com.tm.box.entity.JobRecord;
 
 
-public class BJobManager extends BlackManager<IBJobManagerService> {
+public class BJobManager extends BoxManager<IBJobManagerService> {
     private static final BJobManager sJobManager = new BJobManager();
 
     public static BJobManager get() {

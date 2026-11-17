@@ -5,7 +5,7 @@ import android.os.Bundle;
 
 import java.lang.reflect.Method;
 
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 import com.tm.box.fake.hook.ClassInvocationStub;
 import com.tm.box.fake.hook.MethodHook;
 import com.tm.box.fake.hook.ProxyMethod;
@@ -22,7 +22,7 @@ public class WorkManagerProxy extends ClassInvocationStub {
     @Override
     protected Object getWho() {
         try {
-            Context context = BlackBoxCore.getContext();
+            Context context = TmBox.getContext();
             if (context != null) {
                 
                 Class<?> workManagerClass = Class.forName("androidx.work.WorkManager");

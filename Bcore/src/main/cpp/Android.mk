@@ -28,7 +28,7 @@ SRC3 := $(wildcard $(LOCAL_PATH)/Hook/*.cpp) $(wildcard $(LOCAL_PATH)/Hook/*.c)
 # Collect all source files in JniHook/
 SRC4 := $(wildcard $(LOCAL_PATH)/JniHook/*.cpp) $(wildcard $(LOCAL_PATH)/JniHook/*.c)
 
-LOCAL_MODULE := blackbox
+LOCAL_MODULE := tmbox
 LOCAL_SRC_FILES := BoxCore.cpp \
 hidden_api.cpp \
 IO.cpp \

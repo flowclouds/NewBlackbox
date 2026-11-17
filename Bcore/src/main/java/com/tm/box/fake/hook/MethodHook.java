@@ -2,7 +2,7 @@ package com.tm.box.fake.hook;
 
 import java.lang.reflect.Method;
 
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 
 
 public abstract class MethodHook {
@@ -21,6 +21,6 @@ public abstract class MethodHook {
     protected abstract Object hook(Object who, Method method, Object[] args) throws Throwable;
 
     protected boolean isEnable() {
-        return BlackBoxCore.get().isBlackProcess();
+        return TmBox.get().isBoxProcess();
     }
 }

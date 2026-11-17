@@ -28,7 +28,7 @@ import black.android.app.BRLoadedApkServiceDispatcherInnerConnection;
 import black.android.content.BRContentProviderNative;
 import black.android.content.pm.BRUserInfo;
 import black.android.util.BRSingleton;
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 import com.tm.box.app.BActivityThread;
 import com.tm.box.core.env.AppSystemEnv;
 import com.tm.box.entity.AppConfig;
@@ -142,7 +142,7 @@ public class IActivityManagerProxy extends ClassInvocationStub {
                 }
 
                 if (BuildCompat.isQ()) {
-                    args[1] = BlackBoxCore.getHostPkg();
+                    args[1] = TmBox.getHostPkg();
                 }
 
                 if (auth.equals("settings")
@@ -160,7 +160,7 @@ public class IActivityManagerProxy extends ClassInvocationStub {
                 } else {
                     
 
-                    ProviderInfo providerInfo = BlackBoxCore.getBPackageManager()
+                    ProviderInfo providerInfo = TmBox.getBPackageManager()
                             .resolveContentProvider(
                                     (String) auth, GET_META_DATA, BActivityThread.getUserId());
                     if (providerInfo == null) {
@@ -171,17 +171,17 @@ public class IActivityManagerProxy extends ClassInvocationStub {
                     
                     IBinder providerBinder = null;
                     if (BActivityThread.getAppPid() != -1) {
-                        AppConfig appConfig = BlackBoxCore.getBActivityManager()
+                        AppConfig appConfig = TmBox.getBActivityManager()
                                 .initProcess(
                                         providerInfo.packageName,
                                         providerInfo.processName,
                                         BActivityThread.getUserId());
                         if (appConfig.bpid != BActivityThread.getAppPid()) {
-                            providerBinder = BlackBoxCore.getBActivityManager()
+                            providerBinder = TmBox.getBActivityManager()
                                     .acquireContentProviderClient(providerInfo);
                         }
                         args[authIndex] = ProxyManifest.getProxyAuthorities(appConfig.bpid);
-                        args[getUserIndex()] = BlackBoxCore.getHostUserId();
+                        args[getUserIndex()] = TmBox.getHostUserId();
                     }
                     if (providerBinder == null)
                         return null;
@@ -222,7 +222,7 @@ public class IActivityManagerProxy extends ClassInvocationStub {
         protected Object hook(Object who, Method method, Object[] args) throws Throwable {
             Intent intent = (Intent) args[1];
             String resolvedType = (String) args[2];
-            ResolveInfo resolveInfo = BlackBoxCore.getBPackageManager().resolveService(intent, 0, resolvedType, BActivityThread.getUserId());
+            ResolveInfo resolveInfo = TmBox.getBPackageManager().resolveService(intent, 0, resolvedType, BActivityThread.getUserId());
             if (resolveInfo == null) {
                 return method.invoke(who, args);
             }
@@ -232,7 +232,7 @@ public class IActivityManagerProxy extends ClassInvocationStub {
             if (requireForegroundIndex != -1) {
                 requireForeground = (boolean) args[requireForegroundIndex];
             }
-            return BlackBoxCore.getBActivityManager().startService(intent, resolvedType, requireForeground, BActivityThread.getUserId());
+            return TmBox.getBActivityManager().startService(intent, resolvedType, requireForeground, BActivityThread.getUserId());
         }
 
         public int getRequireForeground() {
@@ -264,7 +264,7 @@ public class IActivityManagerProxy extends ClassInvocationStub {
                             }
                         }
                 
-                return BlackBoxCore.getBActivityManager().stopService(intent, resolvedType, BActivityThread.getUserId());
+                return TmBox.getBActivityManager().stopService(intent, resolvedType, BActivityThread.getUserId());
             } catch (SecurityException e) {
                 Slog.w(TAG, "StopService: SecurityException caught, returning false", e);
                 return false;
@@ -296,7 +296,7 @@ public class IActivityManagerProxy extends ClassInvocationStub {
                             }
                         }
                 
-                BlackBoxCore.getBActivityManager().stopServiceToken(componentName, token, BActivityThread.getUserId());
+                TmBox.getBActivityManager().stopServiceToken(componentName, token, BActivityThread.getUserId());
                 return true;
             } catch (SecurityException e) {
                 Slog.w(TAG, "StopServiceToken: SecurityException caught, returning true", e);
@@ -354,9 +354,9 @@ public class IActivityManagerProxy extends ClassInvocationStub {
 
             int userId = intent.getIntExtra("_B_|_UserId", -1);
             userId = userId == -1 ? BActivityThread.getUserId() : userId;
-            ResolveInfo resolveInfo = BlackBoxCore.getBPackageManager().resolveService(intent, 0, resolvedType, userId);
+            ResolveInfo resolveInfo = TmBox.getBPackageManager().resolveService(intent, 0, resolvedType, userId);
             if (resolveInfo != null || AppSystemEnv.isOpenPackage(intent.getComponent())) {
-                Intent proxyIntent = BlackBoxCore.getBActivityManager().bindService(intent,
+                Intent proxyIntent = TmBox.getBActivityManager().bindService(intent,
                         connection == null ? null : connection.asBinder(),
                         resolvedType,
                         userId);
@@ -375,7 +375,7 @@ public class IActivityManagerProxy extends ClassInvocationStub {
 
                 
                 if (proxyIntent != null && proxyIntent.getComponent() != null && 
-                    proxyIntent.getComponent().getPackageName().equals(BlackBoxCore.getHostPkg())){
+                    proxyIntent.getComponent().getPackageName().equals(TmBox.getHostPkg())){
                     int flagsIndex = getFlagsIndex(args);
                     if (flagsIndex >= 0) {
                         int flags = MethodParameterUtils.toInt(args[flagsIndex]);
@@ -383,7 +383,7 @@ public class IActivityManagerProxy extends ClassInvocationStub {
                         args[flagsIndex] = flags;
                     }
                 }
-                args[callingPackageIndex] = BlackBoxCore.getHostPkg();
+                args[callingPackageIndex] = TmBox.getHostPkg();
 
                 if (proxyIntent != null) {
                     args[2] = proxyIntent;
@@ -417,7 +417,7 @@ public class IActivityManagerProxy extends ClassInvocationStub {
 
         @Override
         protected boolean isEnable() {
-            return BlackBoxCore.get().isBlackProcess() || BlackBoxCore.get().isServerProcess();
+            return TmBox.get().isBoxProcess() || TmBox.get().isServerProcess();
         }
     }
 
@@ -431,7 +431,7 @@ public class IActivityManagerProxy extends ClassInvocationStub {
 
         @Override
         protected boolean isEnable() {
-            return BlackBoxCore.get().isBlackProcess() || BlackBoxCore.get().isServerProcess();
+            return TmBox.get().isBoxProcess() || TmBox.get().isServerProcess();
         }
     }
 
@@ -447,7 +447,7 @@ public class IActivityManagerProxy extends ClassInvocationStub {
 
         @Override
         protected boolean isEnable() {
-            return BlackBoxCore.get().isBlackProcess() || BlackBoxCore.get().isServerProcess();
+            return TmBox.get().isBoxProcess() || TmBox.get().isServerProcess();
         }
     }
 
@@ -460,7 +460,7 @@ public class IActivityManagerProxy extends ClassInvocationStub {
             if (iServiceConnection == null) {
                 return method.invoke(who, args);
             }
-            BlackBoxCore.getBActivityManager().unbindService(iServiceConnection.asBinder(), BActivityThread.getUserId());
+            TmBox.getBActivityManager().unbindService(iServiceConnection.asBinder(), BActivityThread.getUserId());
             ServiceConnectionDelegate delegate = ServiceConnectionDelegate.getDelegate(iServiceConnection.asBinder());
             if (delegate != null) {
                 args[0] = delegate;
@@ -508,7 +508,7 @@ public class IActivityManagerProxy extends ClassInvocationStub {
                 switch (type) {
                     case ActivityManagerCompat.INTENT_SENDER_ACTIVITY:
                         Intent shadow = new Intent();
-                        shadow.setComponent(new ComponentName(BlackBoxCore.getHostPkg(), ProxyManifest.getProxyPendingActivity(BActivityThread.getAppPid())));
+                        shadow.setComponent(new ComponentName(TmBox.getHostPkg(), ProxyManifest.getProxyPendingActivity(BActivityThread.getAppPid())));
                         ProxyPendingRecord.saveStub(shadow, intent, BActivityThread.getUserId());
                         intents[i] = shadow;
                         break;
@@ -518,9 +518,9 @@ public class IActivityManagerProxy extends ClassInvocationStub {
             if (invoke != null) {
                 String[] packagesForUid = BPackageManager.get().getPackagesForUid(BActivityThread.getCallingBUid());
                 if (packagesForUid.length < 1) {
-                    packagesForUid = new String[]{BlackBoxCore.getHostPkg()};
+                    packagesForUid = new String[]{TmBox.getHostPkg()};
                 }
-                BlackBoxCore.getBActivityManager().getIntentSender(invoke.asBinder(), packagesForUid[0], BActivityThread.getCallingBUid());
+                TmBox.getBActivityManager().getIntentSender(invoke.asBinder(), packagesForUid[0], BActivityThread.getCallingBUid());
             }
             return invoke;
         }
@@ -544,7 +544,7 @@ public class IActivityManagerProxy extends ClassInvocationStub {
         @Override
         protected Object hook(Object who, Method method, Object[] args) throws Throwable {
             IInterface invoke = (IInterface) args[0];
-            return BlackBoxCore.getBActivityManager().getPackageForIntentSender(invoke.asBinder());
+            return TmBox.getBActivityManager().getPackageForIntentSender(invoke.asBinder());
         }
     }
 
@@ -553,7 +553,7 @@ public class IActivityManagerProxy extends ClassInvocationStub {
         @Override
         protected Object hook(Object who, Method method, Object[] args) throws Throwable {
             IInterface invoke = (IInterface) args[0];
-            return BlackBoxCore.getBActivityManager().getUidForIntentSender(invoke.asBinder());
+            return TmBox.getBActivityManager().getUidForIntentSender(invoke.asBinder());
         }
     }
 
@@ -576,7 +576,7 @@ public class IActivityManagerProxy extends ClassInvocationStub {
             int intentIndex = getIntentIndex(args);
             Intent intent = (Intent) args[intentIndex];
             String resolvedType = (String) args[intentIndex + 1];
-            Intent proxyIntent = BlackBoxCore.getBActivityManager().sendBroadcast(intent, resolvedType, BActivityThread.getUserId());
+            Intent proxyIntent = TmBox.getBActivityManager().sendBroadcast(intent, resolvedType, BActivityThread.getUserId());
             if (proxyIntent != null) {
                 proxyIntent.setExtrasClassLoader(BActivityThread.getApplication().getClassLoader());
                 ProxyBroadcastRecord.saveStub(proxyIntent, intent, BActivityThread.getUserId());
@@ -638,7 +638,7 @@ public class IActivityManagerProxy extends ClassInvocationStub {
             MethodParameterUtils.replaceLastAppPkg(args);
             Intent intent = (Intent) args[0];
             String resolvedType = (String) args[1];
-            IBinder peek = BlackBoxCore.getBActivityManager().peekService(intent, resolvedType, BActivityThread.getUserId());
+            IBinder peek = TmBox.getBActivityManager().peekService(intent, resolvedType, BActivityThread.getUserId());
             return peek;
         }
     }
@@ -768,7 +768,7 @@ public class IActivityManagerProxy extends ClassInvocationStub {
     public static class getCurrentUser extends MethodHook {
         @Override
         protected Object hook(Object who, Method method, Object[] args) throws Throwable {
-            Object blackBox = BRUserInfo.get()._new(BActivityThread.getUserId(), "BlackBox", BRUserInfo.get().FLAG_PRIMARY());
+            Object blackBox = BRUserInfo.get()._new(BActivityThread.getUserId(), "TmBox", BRUserInfo.get().FLAG_PRIMARY());
             return blackBox;
         }
     }

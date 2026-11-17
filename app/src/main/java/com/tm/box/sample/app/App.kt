@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 import android.util.Log
-import com.tm.box.BlackBoxCore
+import com.tm.box.TmBox
 
 
 class App : Application() {
@@ -26,7 +26,7 @@ class App : Application() {
             super.attachBaseContext(base)
 
             try {
-                BlackBoxCore.get().onBeforeMainApplicationAttach(this, base)
+                TmBox.get().onBeforeMainApplicationAttach(this, base)
             } catch (e: Exception) {
                 Log.e("App", "Error in onBeforeMainApplicationAttach: ${e.message}")
             }
@@ -41,7 +41,7 @@ class App : Application() {
 
             try {
 
-                BlackBoxCore.get().onAfterMainApplicationAttach(this, base)
+                TmBox.get().onAfterMainApplicationAttach(this, base)
 
             } catch (e: Exception) {
 

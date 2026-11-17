@@ -5,7 +5,7 @@ import java.util.List;
 
 import black.com.android.internal.net.BRVpnConfig;
 import black.com.android.internal.net.VpnConfigContext;
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 import com.tm.box.app.BActivityThread;
 import com.tm.box.fake.hook.MethodHook;
 import com.tm.box.fake.hook.ProxyMethod;
@@ -51,7 +51,7 @@ public class VpnCommonProxy {
             if (applications == null)
                 return;
             if (applications.contains(BActivityThread.getAppPackageName())) {
-                applications.add(BlackBoxCore.getHostPkg());
+                applications.add(TmBox.getHostPkg());
             }
         }
     }

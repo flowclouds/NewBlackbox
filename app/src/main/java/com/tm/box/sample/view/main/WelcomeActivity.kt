@@ -4,7 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import com.tm.box.BlackBoxCore
+import com.tm.box.TmBox
 import com.tm.box.sample.util.InjectionUtil
 import com.tm.box.sample.view.list.ListViewModel
 

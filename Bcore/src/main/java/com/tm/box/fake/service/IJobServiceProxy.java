@@ -8,7 +8,7 @@ import java.lang.reflect.Method;
 
 import black.android.app.job.BRIJobSchedulerStub;
 import black.android.os.BRServiceManager;
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 import com.tm.box.app.BActivityThread;
 import com.tm.box.fake.hook.BinderInvocationStub;
 import com.tm.box.fake.hook.MethodHook;
@@ -62,14 +62,14 @@ public class IJobServiceProxy extends BinderInvocationStub {
                 
                 
                 try {
-                    JobInfo proxyJobInfo = BlackBoxCore.getBJobManager().schedule(jobInfo);
+                    JobInfo proxyJobInfo = TmBox.getBJobManager().schedule(jobInfo);
                     if (proxyJobInfo != null) {
                         args[0] = proxyJobInfo;
                         Slog.d(TAG, "Schedule: Successfully created proxy JobInfo");
                         return method.invoke(who, args);
                     }
                 } catch (Exception e) {
-                    Slog.w(TAG, "Schedule: BlackBox job manager failed, trying system fallback", e);
+                    Slog.w(TAG, "Schedule: TmBox job manager failed, trying system fallback", e);
                 }
                 
                 
@@ -187,7 +187,7 @@ public class IJobServiceProxy extends BinderInvocationStub {
                     return method.invoke(who, args);
                 }
                 
-                args[0] = BlackBoxCore.getBJobManager()
+                args[0] = TmBox.getBJobManager()
                         .cancel(BActivityThread.getAppConfig().processName, jobId);
                 return method.invoke(who, args);
             } catch (Exception e) {
@@ -202,7 +202,7 @@ public class IJobServiceProxy extends BinderInvocationStub {
         @Override
         protected Object hook(Object who, Method method, Object[] args) throws Throwable {
             try {
-                BlackBoxCore.getBJobManager().cancelAll(BActivityThread.getAppConfig().processName);
+                TmBox.getBJobManager().cancelAll(BActivityThread.getAppConfig().processName);
                 return method.invoke(who, args);
             } catch (Exception e) {
                 Slog.e(TAG, "CancelAll: Error canceling all jobs", e);
@@ -238,14 +238,14 @@ public class IJobServiceProxy extends BinderInvocationStub {
                 
                 
                 try {
-                    JobInfo proxyJobInfo = BlackBoxCore.getBJobManager().schedule(jobInfo);
+                    JobInfo proxyJobInfo = TmBox.getBJobManager().schedule(jobInfo);
                     if (proxyJobInfo != null) {
                         args[0] = proxyJobInfo;
                         Slog.d(TAG, "Enqueue: Successfully created proxy JobInfo");
                         return method.invoke(who, args);
                     }
                 } catch (Exception e) {
-                    Slog.w(TAG, "Enqueue: BlackBox job manager failed, trying system fallback", e);
+                    Slog.w(TAG, "Enqueue: TmBox job manager failed, trying system fallback", e);
                 }
                 
                 

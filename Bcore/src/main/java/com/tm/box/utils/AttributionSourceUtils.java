@@ -1,6 +1,6 @@
 package com.tm.box.utils;
 
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 import com.tm.box.app.BActivityThread;
 import com.tm.box.utils.Slog;
 import com.tm.box.utils.compat.ContextCompat;
@@ -17,7 +17,7 @@ public class AttributionSourceUtils {
             Object arg = args[i];
             if (arg != null && arg.getClass().getName().contains("AttributionSource")) {
                 try {
-                    ContextCompat.fixAttributionSourceState(arg, BlackBoxCore.getHostUid());
+                    ContextCompat.fixAttributionSourceState(arg, TmBox.getHostUid());
                     fixAttributionSourceUid(arg);
                 } catch (Exception e) {
                     Slog.w(TAG, "Failed to fix AttributionSource in args: " + e.getMessage());
@@ -52,7 +52,7 @@ public class AttributionSourceUtils {
                 try {
                     java.lang.reflect.Field uidField = attributionSourceClass.getDeclaredField(fieldName);
                     uidField.setAccessible(true);
-                    uidField.set(attributionSource, BlackBoxCore.getHostUid());
+                    uidField.set(attributionSource, TmBox.getHostUid());
                     Slog.d(TAG, "Fixed AttributionSource UID via field: " + fieldName);
                     break;
                 } catch (NoSuchFieldException e) {
@@ -64,7 +64,7 @@ public class AttributionSourceUtils {
             try {
                 java.lang.reflect.Method setUidMethod = attributionSourceClass.getDeclaredMethod("setUid", int.class);
                 setUidMethod.setAccessible(true);
-                setUidMethod.invoke(attributionSource, BlackBoxCore.getHostUid());
+                setUidMethod.invoke(attributionSource, TmBox.getHostUid());
                 Slog.d(TAG, "Fixed AttributionSource UID via setter method");
             } catch (Exception e) {
                 
@@ -77,7 +77,7 @@ public class AttributionSourceUtils {
                 try {
                     java.lang.reflect.Field packageField = attributionSourceClass.getDeclaredField(fieldName);
                     packageField.setAccessible(true);
-                    packageField.set(attributionSource, BlackBoxCore.getHostPkg());
+                    packageField.set(attributionSource, TmBox.getHostPkg());
                     Slog.d(TAG, "Fixed AttributionSource package name via field: " + fieldName);
                     break;
                 } catch (NoSuchFieldException e) {
@@ -130,7 +130,7 @@ public class AttributionSourceUtils {
                 
                 java.lang.reflect.Constructor<?> constructor = attributionSourceClass.getDeclaredConstructor(int.class, String.class);
                 constructor.setAccessible(true);
-                attributionSource = constructor.newInstance(BlackBoxCore.getHostUid(), BlackBoxCore.getHostPkg());
+                attributionSource = constructor.newInstance(TmBox.getHostUid(), TmBox.getHostPkg());
             } catch (Exception e) {
                 try {
                     

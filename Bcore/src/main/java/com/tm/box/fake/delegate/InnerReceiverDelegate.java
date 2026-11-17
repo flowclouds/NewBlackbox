@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import black.android.content.BRIIntentReceiver;
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 import com.tm.box.app.BActivityThread;
 import com.tm.box.proxy.record.ProxyBroadcastRecord;
 
@@ -56,11 +56,11 @@ public class InnerReceiverDelegate extends IIntentReceiver.Stub {
 
     @Override
     public void performReceive(Intent intent, int resultCode, String data, Bundle extras, boolean ordered, boolean sticky, int sendingUser) throws RemoteException {
-        intent.setExtrasClassLoader(BlackBoxCore.getApplication().getClassLoader());
+        intent.setExtrasClassLoader(TmBox.getApplication().getClassLoader());
         ProxyBroadcastRecord proxyBroadcastRecord = ProxyBroadcastRecord.create(intent);
         Intent perIntent;
         if (proxyBroadcastRecord.mIntent != null) {
-            proxyBroadcastRecord.mIntent.setExtrasClassLoader(BlackBoxCore.getApplication().getClassLoader());
+            proxyBroadcastRecord.mIntent.setExtrasClassLoader(TmBox.getApplication().getClassLoader());
             perIntent = proxyBroadcastRecord.mIntent;
         } else {
             perIntent = intent;

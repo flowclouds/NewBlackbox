@@ -6,7 +6,7 @@ import java.lang.reflect.Method;
 
 import black.android.os.BRServiceManager;
 import black.android.view.BRIAutoFillManagerStub;
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 import com.tm.box.app.BActivityThread;
 import com.tm.box.fake.hook.BinderInvocationStub;
 import com.tm.box.fake.hook.MethodHook;
@@ -46,7 +46,7 @@ public class IAutofillManagerProxy extends BinderInvocationStub {
                     if (args[i] == null)
                         continue;
                     if (args[i] instanceof ComponentName) {
-                        args[i] = new ComponentName(BlackBoxCore.getHostPkg(), ProxyManifest.getProxyActivity(BlackBoxCore.getAppPid()));
+                        args[i] = new ComponentName(TmBox.getHostPkg(), ProxyManifest.getProxyActivity(TmBox.getAppPid()));
                     }
                 }
             }

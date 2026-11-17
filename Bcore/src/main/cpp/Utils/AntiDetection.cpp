@@ -54,6 +54,7 @@ static const char* blocked_files[] = {
     "/data/data/com.dual.dualspace",
     "/data/data/com.ludashi.superboost",
     "/data/data/com.tm.box.sample",
+    "/box",
     "/blackbox",
     "/virtual",
     

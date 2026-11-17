@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 import com.tm.box.app.BActivityThread;
 import com.tm.box.fake.hook.ClassInvocationStub;
 import com.tm.box.fake.hook.MethodHook;
@@ -63,7 +63,7 @@ public class ClassLoaderProxy extends ClassInvocationStub {
     private void initializeFallbackClassLoaders() {
         try {
             
-            Context hostContext = BlackBoxCore.getContext();
+            Context hostContext = TmBox.getContext();
             if (hostContext != null) {
                 ClassLoader hostClassLoader = hostContext.getClassLoader();
                 if (hostClassLoader != null) {
@@ -414,7 +414,7 @@ public class ClassLoaderProxy extends ClassInvocationStub {
             }
             
             
-            Context hostContext = BlackBoxCore.getContext();
+            Context hostContext = TmBox.getContext();
             if (hostContext != null) {
                 ApplicationInfo appInfo = hostContext.getApplicationInfo();
                 if (appInfo != null && appInfo.sourceDir != null) {
@@ -456,7 +456,7 @@ public class ClassLoaderProxy extends ClassInvocationStub {
     private static Object recoverDexPathList(Object who, Object[] args) {
         try {
             
-            Context hostContext = BlackBoxCore.getContext();
+            Context hostContext = TmBox.getContext();
             if (hostContext != null) {
                 ApplicationInfo appInfo = hostContext.getApplicationInfo();
                 if (appInfo != null && appInfo.sourceDir != null) {

@@ -5,7 +5,7 @@ import android.content.ContextWrapper;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 
 
 public class GlobalContextWrapper extends ContextWrapper {
@@ -15,8 +15,8 @@ public class GlobalContextWrapper extends ContextWrapper {
     private final String packageName;
     
     public GlobalContextWrapper(Context base, String packageName) {
-        super(base != null ? base : BlackBoxCore.getContext());
-        this.fallbackContext = BlackBoxCore.getContext();
+        super(base != null ? base : TmBox.getContext());
+        this.fallbackContext = TmBox.getContext();
         this.packageName = packageName;
     }
     

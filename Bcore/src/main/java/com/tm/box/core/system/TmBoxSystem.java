@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 import com.tm.box.core.env.AppSystemEnv;
 import com.tm.box.core.env.BEnvironment;
 import com.tm.box.core.system.accounts.BAccountManagerService;
@@ -30,20 +30,20 @@ import com.tm.box.utils.FileUtils;
 import com.tm.box.core.system.JarManager;
 
 
-public class BlackBoxSystem {
-    private static BlackBoxSystem sBlackBoxSystem;
+public class TmBoxSystem {
+    private static TmBoxSystem sTmBoxSystem;
     private final List<ISystemService> mServices = new ArrayList<>();
     private final static AtomicBoolean isStartup = new AtomicBoolean(false);
 
-    public static BlackBoxSystem getSystem() {
-        if (sBlackBoxSystem == null) {
-            synchronized (BlackBoxSystem.class) {
-                if (sBlackBoxSystem == null) {
-                    sBlackBoxSystem = new BlackBoxSystem();
+    public static TmBoxSystem getSystem() {
+        if (sTmBoxSystem == null) {
+            synchronized (TmBoxSystem.class) {
+                if (sTmBoxSystem == null) {
+                    sTmBoxSystem = new TmBoxSystem();
                 }
             }
         }
-        return sBlackBoxSystem;
+        return sTmBoxSystem;
     }
 
     public void startup() {
@@ -71,7 +71,7 @@ public class BlackBoxSystem {
         for (String preInstallPackage : preInstallPackages) {
             try {
                 if (!BPackageManagerService.get().isInstalled(preInstallPackage, BUserHandle.USER_ALL)) {
-                    PackageInfo packageInfo = BlackBoxCore.getPackageManager().getPackageInfo(preInstallPackage, 0);
+                    PackageInfo packageInfo = TmBox.getPackageManager().getPackageInfo(preInstallPackage, 0);
                     BPackageManagerService.get().installPackageAsUser(packageInfo.applicationInfo.sourceDir, InstallOption.installBySystem(), BUserHandle.USER_ALL);
                 }
             } catch (PackageManager.NameNotFoundException ignored) {

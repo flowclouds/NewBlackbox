@@ -5,7 +5,7 @@ import android.os.Process;
 import java.lang.reflect.Method;
 
 import black.libcore.io.BRLibcore;
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 import com.tm.box.app.BActivityThread;
 import com.tm.box.core.IOCore;
 import com.tm.box.fake.hook.ClassInvocationStub;
@@ -92,7 +92,7 @@ public class OsStub extends ClassInvocationStub {
         if (BActivityThread.isThreadInit() && BActivityThread.currentActivityThread().isInit()) {
             return BActivityThread.getBAppId();
         } else {
-            return BlackBoxCore.getHostUid();
+            return TmBox.getHostUid();
         }
     }
 }

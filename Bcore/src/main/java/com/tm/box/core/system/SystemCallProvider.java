@@ -30,12 +30,12 @@ public class SystemCallProvider extends ContentProvider {
 
     private boolean initSystem() {
         try {
-            Slog.d(TAG, "Initializing BlackBox system...");
-            BlackBoxSystem.getSystem().startup();
-            Slog.d(TAG, "BlackBox system initialized successfully");
+            Slog.d(TAG, "Initializing TmBox system...");
+            TmBoxSystem.getSystem().startup();
+            Slog.d(TAG, "TmBox system initialized successfully");
             return true;
         } catch (Exception e) {
-            Slog.e(TAG, "Failed to initialize BlackBox system", e);
+            Slog.e(TAG, "Failed to initialize TmBox system", e);
             return false;
         }
     }

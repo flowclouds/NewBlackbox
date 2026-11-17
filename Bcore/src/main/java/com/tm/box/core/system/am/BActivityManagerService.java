@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 import com.tm.box.core.system.BProcessManagerService;
 import com.tm.box.core.system.ISystemService;
 import com.tm.box.core.system.ProcessRecord;
@@ -90,7 +90,7 @@ public class BActivityManagerService extends IBActivityManagerService.Stub imple
             }
         }
         Intent shadow = new Intent();
-        shadow.setPackage(BlackBoxCore.getHostPkg());
+        shadow.setPackage(TmBox.getHostPkg());
         shadow.setComponent(null);
         shadow.setAction(intent.getAction());
         return shadow;
@@ -160,7 +160,7 @@ public class BActivityManagerService extends IBActivityManagerService.Stub imple
     @Override
     public RunningAppProcessInfo getRunningAppProcesses(String callerPackage, int userId) throws RemoteException {
         ActivityManager manager = (ActivityManager)
-                BlackBoxCore.getContext().getSystemService(Context.ACTIVITY_SERVICE);
+                TmBox.getContext().getSystemService(Context.ACTIVITY_SERVICE);
         List<ActivityManager.RunningAppProcessInfo> runningAppProcesses = manager.getRunningAppProcesses();
         Map<Integer, ActivityManager.RunningAppProcessInfo> runningProcessMap = new HashMap<>();
         for (ActivityManager.RunningAppProcessInfo runningProcess : runningAppProcesses) {

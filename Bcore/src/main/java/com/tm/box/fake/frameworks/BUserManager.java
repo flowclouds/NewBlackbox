@@ -13,7 +13,7 @@ import com.tm.box.core.system.user.IBUserManagerService;
 import com.tm.box.utils.Slog;
 
 
-public class BUserManager extends BlackManager<IBUserManagerService> {
+public class BUserManager extends BoxManager<IBUserManagerService> {
     private static final String TAG = "BUserManager";
     private static final BUserManager sUserManager = new BUserManager();
 

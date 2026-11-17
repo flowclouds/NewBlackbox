@@ -6,7 +6,7 @@ import android.os.IBinder;
 import java.lang.reflect.Method;
 
 import black.android.os.BRServiceManager;
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 import com.tm.box.fake.hook.BinderInvocationStub;
 import com.tm.box.fake.hook.MethodHook;
 import com.tm.box.fake.hook.ProxyMethod;
@@ -65,8 +65,8 @@ public class GmsProxy extends BinderInvocationStub {
                     String callingPackage = (String) args[0];
                     if ("com.google.android.gms".equals(callingPackage)) {
                         
-                        args[0] = BlackBoxCore.getHostPkg();
-                        Slog.d(TAG, "GmsProxy: Fixed calling package from com.google.android.gms to " + BlackBoxCore.getHostPkg());
+                        args[0] = TmBox.getHostPkg();
+                        Slog.d(TAG, "GmsProxy: Fixed calling package from com.google.android.gms to " + TmBox.getHostPkg());
                     }
                 }
                 return method.invoke(who, args);

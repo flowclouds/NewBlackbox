@@ -168,8 +168,8 @@ public class BResourcesManager implements IInjectHook {
     
     private static Object getPackageManager() {
         try {
-            Class<?> blackBoxCoreClass = Class.forName("com.tm.box.BlackBoxCore");
-            Method getPackageManagerMethod = blackBoxCoreClass.getMethod("getPackageManager");
+            Class<?> tmBoxClass = Class.forName("com.tm.box.TmBox");
+            Method getPackageManagerMethod = tmBoxClass.getMethod("getPackageManager");
             return getPackageManagerMethod.invoke(null);
         } catch (Exception e) {
             Log.w(TAG, "Failed to get PackageManager: " + e.getMessage());

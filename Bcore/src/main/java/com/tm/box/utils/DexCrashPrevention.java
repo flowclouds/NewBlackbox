@@ -13,7 +13,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 import com.tm.box.app.BActivityThread;
 
 
@@ -349,7 +349,7 @@ public class DexCrashPrevention {
     
     private static String getVirtualAppDirectory() {
         try {
-            Context context = BlackBoxCore.getContext();
+            Context context = TmBox.getContext();
             if (context != null) {
                 ApplicationInfo appInfo = context.getApplicationInfo();
                 if (appInfo != null && appInfo.sourceDir != null) {

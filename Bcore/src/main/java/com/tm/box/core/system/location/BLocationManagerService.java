@@ -19,7 +19,7 @@ import java.util.concurrent.Executors;
 
 import black.android.location.BRILocationListener;
 import black.android.location.BRILocationListenerStub;
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 import com.tm.box.core.env.BEnvironment;
 import com.tm.box.core.system.ISystemService;
 import com.tm.box.entity.location.BCell;
@@ -251,7 +251,7 @@ public class BLocationManagerService extends IBLocationManagerService.Stub imple
                 }
                 lastLocation = location;
                 l = System.currentTimeMillis();
-                BlackBoxCore.get().getHandler().post(() -> BRILocationListener.get(iInterface).onLocationChanged(location.convert2SystemLocation()));
+                TmBox.get().getHandler().post(() -> BRILocationListener.get(iInterface).onLocationChanged(location.convert2SystemLocation()));
             }
         });
     }

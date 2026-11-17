@@ -3,7 +3,7 @@ package com.tm.box.utils;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -133,7 +133,7 @@ public class SystemHookManager {
                 Log.d(TAG, "Found ActivityThread class");
                 
                 
-                Object activityThread = BlackBoxCore.mainThread();
+                Object activityThread = TmBox.mainThread();
                 if (activityThread != null) {
                     Log.d(TAG, "Found ActivityThread instance");
                     
@@ -181,7 +181,7 @@ public class SystemHookManager {
     private static void replaceControllerInstance(Class<?> controllerClass, Object proxy, String controllerName) {
         try {
             
-            Object activityThread = BlackBoxCore.mainThread();
+            Object activityThread = TmBox.mainThread();
             if (activityThread != null) {
                 
                 Field[] fields = activityThread.getClass().getDeclaredFields();
@@ -222,7 +222,7 @@ public class SystemHookManager {
     private static void ensureAllActivitiesHaveContext() {
         try {
             
-            Object activityThread = BlackBoxCore.mainThread();
+            Object activityThread = TmBox.mainThread();
             if (activityThread != null) {
                 
                 try {
@@ -246,7 +246,7 @@ public class SystemHookManager {
                                                     activityField.setAccessible(true);
                                                     Object activity = activityField.get(record);
                                                     if (activity instanceof android.app.Activity) {
-                                                        BlackBoxCore.ensureActivityContext((android.app.Activity) activity);
+                                                        TmBox.ensureActivityContext((android.app.Activity) activity);
                                                     }
                                                 } catch (Exception e) {
                                                     

@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 
 import com.tm.box.core.env.BEnvironment;
 import com.tm.box.utils.FileUtils;
@@ -61,7 +61,7 @@ public class IOCore {
     public String redirectPath(String path) {
         if (TextUtils.isEmpty(path))
             return path;
-        if (path.contains("/blackbox/")) {
+        if (path.contains("/box/")) {
             return path;
         }
         String search = sBlackTree.search(path);
@@ -110,8 +110,8 @@ public class IOCore {
         String packageName = context.getPackageName();
 
         try {
-            ApplicationInfo packageInfo = BlackBoxCore.getBPackageManager().getApplicationInfo(packageName, PackageManager.GET_META_DATA, BlackBoxCore.getUserId());
-            int systemUserId = BlackBoxCore.getHostUserId();
+            ApplicationInfo packageInfo = TmBox.getBPackageManager().getApplicationInfo(packageName, PackageManager.GET_META_DATA, TmBox.getUserId());
+            int systemUserId = TmBox.getHostUserId();
             rule.put(String.format("/data/data/%s/lib", packageName), packageInfo.nativeLibraryDir);
             rule.put(String.format("/data/user/%d/%s/lib", systemUserId, packageName), packageInfo.nativeLibraryDir);
 
@@ -124,15 +124,15 @@ public class IOCore {
             
             rule.put("/data/misc/profiles", profilesRoot.getAbsolutePath());
 
-            File profilesCurDir = new File(profilesRoot, String.format("cur/%d/%s", BlackBoxCore.getUserId(), packageName));
-            File profilesRefDir = new File(profilesRoot, String.format("ref/%d/%s", BlackBoxCore.getUserId(), packageName));
+            File profilesCurDir = new File(profilesRoot, String.format("cur/%d/%s", TmBox.getUserId(), packageName));
+            File profilesRefDir = new File(profilesRoot, String.format("ref/%d/%s", TmBox.getUserId(), packageName));
             FileUtils.mkdirs(profilesCurDir.getAbsolutePath());
             FileUtils.mkdirs(profilesRefDir.getAbsolutePath());
-            rule.put(String.format("/data/misc/profiles/cur/%d/%s", BlackBoxCore.getUserId(), packageName), profilesCurDir.getAbsolutePath());
-            rule.put(String.format("/data/misc/profiles/ref/%d/%s", BlackBoxCore.getUserId(), packageName), profilesRefDir.getAbsolutePath());
+            rule.put(String.format("/data/misc/profiles/cur/%d/%s", TmBox.getUserId(), packageName), profilesCurDir.getAbsolutePath());
+            rule.put(String.format("/data/misc/profiles/ref/%d/%s", TmBox.getUserId(), packageName), profilesRefDir.getAbsolutePath());
 
-            if (BlackBoxCore.getContext().getExternalCacheDir() != null && context.getExternalCacheDir() != null) {
-                File external = BEnvironment.getExternalUserDir(BlackBoxCore.getUserId());
+            if (TmBox.getContext().getExternalCacheDir() != null && context.getExternalCacheDir() != null) {
+                File external = BEnvironment.getExternalUserDir(TmBox.getUserId());
 
                 
                 rule.put("/sdcard", external.getAbsolutePath());
@@ -141,7 +141,7 @@ public class IOCore {
                 blackRule.add("/sdcard/Pictures");
                 blackRule.add(String.format("/storage/emulated/%d/Pictures", systemUserId));
             }
-            if (BlackBoxCore.get().isHideRoot()) {
+            if (TmBox.get().isHideRoot()) {
                 hideRoot(rule);
             }
             proc(rule);
@@ -171,7 +171,7 @@ public class IOCore {
     }
 
     private void proc(Map<String, String> rule) {
-        int appPid = BlackBoxCore.getAppPid();
+        int appPid = TmBox.getAppPid();
         int pid = Process.myPid();
         String selfProc = "/proc/self/";
         String proc = "/proc/" + pid + "/";

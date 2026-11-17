@@ -5,7 +5,7 @@ import android.os.IInterface;
 import java.lang.reflect.Method;
 
 import black.android.content.BRAttributionSource;
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 import com.tm.box.fake.hook.ClassInvocationStub;
 import com.tm.box.utils.compat.ContextCompat;
 
@@ -59,7 +59,7 @@ public class SystemProviderStub extends ClassInvocationStub implements BContentP
                     
                     if (arg != null && attributionSourceClass != null && 
                             arg.getClass().getName().equals(attributionSourceClass.getName())) {
-                        ContextCompat.fixAttributionSourceState(arg, BlackBoxCore.getHostUid());
+                        ContextCompat.fixAttributionSourceState(arg, TmBox.getHostUid());
                     }
                 }
             }
@@ -73,13 +73,13 @@ public class SystemProviderStub extends ClassInvocationStub implements BContentP
                 String authority = (String) arg;
                 
                 if (!isSystemProviderAuthority(authority)) {
-                    args[0] = BlackBoxCore.getHostPkg();
+                    args[0] = TmBox.getHostPkg();
                 }
             } else if (arg != null) {
                 Class<?> attrSourceClass = BRAttributionSource.getRealClass();
                 
                 if (attrSourceClass != null && arg.getClass().getName().equals(attrSourceClass.getName())) {
-                    ContextCompat.fixAttributionSourceState(arg, BlackBoxCore.getHostUid());
+                    ContextCompat.fixAttributionSourceState(arg, TmBox.getHostUid());
                 }
             }
         }

@@ -10,7 +10,7 @@ import black.android.content.AttributionSourceStateContext;
 import black.android.content.BRAttributionSource;
 import black.android.content.BRAttributionSourceState;
 import black.android.content.BRContentResolver;
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 import com.tm.box.app.BActivityThread;
 import com.tm.box.utils.Slog;
 
@@ -24,7 +24,7 @@ public class ContextCompat {
             mAttributionSourceState = BRAttributionSource.get(obj).mAttributionSourceState();
 
             AttributionSourceStateContext attributionSourceStateContext = BRAttributionSourceState.get(mAttributionSourceState);
-            attributionSourceStateContext._set_packageName(BlackBoxCore.getHostPkg());
+            attributionSourceStateContext._set_packageName(TmBox.getHostPkg());
             attributionSourceStateContext._set_uid(uid);
             fixAttributionSourceState(BRAttributionSource.get(obj).getNext(), uid);
         }
@@ -60,11 +60,11 @@ public class ContextCompat {
                 e.printStackTrace();
             }
 
-            BRContextImpl.get(context)._set_mBasePackageName(BlackBoxCore.getHostPkg());
-            BRContextImplKitkat.get(context)._set_mOpPackageName(BlackBoxCore.getHostPkg());
+            BRContextImpl.get(context)._set_mBasePackageName(TmBox.getHostPkg());
+            BRContextImplKitkat.get(context)._set_mOpPackageName(TmBox.getHostPkg());
             
             try {
-                BRContentResolver.get(context.getContentResolver())._set_mPackageName(BlackBoxCore.getHostPkg());
+                BRContentResolver.get(context.getContentResolver())._set_mPackageName(TmBox.getHostPkg());
             } catch (Exception e) {
                 Slog.w(TAG, "Failed to fix content resolver: " + e.getMessage());
             }
@@ -73,7 +73,7 @@ public class ContextCompat {
                 try {
                     
                     
-                    fixAttributionSourceState(BRContextImpl.get(context).getAttributionSource(), BlackBoxCore.getHostUid());
+                    fixAttributionSourceState(BRContextImpl.get(context).getAttributionSource(), TmBox.getHostUid());
                 } catch (Exception e) {
                     Slog.w(TAG, "Failed to fix attribution source state: " + e.getMessage());
                 }

@@ -8,12 +8,12 @@ import java.lang.reflect.ParameterizedType;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 import com.tm.box.utils.Reflector;
 
 
-public abstract class BlackManager<Service extends IInterface> {
-    public static final String TAG = "BlackManager";
+public abstract class BoxManager<Service extends IInterface> {
+    public static final String TAG = "BoxManager";
 
     private Service mService;
     private final AtomicBoolean mServiceCreationFailed = new AtomicBoolean(false);
@@ -53,7 +53,7 @@ public abstract class BlackManager<Service extends IInterface> {
         }
 
         try {
-            IBinder binder = BlackBoxCore.get().getService(getServiceName());
+            IBinder binder = TmBox.get().getService(getServiceName());
             if (binder == null) {
                 Log.w(TAG, "Failed to get binder for service: " + getServiceName());
                 markServiceCreationFailed();

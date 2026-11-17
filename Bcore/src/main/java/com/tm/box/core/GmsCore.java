@@ -5,7 +5,7 @@ import android.content.pm.PackageManager;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 import com.tm.box.entity.pm.InstallResult;
 
 
@@ -48,18 +48,18 @@ public class GmsCore {
     }
 
     private static InstallResult installPackages(Set<String> list, int userId) {
-        BlackBoxCore blackBoxCore = BlackBoxCore.get();
+        TmBox tmBox = TmBox.get();
         for (String packageName : list) {
-            if (blackBoxCore.isInstalled(packageName, userId)) {
+            if (tmBox.isInstalled(packageName, userId)) {
                 continue;
             }
             try {
-                BlackBoxCore.getContext().getPackageManager().getApplicationInfo(packageName, 0);
+                TmBox.getContext().getPackageManager().getApplicationInfo(packageName, 0);
             } catch (PackageManager.NameNotFoundException e) {
                 
                 continue;
             }
-            InstallResult installResult = blackBoxCore.installPackageAsUser(packageName, userId);
+            InstallResult installResult = tmBox.installPackageAsUser(packageName, userId);
             if (!installResult.success) {
                 return installResult;
             }
@@ -68,9 +68,9 @@ public class GmsCore {
     }
 
     private static void uninstallPackages(Set<String> list, int userId) {
-        BlackBoxCore blackBoxCore = BlackBoxCore.get();
+        TmBox tmBox = TmBox.get();
         for (String packageName : list) {
-            blackBoxCore.uninstallPackageAsUser(packageName, userId);
+            tmBox.uninstallPackageAsUser(packageName, userId);
         }
     }
 
@@ -101,7 +101,7 @@ public class GmsCore {
 
     public static boolean isSupportGms() {
         try {
-            BlackBoxCore.getPackageManager().getPackageInfo(GMS_PKG, 0);
+            TmBox.getPackageManager().getPackageInfo(GMS_PKG, 0);
             return true;
         } catch (PackageManager.NameNotFoundException ignored) {
         }
@@ -109,6 +109,6 @@ public class GmsCore {
     }
 
     public static boolean isInstalledGoogleService(int userId) {
-        return BlackBoxCore.get().isInstalled(GMS_PKG, userId);
+        return TmBox.get().isInstalled(GMS_PKG, userId);
     }
 }

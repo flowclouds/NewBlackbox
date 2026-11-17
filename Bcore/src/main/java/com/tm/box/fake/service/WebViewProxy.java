@@ -10,7 +10,7 @@ import android.webkit.WebSettings;
 import java.io.File;
 import java.lang.reflect.Method;
 
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 import com.tm.box.fake.hook.ClassInvocationStub;
 import com.tm.box.fake.hook.MethodHook;
 import com.tm.box.fake.hook.ProxyMethod;
@@ -52,7 +52,7 @@ public class WebViewProxy extends ClassInvocationStub {
                 if (args != null && args.length > 0 && args[0] instanceof Context) {
                     context = (Context) args[0];
                 } else {
-                    context = BlackBoxCore.getContext();
+                    context = TmBox.getContext();
                 }
 
                 if (context != null) {
@@ -139,8 +139,8 @@ public class WebViewProxy extends ClassInvocationStub {
 
                     
                     String userAgent = settings.getUserAgentString();
-                    if (userAgent != null && !userAgent.contains("BlackBox")) {
-                        settings.setUserAgentString(userAgent + " BlackBox");
+                    if (userAgent != null && !userAgent.contains("TmBox")) {
+                        settings.setUserAgentString(userAgent + " TmBox");
                     }
 
                     
@@ -196,7 +196,7 @@ public class WebViewProxy extends ClassInvocationStub {
                     Slog.d(TAG, "WebView: setDataDirectorySuffix called with: " + suffix);
                     
                     
-                    Context context = BlackBoxCore.getContext();
+                    Context context = TmBox.getContext();
                     String packageName = context != null ? context.getPackageName() : "unknown";
                     String userId = String.valueOf(BActivityThread.getUserId());
                     String uniqueSuffix = suffix + "_" + userId + "_" + android.os.Process.myPid();
@@ -221,7 +221,7 @@ public class WebViewProxy extends ClassInvocationStub {
                 Slog.d(TAG, "WebView: getDataDirectory called, returning unique directory");
                 
                 
-                Context context = BlackBoxCore.getContext();
+                Context context = TmBox.getContext();
                 if (context != null) {
                     String packageName = context.getPackageName();
                     String userId = String.valueOf(BActivityThread.getUserId());
@@ -241,7 +241,7 @@ public class WebViewProxy extends ClassInvocationStub {
             } catch (Exception e) {
                 Slog.w(TAG, "WebView: getDataDirectory failed, returning fallback", e);
                 
-                return "/data/data/" + BlackBoxCore.getHostPkg() + "/webview_fallback";
+                return "/data/data/" + TmBox.getHostPkg() + "/webview_fallback";
             }
         }
     }
@@ -255,7 +255,7 @@ public class WebViewProxy extends ClassInvocationStub {
             
             try {
                 
-                Context context = BlackBoxCore.getContext();
+                Context context = TmBox.getContext();
                 if (context != null) {
                     
                     String packageName = context.getPackageName();

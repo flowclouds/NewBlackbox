@@ -9,7 +9,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 import com.tm.box.app.BActivityThread;
 import com.tm.box.entity.AppConfig;
 import com.tm.box.utils.compat.BundleCompat;
@@ -28,10 +28,10 @@ public class ProxyContentProvider extends ContentProvider {
             assert extras != null;
             extras.setClassLoader(AppConfig.class.getClassLoader());
             AppConfig appConfig = extras.getParcelable(AppConfig.KEY);
-            BlackBoxCore.currentActivityThread().initProcess(appConfig);
+            TmBox.currentActivityThread().initProcess(appConfig);
 
             Bundle bundle = new Bundle();
-            BundleCompat.putBinder(bundle, "_Black_|_client_", BlackBoxCore.currentActivityThread());
+            BundleCompat.putBinder(bundle, "_Black_|_client_", TmBox.currentActivityThread());
             return bundle;
         }
         return super.call(method, arg, extras);

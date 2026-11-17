@@ -6,7 +6,7 @@ import android.os.IBinder;
 import java.lang.reflect.Method;
 
 import black.android.os.BRServiceManager;
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 import com.tm.box.fake.hook.BinderInvocationStub;
 import com.tm.box.fake.hook.MethodHook;
 import com.tm.box.fake.hook.ProxyMethod;
@@ -59,9 +59,9 @@ public class ISensitiveContentProtectionManagerProxy extends BinderInvocationStu
                 for (int i = 0; i < args.length; i++) {
                     if (args[i] instanceof String) {
                         String pkg = (String) args[i];
-                        if (pkg != null && !pkg.equals(BlackBoxCore.getHostPkg())) {
-                            Slog.d(TAG, "Fixing package name in setSensitiveContentProtection: " + pkg + " -> " + BlackBoxCore.getHostPkg());
-                            args[i] = BlackBoxCore.getHostPkg();
+                        if (pkg != null && !pkg.equals(TmBox.getHostPkg())) {
+                            Slog.d(TAG, "Fixing package name in setSensitiveContentProtection: " + pkg + " -> " + TmBox.getHostPkg());
+                            args[i] = TmBox.getHostPkg();
                         }
                     }
                 }

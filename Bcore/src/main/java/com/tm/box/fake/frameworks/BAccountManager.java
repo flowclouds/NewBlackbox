@@ -13,7 +13,7 @@ import com.tm.box.core.system.ServiceManager;
 import com.tm.box.core.system.accounts.IBAccountManagerService;
 
 
-public class BAccountManager extends BlackManager<IBAccountManagerService> {
+public class BAccountManager extends BoxManager<IBAccountManagerService> {
     private static final BAccountManager sBAccountManager = new BAccountManager();
 
     public static BAccountManager get() {

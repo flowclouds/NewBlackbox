@@ -15,7 +15,7 @@ import androidx.core.content.ContextCompat;
 
 import java.lang.reflect.Method;
 
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 import com.tm.box.utils.Slog;
 import com.tm.box.utils.compat.BuildCompat;
 
@@ -59,7 +59,7 @@ public class XiaomiPermissionManager {
             return true;
         }
         
-        Context context = BlackBoxCore.getContext();
+        Context context = TmBox.getContext();
         return ContextCompat.checkSelfPermission(context, POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED;
     }
     
@@ -69,7 +69,7 @@ public class XiaomiPermissionManager {
             return true; 
         }
         
-        Context context = BlackBoxCore.getContext();
+        Context context = TmBox.getContext();
         
         
         try {
@@ -178,7 +178,7 @@ public class XiaomiPermissionManager {
             return;
         }
         
-        Context context = BlackBoxCore.getContext();
+        Context context = TmBox.getContext();
         
         try {
             
@@ -205,7 +205,7 @@ public class XiaomiPermissionManager {
     
     
     public void openNotificationSettings() {
-        Context context = BlackBoxCore.getContext();
+        Context context = TmBox.getContext();
         
         try {
             Intent intent = new Intent();
@@ -231,7 +231,7 @@ public class XiaomiPermissionManager {
             return;
         }
         
-        Context context = BlackBoxCore.getContext();
+        Context context = TmBox.getContext();
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         
         if (notificationManager == null) {
@@ -242,11 +242,11 @@ public class XiaomiPermissionManager {
         try {
             
             android.app.NotificationChannel mainChannel = new android.app.NotificationChannel(
-                "blackbox_main",
-                "BlackBox Core",
+                "box_main",
+                "TmBox Core",
                 NotificationManager.IMPORTANCE_HIGH
             );
-            mainChannel.setDescription("Core BlackBox functionality notifications");
+            mainChannel.setDescription("Core TmBox functionality notifications");
             mainChannel.enableLights(true);
             mainChannel.enableVibration(true);
             mainChannel.setShowBadge(true);
@@ -256,8 +256,8 @@ public class XiaomiPermissionManager {
             
             
             android.app.NotificationChannel backgroundChannel = new android.app.NotificationChannel(
-                "blackbox_background",
-                "BlackBox Background",
+                "box_background",
+                "TmBox Background",
                 NotificationManager.IMPORTANCE_LOW
             );
             backgroundChannel.setDescription("Background service notifications");
@@ -279,7 +279,7 @@ public class XiaomiPermissionManager {
             return;
         }
         
-        Context context = BlackBoxCore.getContext();
+        Context context = TmBox.getContext();
         
         try {
             PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
@@ -315,7 +315,7 @@ public class XiaomiPermissionManager {
     
     private void grantPermissionThroughReflection(String permission) {
         try {
-            Context context = BlackBoxCore.getContext();
+            Context context = TmBox.getContext();
             
             
             PackageManager packageManager = context.getPackageManager();

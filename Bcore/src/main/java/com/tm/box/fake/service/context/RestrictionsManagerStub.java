@@ -6,7 +6,7 @@ import java.lang.reflect.Method;
 
 import black.android.content.BRIRestrictionsManagerStub;
 import black.android.os.BRServiceManager;
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 import com.tm.box.fake.hook.BinderInvocationStub;
 import com.tm.box.fake.hook.MethodHook;
 import com.tm.box.fake.hook.ProxyMethod;
@@ -37,7 +37,7 @@ public class RestrictionsManagerStub extends BinderInvocationStub {
     public static class GetApplicationRestrictions extends MethodHook {
         @Override
         protected Object hook(Object who, Method method, Object[] args) throws Throwable {
-            args[0] = BlackBoxCore.getHostPkg();
+            args[0] = TmBox.getHostPkg();
             return method.invoke(who, args);
         }
     }

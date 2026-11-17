@@ -59,7 +59,7 @@ import black.android.graphics.BRCompatibility;
 import black.android.security.net.config.BRNetworkSecurityConfigProvider;
 import black.com.android.internal.content.BRReferrerIntent;
 import black.dalvik.system.BRVMRuntime;
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 import com.tm.box.app.configuration.AppLifecycleCallback;
 import com.tm.box.app.dispatcher.AppServiceDispatcher;
 import com.tm.box.core.CrashHandler;
@@ -95,7 +95,7 @@ public class BActivityThread extends IBActivityThread.Stub {
     private Application mInitialApplication;
     private AppConfig mAppConfig;
     private final List<ProviderInfo> mProviders = new ArrayList<>();
-    private final Handler mH = BlackBoxCore.get().getHandler();
+    private final Handler mH = TmBox.get().getHandler();
     private static final Object mConfigLock = new Object();
 
     public static boolean isThreadInit() {
@@ -160,7 +160,7 @@ public class BActivityThread extends IBActivityThread.Stub {
     }
 
     public static int getCallingBUid() {
-        return getAppConfig() == null ? BlackBoxCore.getHostUid() : getAppConfig().callingBUid;
+        return getAppConfig() == null ? TmBox.getHostUid() : getAppConfig().callingBUid;
     }
 
     public static int getUid() {
@@ -229,14 +229,14 @@ public class BActivityThread extends IBActivityThread.Stub {
         }
 
         try {
-            Context context = BlackBoxCore.getContext().createPackageContext(
+            Context context = TmBox.getContext().createPackageContext(
                     serviceInfo.packageName,
                     Context.CONTEXT_INCLUDE_CODE | Context.CONTEXT_IGNORE_SECURITY
             );
             BRContextImpl.get(context).setOuterContext(service);
             BRService.get(service).attach(
                     context,
-                    BlackBoxCore.mainThread(),
+                    TmBox.mainThread(),
                     serviceInfo.name,
                     token,
                     mInitialApplication,
@@ -284,14 +284,14 @@ public class BActivityThread extends IBActivityThread.Stub {
         }
 
         try {
-            Context context = BlackBoxCore.getContext().createPackageContext(
+            Context context = TmBox.getContext().createPackageContext(
                     serviceInfo.packageName,
                     Context.CONTEXT_INCLUDE_CODE | Context.CONTEXT_IGNORE_SECURITY
             );
             BRContextImpl.get(context).setOuterContext(service);
             BRService.get(service).attach(
                     context,
-                    BlackBoxCore.mainThread(),
+                    TmBox.mainThread(),
                     serviceInfo.name,
                     BActivityThread.currentActivityThread().getActivityThread(),
                     mInitialApplication,
@@ -316,7 +316,7 @@ public class BActivityThread extends IBActivityThread.Stub {
     public void bindApplication(final String packageName, final String processName) {
         if (Looper.myLooper() != Looper.getMainLooper()) {
             final ConditionVariable conditionVariable = new ConditionVariable();
-            BlackBoxCore.get().getHandler().post(() -> {
+            TmBox.get().getHandler().post(() -> {
                 
                 Object bindData = createBindApplicationData(packageName, processName);
                 handleBindApplication(packageName, processName);
@@ -334,7 +334,7 @@ public class BActivityThread extends IBActivityThread.Stub {
     private Object createBindApplicationData(String packageName, String processName) {
         try {
             
-            PackageInfo packageInfo = BlackBoxCore.getBPackageManager().getPackageInfo(packageName, PackageManager.GET_PROVIDERS, getUserId());
+            PackageInfo packageInfo = TmBox.getBPackageManager().getPackageInfo(packageName, PackageManager.GET_PROVIDERS, getUserId());
             ApplicationInfo applicationInfo = packageInfo.applicationInfo;
             
             
@@ -363,14 +363,14 @@ public class BActivityThread extends IBActivityThread.Stub {
         } catch (Throwable ignored) {
         }
 
-        PackageInfo packageInfo = BlackBoxCore.getBPackageManager().getPackageInfo(packageName, PackageManager.GET_PROVIDERS, BActivityThread.getUserId());
+        PackageInfo packageInfo = TmBox.getBPackageManager().getPackageInfo(packageName, PackageManager.GET_PROVIDERS, BActivityThread.getUserId());
         ApplicationInfo applicationInfo = packageInfo.applicationInfo;
         if (packageInfo.providers == null) {
             packageInfo.providers = new ProviderInfo[]{};
         }
         mProviders.addAll(Arrays.asList(packageInfo.providers));
 
-        Object boundApplication = BRActivityThread.get(BlackBoxCore.mainThread()).mBoundApplication();
+        Object boundApplication = BRActivityThread.get(TmBox.mainThread()).mBoundApplication();
 
         Context packageContext = createPackageContext(applicationInfo);
         Object loadedApk = BRContextImpl.get(packageContext).mPackageInfo();
@@ -469,8 +469,8 @@ public class BActivityThread extends IBActivityThread.Stub {
             }
             
             mInitialApplication = application;
-            BRActivityThread.get(BlackBoxCore.mainThread())._set_mInitialApplication(mInitialApplication);
-            ContextCompat.fix((Context) BRActivityThread.get(BlackBoxCore.mainThread()).getSystemContext());
+            BRActivityThread.get(TmBox.mainThread())._set_mInitialApplication(mInitialApplication);
+            ContextCompat.fix((Context) BRActivityThread.get(TmBox.mainThread()).getSystemContext());
             ContextCompat.fix(mInitialApplication);
             installProviders(mInitialApplication, bindData.processName, bindData.providers);
 
@@ -617,9 +617,9 @@ public class BActivityThread extends IBActivityThread.Stub {
             }
             
             
-            String packageName = BlackBoxCore.getAppPackageName();
+            String packageName = TmBox.getAppPackageName();
             if (packageName != null) {
-                PackageInfo packageInfo = BlackBoxCore.getBPackageManager().getPackageInfo(packageName, 0, getUserId());
+                PackageInfo packageInfo = TmBox.getBPackageManager().getPackageInfo(packageName, 0, getUserId());
                 return packageInfo.applicationInfo;
             }
             
@@ -706,9 +706,9 @@ public class BActivityThread extends IBActivityThread.Stub {
     
     private Context createFallbackContext(String packageName) {
         try {
-            Context baseContext = BlackBoxCore.getContext();
+            Context baseContext = TmBox.getContext();
             if (baseContext == null) {
-                Slog.e(TAG, "BlackBoxCore.getContext() is null, cannot create fallback context");
+                Slog.e(TAG, "TmBox.getContext() is null, cannot create fallback context");
                 return null;
             }
             
@@ -861,7 +861,7 @@ public class BActivityThread extends IBActivityThread.Stub {
     private void setApplication(Application application) {
         try {
             mInitialApplication = application;
-            BRActivityThread.get(BlackBoxCore.mainThread())._set_mInitialApplication(application);
+            BRActivityThread.get(TmBox.mainThread())._set_mInitialApplication(application);
             Slog.d(TAG, "Application set in ActivityThread successfully");
         } catch (Exception e) {
             Slog.e(TAG, "Error setting application in ActivityThread", e);
@@ -876,7 +876,7 @@ public class BActivityThread extends IBActivityThread.Stub {
                             Application basicApp = createMinimalApplication(packageContext, packageName);
             if (basicApp != null) {
                 mInitialApplication = basicApp;
-                BRActivityThread.get(BlackBoxCore.mainThread())._set_mInitialApplication(mInitialApplication);
+                BRActivityThread.get(TmBox.mainThread())._set_mInitialApplication(mInitialApplication);
                 ContextCompat.fix(mInitialApplication);
                 
                 
@@ -898,7 +898,7 @@ public class BActivityThread extends IBActivityThread.Stub {
                 try {
                     if (processName.equals(providerInfo.processName) ||
                             providerInfo.processName.equals(context.getPackageName()) || providerInfo.multiprocess) {
-                        installProvider(BlackBoxCore.mainThread(), context, providerInfo, null);
+                        installProvider(TmBox.mainThread(), context, providerInfo, null);
                     }
                 } catch (SecurityException se) {
                     Slog.w(TAG, "SecurityException installing provider " + providerInfo.name + ": " + se.getMessage());
@@ -920,7 +920,7 @@ public class BActivityThread extends IBActivityThread.Stub {
 
     public static Context createPackageContext(ApplicationInfo info) {
         try {
-            return BlackBoxCore.getContext().createPackageContext(info.packageName,
+            return TmBox.getContext().createPackageContext(info.packageName,
                     Context.CONTEXT_INCLUDE_CODE | Context.CONTEXT_IGNORE_SECURITY);
         } catch (Exception e) {
             e.printStackTrace();
@@ -932,7 +932,7 @@ public class BActivityThread extends IBActivityThread.Stub {
     private static Context createMinimalPackageContext(ApplicationInfo info) {
         try {
             
-            Context baseContext = BlackBoxCore.getContext();
+            Context baseContext = TmBox.getContext();
             
             
             try {
@@ -979,7 +979,7 @@ public class BActivityThread extends IBActivityThread.Stub {
     
     private static Context createWrappedBaseContext(String packageName) {
         try {
-            Context baseContext = BlackBoxCore.getContext();
+            Context baseContext = TmBox.getContext();
             
             
             return new ContextWrapper(baseContext) {
@@ -1011,7 +1011,7 @@ public class BActivityThread extends IBActivityThread.Stub {
         } catch (Exception e) {
             Slog.e(TAG, "Failed to create wrapped base context for " + packageName + ": " + e.getMessage());
             
-            return BlackBoxCore.getContext();
+            return TmBox.getContext();
         }
     }
 
@@ -1027,7 +1027,7 @@ public class BActivityThread extends IBActivityThread.Stub {
                     }
                     if (processName.equals(providerInfo.processName) ||
                             providerInfo.processName.equals(context.getPackageName()) || providerInfo.multiprocess) {
-                        installProvider(BlackBoxCore.mainThread(), context, providerInfo, null);
+                        installProvider(TmBox.mainThread(), context, providerInfo, null);
                     }
                 } catch (Throwable ignored) {
                 }
@@ -1054,7 +1054,7 @@ public class BActivityThread extends IBActivityThread.Stub {
 
     @Override
     public IBinder getActivityThread() {
-        return BRActivityThread.get(BlackBoxCore.mainThread()).getApplicationThread();
+        return BRActivityThread.get(TmBox.mainThread()).getApplicationThread();
     }
 
     @Override
@@ -1081,7 +1081,7 @@ public class BActivityThread extends IBActivityThread.Stub {
         }
         String[] split = providerInfo.authority.split(";");
         for (String auth : split) {
-            ContentProviderClient contentProviderClient = BlackBoxCore.getContext()
+            ContentProviderClient contentProviderClient = TmBox.getContext()
                     .getContentResolver().acquireContentProviderClient(auth);
             IInterface iInterface = BRContentProviderClient.get(contentProviderClient).mContentProvider();
             if (iInterface == null)
@@ -1099,7 +1099,7 @@ public class BActivityThread extends IBActivityThread.Stub {
     @Override
     public void finishActivity(final IBinder token) {
         mH.post(() -> {
-            Map<IBinder, Object> activities = BRActivityThread.get(BlackBoxCore.mainThread()).mActivities();
+            Map<IBinder, Object> activities = BRActivityThread.get(TmBox.mainThread()).mActivities();
             if (activities.isEmpty())
                 return;
             Object clientRecord = activities.get(token);
@@ -1123,12 +1123,12 @@ public class BActivityThread extends IBActivityThread.Stub {
         mH.post(() -> {
             Intent newIntent;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-                newIntent = BRReferrerIntent.get()._new(intent, BlackBoxCore.getHostPkg());
+                newIntent = BRReferrerIntent.get()._new(intent, TmBox.getHostPkg());
             } else {
                 newIntent = intent;
             }
-            Object mainThread = BlackBoxCore.mainThread();
-            if (BRActivityThread.get(BlackBoxCore.mainThread())._check_performNewIntents(null, null) != null) {
+            Object mainThread = TmBox.mainThread();
+            if (BRActivityThread.get(TmBox.mainThread())._check_performNewIntents(null, null) != null) {
                 BRActivityThread.get(mainThread).performNewIntents(
                         token,
                         Collections.singletonList(newIntent)
@@ -1167,7 +1167,7 @@ public class BActivityThread extends IBActivityThread.Stub {
                 if (finish != null) {
                     finish.finish();
                 }
-                BlackBoxCore.getBActivityManager().finishBroadcast(data.data);
+                TmBox.getBActivityManager().finishBroadcast(data.data);
             } catch (Throwable throwable) {
                 throwable.printStackTrace();
                 Slog.e(TAG,
@@ -1179,24 +1179,24 @@ public class BActivityThread extends IBActivityThread.Stub {
 
     public static Activity getActivityByToken(IBinder token) {
         Map<IBinder, Object> iBinderObjectMap =
-                BRActivityThread.get(BlackBoxCore.mainThread()).mActivities();
+                BRActivityThread.get(TmBox.mainThread()).mActivities();
         return BRActivityThreadActivityClientRecord.get(iBinderObjectMap.get(token)).activity();
     }
 
     private void onBeforeCreateApplication(String packageName, String processName, Context context) {
-        for (AppLifecycleCallback appLifecycleCallback : BlackBoxCore.get().getAppLifecycleCallbacks()) {
+        for (AppLifecycleCallback appLifecycleCallback : TmBox.get().getAppLifecycleCallbacks()) {
             appLifecycleCallback.beforeCreateApplication(packageName, processName, context, BActivityThread.getUserId());
         }
     }
 
     private void onBeforeApplicationOnCreate(String packageName, String processName, Application application) {
-        for (AppLifecycleCallback appLifecycleCallback : BlackBoxCore.get().getAppLifecycleCallbacks()) {
+        for (AppLifecycleCallback appLifecycleCallback : TmBox.get().getAppLifecycleCallbacks()) {
             appLifecycleCallback.beforeApplicationOnCreate(packageName, processName, application, BActivityThread.getUserId());
         }
     }
 
     private void onAfterApplicationOnCreate(String packageName, String processName, Application application) {
-        for (AppLifecycleCallback appLifecycleCallback : BlackBoxCore.get().getAppLifecycleCallbacks()) {
+        for (AppLifecycleCallback appLifecycleCallback : TmBox.get().getAppLifecycleCallbacks()) {
             appLifecycleCallback.afterApplicationOnCreate(packageName, processName, application, BActivityThread.getUserId());
         }
     }
@@ -1222,11 +1222,11 @@ public class BActivityThread extends IBActivityThread.Stub {
             try {
                 validContext = getApplication();
                 if (validContext == null) {
-                    validContext = BlackBoxCore.getContext();
+                    validContext = TmBox.getContext();
                 }
             } catch (Exception e) {
                 Slog.w(TAG, "Could not get application context: " + e.getMessage());
-                validContext = BlackBoxCore.getContext();
+                validContext = TmBox.getContext();
             }
             
             if (validContext != null) {
@@ -1255,7 +1255,7 @@ public class BActivityThread extends IBActivityThread.Stub {
     public static void hookActivityThread() {
         try {
             
-            Object activityThread = BlackBoxCore.mainThread();
+            Object activityThread = TmBox.mainThread();
             if (activityThread != null) {
                 
                 Instrumentation instrumentation = BRActivityThread.get(activityThread).mInstrumentation();

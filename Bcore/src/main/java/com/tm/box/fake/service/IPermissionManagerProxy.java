@@ -8,7 +8,7 @@ import black.android.app.BRActivityThread;
 import black.android.app.BRContextImpl;
 import black.android.os.BRServiceManager;
 import black.android.permission.BRIPermissionManagerStub;
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 import com.tm.box.fake.hook.BinderInvocationStub;
 import com.tm.box.fake.service.base.PkgMethodProxy;
 import com.tm.box.fake.service.base.ValueMethodProxy;

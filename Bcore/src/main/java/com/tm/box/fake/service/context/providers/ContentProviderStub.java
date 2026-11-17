@@ -6,7 +6,7 @@ import java.lang.reflect.Method;
 
 import black.android.content.BRAttributionSource;
 import com.tm.box.app.BActivityThread;
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 import com.tm.box.fake.hook.ClassInvocationStub;
 import com.tm.box.utils.compat.ContextCompat;
 import com.tm.box.utils.Slog;
@@ -210,21 +210,21 @@ public class ContentProviderStub extends ClassInvocationStub implements BContent
             try {
                 java.lang.reflect.Field uidField = attributionSourceClass.getDeclaredField("mUid");
                 uidField.setAccessible(true);
-                uidField.set(attributionSource, BlackBoxCore.getHostUid());
+                uidField.set(attributionSource, TmBox.getHostUid());
                 Slog.d(TAG, "Fixed AttributionSource UID via field access");
             } catch (NoSuchFieldException e) {
                 
                 try {
                     java.lang.reflect.Field uidField = attributionSourceClass.getDeclaredField("uid");
                     uidField.setAccessible(true);
-                    uidField.set(attributionSource, BlackBoxCore.getHostUid());
+                    uidField.set(attributionSource, TmBox.getHostUid());
                     Slog.d(TAG, "Fixed AttributionSource UID via alternative field");
                 } catch (NoSuchFieldException e2) {
                     
                     try {
                         java.lang.reflect.Method setUidMethod = attributionSourceClass.getDeclaredMethod("setUid", int.class);
                         setUidMethod.setAccessible(true);
-                        setUidMethod.invoke(attributionSource, BlackBoxCore.getHostUid());
+                        setUidMethod.invoke(attributionSource, TmBox.getHostUid());
                         Slog.d(TAG, "Fixed AttributionSource UID via setter method");
                     } catch (Exception e3) {
                         Slog.w(TAG, "Could not fix AttributionSource UID: " + e3.getMessage());

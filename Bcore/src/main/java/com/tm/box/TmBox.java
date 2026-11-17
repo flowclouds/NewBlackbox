@@ -75,10 +75,10 @@ import com.tm.box.utils.LogSender;
 
 @SuppressLint({"StaticFieldLeak", "NewApi"})
 @SuppressWarnings({"unchecked", "deprecation"})
-public class BlackBoxCore extends ClientConfiguration {
-    public static final String TAG = "BlackBoxCore";
+public class TmBox extends ClientConfiguration {
+    public static final String TAG = "TmBox";
 
-    private static final BlackBoxCore sBlackBoxCore = new BlackBoxCore();
+    private static final TmBox sTmBox = new TmBox();
     private static Context sContext;
     
     
@@ -128,8 +128,8 @@ public class BlackBoxCore extends ClientConfiguration {
     private String mCurrentAppPackage = null;
     private boolean mIsSandboxedEnvironment = false;
 
-    public static BlackBoxCore get() {
-        return sBlackBoxCore;
+    public static TmBox get() {
+        return sTmBox;
     }
 
     public Handler getHandler() {
@@ -172,7 +172,7 @@ public class BlackBoxCore extends ClientConfiguration {
         
         if (uid != mHostUid && uid > Process.FIRST_APPLICATION_UID && uid < Process.LAST_APPLICATION_UID) {
             mIsSandboxedEnvironment = true;
-            Slog.d("BlackBoxCore", "Detected sandboxed environment for " + packageName + " with UID: " + uid);
+            Slog.d("TmBox", "Detected sandboxed environment for " + packageName + " with UID: " + uid);
         }
     }
 
@@ -203,14 +203,14 @@ public class BlackBoxCore extends ClientConfiguration {
 
             
             if (mIsSandboxedEnvironment && mCurrentAppUid > 0) {
-                Slog.d("BlackBoxCore", "Resolving UID for " + operation + ": " + originalUid + " -> " + mCurrentAppUid);
+                Slog.d("TmBox", "Resolving UID for " + operation + ": " + originalUid + " -> " + mCurrentAppUid);
                 return mCurrentAppUid;
             }
 
             
             return originalUid;
         } catch (Exception e) {
-            Slog.e("BlackBoxCore", "Error resolving UID for " + operation + ": " + e.getMessage());
+            Slog.e("TmBox", "Error resolving UID for " + operation + ": " + e.getMessage());
             return originalUid;
         }
     }
@@ -222,7 +222,7 @@ public class BlackBoxCore extends ClientConfiguration {
         
         try {
             
-            if (isMainProcess() && !isBlackProcessRunning()) {
+            if (isMainProcess() && !isBoxProcessRunning()) {
                 Slog.w(TAG, "Black process not running, starting it and using fallback services...");
                 startBlackProcess();
                 
@@ -345,7 +345,7 @@ public class BlackBoxCore extends ClientConfiguration {
         
         
         
-        if (isMainProcess() && !isBlackProcessRunning()) {
+        if (isMainProcess() && !isBoxProcessRunning()) {
             Slog.w(TAG, "Main process trying to access service " + name + " but black process not running, starting it...");
             startBlackProcess();
             
@@ -415,7 +415,7 @@ public class BlackBoxCore extends ClientConfiguration {
 
     
     
-    private boolean isBlackProcessRunning() {
+    private boolean isBoxProcessRunning() {
         try {
             
             Bundle testBundle = new Bundle();
@@ -701,7 +701,7 @@ public class BlackBoxCore extends ClientConfiguration {
                         refreshProcessContext();
                         
                         
-                        if (isMainProcess() && !isBlackProcessRunning()) {
+                        if (isMainProcess() && !isBoxProcessRunning()) {
                             startBlackProcess();
                         }
                         
@@ -789,7 +789,7 @@ public class BlackBoxCore extends ClientConfiguration {
                 @Override
                 public void run() {
                     Slog.d(TAG, "Executing delayed service start");
-                    if (isMainProcess() && !isBlackProcessRunning()) {
+                    if (isMainProcess() && !isBoxProcessRunning()) {
                         startBlackProcess();
                     }
                 }
@@ -803,14 +803,14 @@ public class BlackBoxCore extends ClientConfiguration {
     
     
     public void ensureBlackProcessInitialized() {
-        if (isMainProcess() && !isBlackProcessRunning()) {
+        if (isMainProcess() && !isBoxProcessRunning()) {
             Slog.w(TAG, "Ensuring black process is initialized...");
             startBlackProcess();
             
             
             int maxRetries = 5;
             int retryCount = 0;
-            while (retryCount < maxRetries && !isBlackProcessRunning()) {
+            while (retryCount < maxRetries && !isBoxProcessRunning()) {
                 try {
                     Thread.sleep(500);
                     retryCount++;
@@ -820,7 +820,7 @@ public class BlackBoxCore extends ClientConfiguration {
                 }
             }
             
-            if (isBlackProcessRunning()) {
+            if (isBoxProcessRunning()) {
                 Slog.d(TAG, "Black process initialized successfully");
             } else {
                 Slog.w(TAG, "Black process failed to initialize, using fallback services");
@@ -857,15 +857,15 @@ public class BlackBoxCore extends ClientConfiguration {
         initNotificationManager();
 
         String processName = getProcessName(getContext());
-        if (processName.equals(BlackBoxCore.getHostPkg())) {
+        if (processName.equals(TmBox.getHostPkg())) {
             mProcessType = ProcessType.Main;
             startLogcat();
-        } else if (processName.endsWith(getContext().getString(R.string.black_box_service_name))) {
+        } else if (processName.endsWith(getContext().getString(R.string.box_service_name))) {
             mProcessType = ProcessType.Server;
         } else {
             mProcessType = ProcessType.BAppClient;
         }
-        if (BlackBoxCore.get().isBlackProcess()) {
+        if (TmBox.get().isBoxProcess()) {
             BEnvironment.load();
             if (processName.endsWith("p0")) {
 
@@ -981,13 +981,13 @@ public class BlackBoxCore extends ClientConfiguration {
             ensureProperInitialization();
             
             
-            if (isBlackProcess()) {
+            if (isBoxProcess()) {
                 ContentProviderDelegate.init();
             }
             if (!isServerProcess()) {
                 
                 try {
-                    ServiceManager.initBlackManager();
+                    ServiceManager.initBoxManager();
                 } catch (Exception e) {
                     Slog.w(TAG, "Failed to initialize ServiceManager, continuing with fallback: " + e.getMessage());
                 }
@@ -997,16 +997,16 @@ public class BlackBoxCore extends ClientConfiguration {
             }
             
             long totalTime = System.currentTimeMillis() - startTime;
-            Slog.d(TAG, "BlackBox initialization completed in " + totalTime + "ms");
+            Slog.d(TAG, "TmBox initialization completed in " + totalTime + "ms");
             
         } catch (Exception e) {
             long totalTime = System.currentTimeMillis() - startTime;
-            Slog.e(TAG, "BlackBox initialization failed after " + totalTime + "ms", e);
+            Slog.e(TAG, "TmBox initialization failed after " + totalTime + "ms", e);
             
             
             try {
                 if (!isServerProcess()) {
-                    ServiceManager.initBlackManager();
+                    ServiceManager.initBoxManager();
                 }
             } catch (Exception fallbackEx) {
                 Slog.e(TAG, "Fallback initialization also failed", fallbackEx);
@@ -1242,7 +1242,7 @@ public class BlackBoxCore extends ClientConfiguration {
         Main,
     }
 
-    public boolean isBlackProcess() {
+    public boolean isBoxProcess() {
         return mProcessType == ProcessType.BAppClient;
     }
 
@@ -1470,9 +1470,9 @@ public class BlackBoxCore extends ClientConfiguration {
     }
 
     private void initNotificationManager() {
-        NotificationManager nm = (NotificationManager) BlackBoxCore.getContext().getSystemService(Context.NOTIFICATION_SERVICE);
-        String CHANNEL_ONE_ID = BlackBoxCore.getContext().getPackageName() + ".blackbox_core";
-        String CHANNEL_ONE_NAME = "blackbox_core";
+        NotificationManager nm = (NotificationManager) TmBox.getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        String CHANNEL_ONE_ID = TmBox.getContext().getPackageName() + ".box_core";
+        String CHANNEL_ONE_NAME = "box_core";
         if (BuildCompat.isOreo()) {
             NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ONE_ID,
                     CHANNEL_ONE_NAME, NotificationManager.IMPORTANCE_HIGH);
@@ -1485,27 +1485,27 @@ public class BlackBoxCore extends ClientConfiguration {
     }
 
     public void onBeforeMainLaunchApk(String packageName,int userid) {
-        for (AppLifecycleCallback appLifecycleCallback : BlackBoxCore.get().getAppLifecycleCallbacks()) {
+        for (AppLifecycleCallback appLifecycleCallback : TmBox.get().getAppLifecycleCallbacks()) {
             appLifecycleCallback.beforeMainLaunchApk(packageName,userid);
         }
     }
     public void onBeforeMainApplicationAttach(Application app, Context context) {
-        for (AppLifecycleCallback appLifecycleCallback : BlackBoxCore.get().getAppLifecycleCallbacks()) {
+        for (AppLifecycleCallback appLifecycleCallback : TmBox.get().getAppLifecycleCallbacks()) {
             appLifecycleCallback.beforeMainApplicationAttach(app, context);
         }
     }
     public void onAfterMainApplicationAttach(Application app, Context context) {
-        for (AppLifecycleCallback appLifecycleCallback : BlackBoxCore.get().getAppLifecycleCallbacks()) {
+        for (AppLifecycleCallback appLifecycleCallback : TmBox.get().getAppLifecycleCallbacks()) {
             appLifecycleCallback.afterMainApplicationAttach(app, context);
         }
     }
     public void onBeforeMainActivityOnCreate(android.app.Activity activity) {
-        for (AppLifecycleCallback appLifecycleCallback : BlackBoxCore.get().getAppLifecycleCallbacks()) {
+        for (AppLifecycleCallback appLifecycleCallback : TmBox.get().getAppLifecycleCallbacks()) {
             appLifecycleCallback.beforeMainActivityOnCreate(activity);
         }
     }
     public void onAfterMainActivityOnCreate(android.app.Activity activity) {
-        for (AppLifecycleCallback appLifecycleCallback : BlackBoxCore.get().getAppLifecycleCallbacks()) {
+        for (AppLifecycleCallback appLifecycleCallback : TmBox.get().getAppLifecycleCallbacks()) {
             appLifecycleCallback.afterMainActivityOnCreate(activity);
         }
     }
@@ -1724,7 +1724,7 @@ public class BlackBoxCore extends ClientConfiguration {
             
             
             try {
-                ServiceManager.initBlackManager();
+                ServiceManager.initBoxManager();
                 Slog.d(TAG, "ServiceManager initialized successfully");
             } catch (Exception e) {
                 Slog.w(TAG, "ServiceManager initialization failed: " + e.getMessage());
@@ -1838,7 +1838,7 @@ public class BlackBoxCore extends ClientConfiguration {
     }
 
     
-    public boolean isBlackBoxApp(File apkFile) {
+    public boolean isHostApp(File apkFile) {
         try {
             if (apkFile == null || !apkFile.exists()) {
                 return false;
@@ -1850,13 +1850,13 @@ public class BlackBoxCore extends ClientConfiguration {
                 return packageName.equals(getHostPkg());
             }
         } catch (Exception e) {
-            Slog.w(TAG, "Error checking if APK is BlackBox app: " + e.getMessage());
+            Slog.w(TAG, "Error checking if APK is TmBox app: " + e.getMessage());
         }
         return false;
     }
     
     
-    public boolean isBlackBoxApp(String packageName) {
+    public boolean isHostApp(String packageName) {
         if (packageName == null || packageName.isEmpty()) {
             return false;
         }
@@ -2107,7 +2107,7 @@ public class BlackBoxCore extends ClientConfiguration {
                     if (getContext() != null) {
                         NotificationManager nm = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
                         if (nm != null) {
-                            String channelId = getContext().getPackageName() + ".blackbox_core";
+                            String channelId = getContext().getPackageName() + ".box_core";
                             Notification.Builder builder;
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                                 builder = new Notification.Builder(getContext(), channelId);
@@ -2116,7 +2116,7 @@ public class BlackBoxCore extends ClientConfiguration {
                             }
                             
                             builder.setSmallIcon(android.R.drawable.stat_notify_error)
-                                   .setContentTitle("BlackBox Log Upload Failed")
+                                   .setContentTitle("TmBox Log Upload Failed")
                                    .setContentText(error)
                                    .setAutoCancel(true);
                                    
@@ -2138,7 +2138,7 @@ public class BlackBoxCore extends ClientConfiguration {
                     if (getContext() != null) {
                         NotificationManager nm = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
                         if (nm != null) {
-                            String channelId = getContext().getPackageName() + ".blackbox_core";
+                            String channelId = getContext().getPackageName() + ".box_core";
                             Notification.Builder builder;
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                                 builder = new Notification.Builder(getContext(), channelId);
@@ -2147,7 +2147,7 @@ public class BlackBoxCore extends ClientConfiguration {
                             }
 
                             builder.setSmallIcon(android.R.drawable.stat_sys_upload_done)
-                                   .setContentTitle("BlackBox Log Upload")
+                                   .setContentTitle("TmBox Log Upload")
                                    .setContentText("Logs sent successfully")
                                    .setAutoCancel(true);
 

@@ -3,14 +3,48 @@ package com.tm.box.core.env;
 import java.io.File;
 import java.util.Locale;
 
-import com.tm.box.BlackBoxCore;
+import com.tm.box.TmBox;
 import com.tm.box.app.BActivityThread;
 import com.tm.box.utils.FileUtils;
 
 
 public class BEnvironment {
-    private static final File sVirtualRoot = new File(BlackBoxCore.getContext().getCacheDir().getParent(), "blackbox");
-    private static final File sExternalVirtualRoot = BlackBoxCore.getContext().getExternalFilesDir("blackbox");
+    private static final File sVirtualRoot = dir(TmBox.getContext().getCacheDir().getParentFile(), "box");
+    private static final File sExternalVirtualRoot = external("box");
+
+    // shortcut: one-time rename of the old data dir, drop after installed guests have moved
+    private static File dir(File parent, String name) {
+        File next = new File(parent, name);
+        File old = new File(parent, "blackbox");
+        if (old.isDirectory() && empty(next)) {
+            if (next.exists()) {
+                next.delete();
+            }
+            old.renameTo(next);
+        }
+        return next;
+    }
+
+    private static File external(String name) {
+        File old = TmBox.getContext().getExternalFilesDir("blackbox");
+        File next = TmBox.getContext().getExternalFilesDir(name);
+        if (old != null && next != null && empty(next) && !empty(old)) {
+            File tmp = new File(next.getParentFile(), name + ".tmp");
+            if (old.renameTo(tmp)) {
+                next.delete();
+                tmp.renameTo(next);
+            }
+        }
+        return next;
+    }
+
+    private static boolean empty(File dir) {
+        if (dir == null || !dir.exists()) {
+            return true;
+        }
+        String[] names = dir.list();
+        return names == null || names.length == 0;
+    }
 
     public static File JUNIT_JAR = new File(getCacheDir(), "junit.apk");
     public static File EMPTY_JAR = new File(getCacheDir(), "empty.apk");
@@ -140,6 +174,6 @@ public class BEnvironment {
     }
 
     public static File getXSharedPreferences(String packageName, String prefFileName) {
-       return new File(BEnvironment.getDataDir(packageName, BlackBoxCore.getUserId()), "shared_prefs/" + prefFileName + ".xml");
+       return new File(BEnvironment.getDataDir(packageName, TmBox.getUserId()), "shared_prefs/" + prefFileName + ".xml");
     }
 }
