@@ -79,13 +79,6 @@ static const char* blocked_files[] = {
     "/system/lib/libmemu.so",
     "/system/lib/libbluelog.so",
     
-    
-    "/system/xposed.prop",
-    "/system/framework/XposedBridge.jar",
-    "/data/data/de.robv.android.xposed.installer",
-    "/data/data/org.meowcat.edxposed.manager",
-    "/data/data/top.canyie.dreamland.manager",
-    
     nullptr
 };
 
@@ -104,7 +97,6 @@ static const char* blocked_packages[] = {
     "com.ramdroid.appquarantinepro",
     "com.devadvance.rootcloak",
     "com.devadvance.rootcloakplus",
-    "de.robv.android.xposed.installer",
     "com.saurik.substrate",
     "com.zachspong.temprootremovejb",
     "com.amphoras.hidemyroot",

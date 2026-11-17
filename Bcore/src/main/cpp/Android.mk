@@ -37,7 +37,6 @@ Hook/DexFileHook.cpp \
 Hook/FileSystemHook.cpp \
 Utils/HexDump.cpp \
 Utils/AntiDetection.cpp \
-Hook/VMClassLoaderHook.cpp \
 Hook/UnixFileSystemHook.cpp \
 Hook/BinderHook.cpp \
 Hook/BaseHook.cpp \

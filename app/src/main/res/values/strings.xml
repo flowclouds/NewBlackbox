@@ -8,7 +8,6 @@
     <string name="empty_empty">Empty</string>
     <string name="filter">Filter</string>
     <string name="open_source_path">Open Source</string>
-    <string name="xp_setting">Xposed Setting</string>
     <string name="tg_group">Telegram Group</string>
     <string name="fake_location">Fake Location(Preview)</string>
     <string name="real_location">Real Location</string>
@@ -19,10 +18,8 @@
     <string name="setting">Setting</string>
     <string name="jump_module">Go to Module Manager</string>
     <string name="module_setting">Module Manager</string>
-    <string name="enable_xposed">Enable Xposed Framework</string>
     <string name="hider">Hide</string>
     <string name="hide_root">Hide Root</string>
-    <string name="hide_xposed">Hide Xposed</string>
     <string name="userRemark">User Remark</string>
     <string name="done">Done</string>
     <string name="cancel">Cancel</string>
@@ -53,7 +50,6 @@
     <string name="start_in_outside">Start module in outside</string>
     <string name="restart_module">Restart app to apply change</string>
     <string name="cannot_create_shortcut">This desktop does not support creating shortcuts</string>
-    <string name="uninstall_module_toast">Please uninstall the xposed module in the Module Manager</string>
     <string name="other">Others</string>
     <string name="daemon_enable">Daemon</string>
     <string name="use_vpn_network">Use VPN Network</string>
