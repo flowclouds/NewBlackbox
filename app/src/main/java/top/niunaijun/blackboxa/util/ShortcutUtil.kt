@@ -7,6 +7,7 @@ import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.graphics.drawable.IconCompat
 import androidx.core.graphics.drawable.toBitmap
 import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.checkbox.checkBoxPrompt
 import com.afollestad.materialdialogs.input.input
 import top.niunaijun.blackboxa.R
 import top.niunaijun.blackboxa.app.App
@@ -63,13 +64,14 @@ object ShortcutUtil {
         MaterialDialog(context).show {
             title(R.string.try_add_shortcut)
             message(R.string.add_shortcut_fail_msg)
-            positiveButton(R.string.done)
-            negativeButton(R.string.permission_setting){
-                App.getContext().openAppSystemSettings()
+            checkBoxPrompt(R.string.no_reminders) { checked ->
+                if (checked) {
+                    AppManager.mBlackBoxLoader.invalidShortcutPermissionDialog(false)
+                }
             }
-
-            neutralButton(R.string.no_reminders){
-                AppManager.mBlackBoxLoader.invalidShortcutPermissionDialog(false)
+            positiveButton(R.string.done)
+            negativeButton(R.string.permission_setting) {
+                App.getContext().openAppSystemSettings()
             }
         }
 

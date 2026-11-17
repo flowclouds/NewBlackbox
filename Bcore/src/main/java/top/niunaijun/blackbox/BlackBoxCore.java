@@ -23,7 +23,6 @@ import android.os.Process;
 
 import java.io.File;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -1485,15 +1484,6 @@ public class BlackBoxCore extends ClientConfiguration {
         }
     }
 
-    public void closeCodeInit(){
-        try {
-            Class entry = Class.forName("top.niunaijun.blackbox.closecode.Entry");
-            Method attach = entry.getDeclaredMethod("attach");
-            attach.invoke(null);
-        } catch (Exception e) {
-            Slog.w(TAG, "closeCodeInit reflection failed: " + e.getMessage());
-        }
-    }
     public void onBeforeMainLaunchApk(String packageName,int userid) {
         for (AppLifecycleCallback appLifecycleCallback : BlackBoxCore.get().getAppLifecycleCallbacks()) {
             appLifecycleCallback.beforeMainLaunchApk(packageName,userid);

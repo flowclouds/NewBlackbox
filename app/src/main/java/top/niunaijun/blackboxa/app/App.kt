@@ -26,12 +26,6 @@ class App : Application() {
             super.attachBaseContext(base)
 
             try {
-                BlackBoxCore.get().closeCodeInit()
-            } catch (e: Exception) {
-                Log.e("App", "Error in closeCodeInit: ${e.message}")
-            }
-
-            try {
                 BlackBoxCore.get().onBeforeMainApplicationAttach(this, base)
             } catch (e: Exception) {
                 Log.e("App", "Error in onBeforeMainApplicationAttach: ${e.message}")
@@ -65,7 +59,7 @@ class App : Application() {
     override fun onCreate() {
         try {
             super.onCreate()
-            AppManager.doOnCreate(mContext)
+            AppManager.doOnCreate()
         } catch (e: Exception) {
             Log.e("App", "Error in onCreate: ${e.message}")
         }

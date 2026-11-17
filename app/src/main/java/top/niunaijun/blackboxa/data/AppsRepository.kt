@@ -103,8 +103,6 @@ class AppsRepository {
                             continue
                         }
 
-                        val isXpModule = false
-
                         val info =
                                 AppInfo(
                                         safeLoadAppLabel(installedApplication),
@@ -112,8 +110,7 @@ class AppsRepository {
                                                 installedApplication
                                         ), 
                                         installedApplication.packageName,
-                                        installedApplication.sourceDir,
-                                        isXpModule
+                                        installedApplication.sourceDir
                                 )
                         installedList.add(info)
                     } catch (e: Exception) {
@@ -258,15 +255,6 @@ class AppsRepository {
                     }
 
                     
-                    if (applicationInfo == null) {
-                        Log.w(
-                                TAG,
-                                "getVmInstallList: Skipping null applicationInfo at index $index"
-                        )
-                        return@forEachIndexed
-                    }
-
-                    
                     if (applicationInfo.packageName.isNullOrBlank()) {
                         Log.w(
                                 TAG,
@@ -282,8 +270,7 @@ class AppsRepository {
                                             applicationInfo
                                     ), 
                                     applicationInfo.packageName,
-                                    applicationInfo.sourceDir ?: "",
-                                    false
+                                    applicationInfo.sourceDir ?: ""
                             )
 
                     appInfoList.add(info)
@@ -298,7 +285,7 @@ class AppsRepository {
                 } catch (e: Exception) {
                     Log.e(
                             TAG,
-                            "getVmInstallList: Error processing app at index $index (${applicationInfo?.packageName}): ${e.message}"
+                            "getVmInstallList: Error processing app at index $index (${applicationInfo.packageName}): ${e.message}"
                     )
                     
                 }
@@ -367,7 +354,6 @@ class AppsRepository {
             ) {
                 
                 try {
-                    val blackBoxCore = BlackBoxCore.get()
                     val hostPackageName = BlackBoxCore.getHostPkg()
 
                     

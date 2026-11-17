@@ -50,22 +50,11 @@ object AppManager {
         }
     }
 
-    fun doOnCreate(context: Context) {
+    fun doOnCreate() {
         try {
-            mBlackBoxLoader.doOnCreate(context)
-            initThirdService(context)
+            mBlackBoxLoader.doOnCreate()
         } catch (e: Exception) {
             Log.e(TAG, "Error in doOnCreate: ${e.message}")
-            
-        }
-    }
-
-    private fun initThirdService(context: Context) {
-        try {
-            
-            
-        } catch (e: Exception) {
-            Log.e(TAG, "Error in initThirdService: ${e.message}")
         }
     }
 }

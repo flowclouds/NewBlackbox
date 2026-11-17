@@ -9,72 +9,12 @@ import top.niunaijun.blackbox.app.BActivityThread
 import top.niunaijun.blackbox.app.configuration.AppLifecycleCallback
 import top.niunaijun.blackbox.app.configuration.ClientConfiguration
 import top.niunaijun.blackboxa.app.App
-import top.niunaijun.blackboxa.app.rocker.RockerManager
 import top.niunaijun.blackboxa.biz.cache.AppSharedPreferenceDelegate
 
 
 class BlackBoxLoader {
 
-    private var mHideRoot by AppSharedPreferenceDelegate(App.getContext(), false)
-
-    private var mDaemonEnable by AppSharedPreferenceDelegate(App.getContext(), false)
     private var mShowShortcutPermissionDialog by AppSharedPreferenceDelegate(App.getContext(), true)
-
-    
-    private var mUseVpnNetwork by AppSharedPreferenceDelegate(App.getContext(), false)
-
-    private var mDisableFlagSecure by AppSharedPreferenceDelegate(App.getContext(), false)
-
-    fun hideRoot(): Boolean {
-        return try {
-            mHideRoot
-        } catch (e: Exception) {
-            Log.e(TAG, "Error getting hideRoot: ${e.message}")
-            false
-        }
-    }
-
-    fun invalidHideRoot(hideRoot: Boolean) {
-        try {
-            this.mHideRoot = hideRoot
-        } catch (e: Exception) {
-            Log.e(TAG, "Error setting hideRoot: ${e.message}")
-        }
-    }
-
-    fun disableFlagSecure(): Boolean {
-        return try {
-            mDisableFlagSecure
-        } catch (e: Exception) {
-            Log.e(TAG, "Error getting disableFlagSecure: ${e.message}")
-            false
-        }
-    }
-
-    fun invalidDisableFlagSecure(disable: Boolean) {
-        try {
-            this.mDisableFlagSecure = disable
-        } catch (e: Exception) {
-            Log.e(TAG, "Error setting disableFlagSecure: ${e.message}")
-        }
-    }
-
-    fun daemonEnable(): Boolean {
-        return try {
-            mDaemonEnable
-        } catch (e: Exception) {
-            Log.e(TAG, "Error getting daemonEnable: ${e.message}")
-            false
-        }
-    }
-
-    fun invalidDaemonEnable(enable: Boolean) {
-        try {
-            this.mDaemonEnable = enable
-        } catch (e: Exception) {
-            Log.e(TAG, "Error setting daemonEnable: ${e.message}")
-        }
-    }
 
     fun showShortcutPermissionDialog(): Boolean {
         return try {
@@ -90,23 +30,6 @@ class BlackBoxLoader {
             this.mShowShortcutPermissionDialog = show
         } catch (e: Exception) {
             Log.e(TAG, "Error setting showShortcutPermissionDialog: ${e.message}")
-        }
-    }
-
-    fun useVpnNetwork(): Boolean {
-        return try {
-            mUseVpnNetwork
-        } catch (e: Exception) {
-            Log.e(TAG, "Error getting useVpnNetwork: ${e.message}")
-            false
-        }
-    }
-
-    fun invalidUseVpnNetwork(enable: Boolean) {
-        try {
-            this.mUseVpnNetwork = enable
-        } catch (e: Exception) {
-            Log.e(TAG, "Error setting useVpnNetwork: ${e.message}")
         }
     }
 
@@ -170,7 +93,6 @@ class BlackBoxLoader {
                                                 TAG,
                                                 "afterApplicationOnCreate: pkg $packageName, processName $processName"
                                         )
-                                        RockerManager.init(application, userId)
                                     } catch (e: Exception) {
                                         Log.e(
                                                 TAG,
@@ -235,61 +157,22 @@ class BlackBoxLoader {
                                     }
                                 }
 
-                                override fun isHideRoot(): Boolean {
-                                    return try {
-                                        mHideRoot
-                                    } catch (e: Exception) {
-                                        Log.e(TAG, "Error checking hideRoot: ${e.message}")
-                                        false
-                                    }
-                                }
+                                override fun isHideRoot(): Boolean = false
 
-                                override fun isEnableDaemonService(): Boolean {
-                                    return try {
-                                        mDaemonEnable
-                                    } catch (e: Exception) {
-                                        Log.e(TAG, "Error checking daemonEnable: ${e.message}")
-                                        false
-                                    }
-                                }
+                                override fun isEnableDaemonService(): Boolean = false
 
-                                override fun isUseVpnNetwork(): Boolean {
-                                    return try {
-                                        mUseVpnNetwork
-                                    } catch (e: Exception) {
-                                        Log.e(TAG, "Error checking useVpnNetwork: ${e.message}")
-                                        false
-                                    }
-                                }
+                                override fun isUseVpnNetwork(): Boolean = false
 
-                                override fun isDisableFlagSecure(): Boolean {
-                                    return try {
-                                        mDisableFlagSecure
-                                    } catch (e: Exception) {
-                                        Log.e(TAG, "Error checking disableFlagSecure: ${e.message}")
-                                        false
-                                    }
-                                }
+                                override fun isDisableFlagSecure(): Boolean = false
 
                                 override fun requestInstallPackage(
                                         file: File?,
                                         userId: Int
                                 ): Boolean {
-                                    return try {
-                                        if (file == null) {
-                                            Log.w(TAG, "requestInstallPackage: file is null")
-                                            return false
-                                        }
-                                        val packageInfo =
-                                                context.packageManager.getPackageArchiveInfo(
-                                                        file.absolutePath,
-                                                        0
-                                                )
-                                        false
-                                    } catch (e: Exception) {
-                                        Log.e(TAG, "Error in requestInstallPackage: ${e.message}")
-                                        false
+                                    if (file == null) {
+                                        Log.w(TAG, "requestInstallPackage: file is null")
                                     }
+                                    return false
                                 }
                             }
                     )
@@ -298,7 +181,7 @@ class BlackBoxLoader {
         }
     }
 
-    fun doOnCreate(context: Context) {
+    fun doOnCreate() {
         try {
             BlackBoxCore.get().doCreate()
 

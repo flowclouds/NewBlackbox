@@ -31,21 +31,20 @@ open class AppSharedPreferenceDelegate<Data>(
         putData(property.name, value)
     }
 
+    @Suppress("UNCHECKED_CAST")
     protected fun findData(key: String, default: Data): Data {
         with(mSharedPreferences) {
-            val result: Any =
-                    when (default) {
-                        is Int -> getInt(key, default)
-                        is Long -> getLong(key, default)
-                        is Float -> getFloat(key, default)
-                        is String -> getString(key, default)!!
-                        is Boolean -> getBoolean(key, default)
-                        else ->
-                                throw IllegalArgumentException(
-                                        "This type $default can not be saved into sharedPreferences"
-                                )
-                    }
-            return result as? Data ?: default
+            return when (default) {
+                is Int -> getInt(key, default)
+                is Long -> getLong(key, default)
+                is Float -> getFloat(key, default)
+                is String -> getString(key, default) ?: default
+                is Boolean -> getBoolean(key, default)
+                else ->
+                        throw IllegalArgumentException(
+                                "This type $default can not be saved into sharedPreferences"
+                        )
+            } as Data
         }
     }
 
